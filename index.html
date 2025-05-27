@@ -100,16 +100,22 @@
       font-weight: bold;
       margin-top: 30px;
     }
+
+    #bestScoreBox {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #333;
+    }
   </style>
 </head>
 <body>
   <h1>Flag Quiz</h1>
-
   <div class="quiz-card" id="quizContainer"></div>
+  <div id="bestScoreBox">🏆 Best Score: <strong id="bestScoreDisplay"></strong></div>
   <div class="result" id="result"></div>
 
   <script>
-    const questions = [
+    const allQuestions = [
       { flag: "fr", choices: ["France", "Italy", "Netherlands", "Russia"], answer: 0 },
       { flag: "jp", choices: ["China", "Japan", "South Korea", "Thailand"], answer: 1 },
       { flag: "de", choices: ["Belgium", "Germany", "Austria", "Sweden"], answer: 1 },
@@ -119,9 +125,39 @@
       { flag: "ca", choices: ["USA", "Canada", "UK", "Australia"], answer: 1 },
       { flag: "it", choices: ["Ireland", "Italy", "Portugal", "Hungary"], answer: 1 },
       { flag: "cn", choices: ["Japan", "Vietnam", "North Korea", "China"], answer: 3 },
-      { flag: "za", choices: ["Zimbabwe", "South Africa", "Namibia", "Botswana"], answer: 1 }
+      { flag: "za", choices: ["Zimbabwe", "South Africa", "Namibia", "Botswana"], answer: 1 },
+      { flag: "gb", choices: ["Australia", "UK", "New Zealand", "Ireland"], answer: 1 },
+      { flag: "us", choices: ["USA", "Canada", "UK", "Australia"], answer: 0 },
+      { flag: "es", choices: ["Italy", "Spain", "Portugal", "Mexico"], answer: 1 },
+      { flag: "mx", choices: ["Argentina", "Spain", "Mexico", "Colombia"], answer: 2 },
+      { flag: "ru", choices: ["Russia", "Poland", "Czech Republic", "Slovakia"], answer: 0 },
+      { flag: "kr", choices: ["Japan", "China", "South Korea", "Taiwan"], answer: 2 },
+      { flag: "tr", choices: ["Turkey", "Tunisia", "Morocco", "Egypt"], answer: 0 },
+      { flag: "au", choices: ["New Zealand", "Australia", "Fiji", "UK"], answer: 1 },
+      { flag: "ar", choices: ["Colombia", "Chile", "Argentina", "Uruguay"], answer: 2 },
+      { flag: "eg", choices: ["Algeria", "Egypt", "Jordan", "Libya"], answer: 1 },
+      { flag: "pt", choices: ["Spain", "Portugal", "Italy", "Brazil"], answer: 1 },
+      { flag: "gr", choices: ["Turkey", "Greece", "Italy", "Cyprus"], answer: 1 },
+      { flag: "se", choices: ["Finland", "Norway", "Sweden", "Iceland"], answer: 2 },
+      { flag: "fi", choices: ["Finland", "Estonia", "Norway", "Denmark"], answer: 0 },
+      { flag: "no", choices: ["Denmark", "Sweden", "Norway", "Iceland"], answer: 2 },
+      { flag: "dk", choices: ["Norway", "Denmark", "Germany", "Sweden"], answer: 1 },
+      { flag: "ua", choices: ["Ukraine", "Russia", "Belarus", "Moldova"], answer: 0 },
+      { flag: "pl", choices: ["Czech Republic", "Poland", "Slovakia", "Austria"], answer: 1 },
+      { flag: "th", choices: ["Vietnam", "Thailand", "Philippines", "Malaysia"], answer: 1 },
+      { flag: "id", choices: ["Indonesia", "Malaysia", "Philippines", "Thailand"], answer: 0 },
+      { flag: "ph", choices: ["Vietnam", "Philippines", "Thailand", "Malaysia"], answer: 1 },
+      { flag: "vn", choices: ["China", "Vietnam", "Japan", "Thailand"], answer: 1 },
+      { flag: "ke", choices: ["Tanzania", "Kenya", "Ethiopia", "Uganda"], answer: 1 },
+      { flag: "gh", choices: ["Ghana", "Cameroon", "Nigeria", "Senegal"], answer: 0 },
+      { flag: "ma", choices: ["Morocco", "Tunisia", "Algeria", "Egypt"], answer: 0 },
+      { flag: "tn", choices: ["Tunisia", "Morocco", "Algeria", "Libya"], answer: 0 },
+      { flag: "et", choices: ["Ethiopia", "Eritrea", "Kenya", "Somalia"], answer: 0 },
+      { flag: "ch", choices: ["Switzerland", "Austria", "Denmark", "Germany"], answer: 0 },
+      { flag: "be", choices: ["Belgium", "Germany", "Netherlands", "France"], answer: 0 }
     ];
 
+    let questions = [...allQuestions].sort(() => Math.random() - 0.5);
     let currentQuestion = 0;
     let score = 0;
     let selected = null;
@@ -197,11 +233,25 @@
       }
     }
 
+    function saveBestScore(score) {
+      const best = localStorage.getItem("flagBestScore") || 0;
+      if (score > best) {
+        localStorage.setItem("flagBestScore", score);
+      }
+    }
+
+    function getBestScore() {
+      return localStorage.getItem("flagBestScore") || 0;
+    }
+
     function showResult() {
+      saveBestScore(score);
+      const best = getBestScore();
       document.getElementById("quizContainer").innerHTML = "";
       document.getElementById("result").innerHTML = `
         🎉 Quiz completed!<br>
-        Your final score is <strong>${score} / ${questions.length}</strong><br><br>
+        Your final score is <strong>${score} / ${questions.length}</strong><br>
+        🏆 Best score: <strong>${best} / ${questions.length}</strong><br><br>
         <button class="btn" onclick="restartQuiz()">Restart Quiz</button>
       `;
     }
@@ -210,12 +260,15 @@
       currentQuestion = 0;
       score = 0;
       selected = null;
+      questions = [...allQuestions].sort(() => Math.random() - 0.5);
       document.getElementById("result").innerHTML = "";
       showQuestion();
+      document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${questions.length}`;
     }
 
+    // Init
     showQuestion();
+    document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${questions.length}`;
   </script>
 </body>
 </html>
-
