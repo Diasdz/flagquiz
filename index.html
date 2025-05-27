@@ -1,1 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flag Quiz</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fff7f0, #e0f7fa);
+      color: #3b3054;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      color: #3b3054;
+      margin-bottom: 10px;
+    }
+
+    .quiz-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 30px 25px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .choices label {
+      background: #e0f7fa;
+      padding: 14px 16px;
+      border-radius: 12px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.06);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .choices label:hover {
+      background: #b2ebf2;
+    }
+
+    .choices input[type="radio"] {
+      margin-right: 8px;
+    }
+
+    .correct {
+      background-color: #d4edda !important;
+      border: 2px solid #28a745;
+      color: #155724;
+    }
+
+    .incorrect {
+      background-color: #f8d7da !important;
+      border: 2px solid #dc3545;
+      color: #721c24;
+    }
+
+    .feedback {
+      font-weight: bold;
+      margin-top: 15px;
+      text-align: center;
+    }
+
+    .btn {
+      background-color: #ff6b6b;
+      color: white;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 30px auto 0;
+      display: block;
+      font-size: 1em;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      transition: background 0.3s ease, transform 0.1s ease;
+    }
+
+    .btn:hover {
+      background-color: #ff4757;
+      transform: translateY(-2px);
+    }
+
+    .result {
+      text-align: center;
+      font-size: 1.4em;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Flag Quiz</h1>
+
+  <div class="quiz-card" id="quizContainer"></div>
+  <div class="result" id="result"></div>
+
+  <script>
+    const questions = [
+      { flag: "fr", choices: ["France", "Italy", "Netherlands", "Russia"], answer: 0 },
+      { flag: "jp", choices: ["China", "Japan", "South Korea", "Thailand"], answer: 1 },
+      { flag: "de", choices: ["Belgium", "Germany", "Austria", "Sweden"], answer: 1 },
+      { flag: "br", choices: ["Brazil", "Mexico", "Colombia", "Argentina"], answer: 0 },
+      { flag: "ng", choices: ["Ghana", "Kenya", "Nigeria", "Cameroon"], answer: 2 },
+      { flag: "in", choices: ["India", "Pakistan", "Bangladesh", "Sri Lanka"], answer: 0 },
+      { flag: "ca", choices: ["USA", "Canada", "UK", "Australia"], answer: 1 },
+      { flag: "it", choices: ["Ireland", "Italy", "Portugal", "Hungary"], answer: 1 },
+      { flag: "cn", choices: ["Japan", "Vietnam", "North Korea", "China"], answer: 3 },
+      { flag: "za", choices: ["Zimbabwe", "South Africa", "Namibia", "Botswana"], answer: 1 }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selected = null;
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      const container = document.getElementById("quizContainer");
+      container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <p><strong>Question ${currentQuestion + 1} / ${questions.length}</strong></p>
+          <p><strong>Score: ${score}</strong></p>
+        </div>
+        <img src="https://flagcdn.com/w320/${q.flag}.png" alt="Flag" style="width: 200px; height: auto; margin: 15px auto; display: block; border-radius: 12px;" />
+        <div class="choices">
+          ${q.choices.map((choice, i) =>
+            `<label><input type="radio" name="choice" value="${i}"> ${choice}</label>`
+          ).join("")}
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
+      `;
+
+      selected = null;
+      document.querySelectorAll('input[name="choice"]').forEach(input => {
+        input.addEventListener('change', (e) => {
+          selected = parseInt(e.target.value);
+          validateAnswer();
+        });
+      });
+
+      document.addEventListener("keydown", handleEnter);
+    }
+
+    function validateAnswer() {
+      const correct = questions[currentQuestion].answer;
+      const feedback = document.getElementById("feedback");
+
+      const labels = document.querySelectorAll(".choices label");
+      labels.forEach((label, index) => {
+        const input = label.querySelector("input");
+        input.disabled = true;
+
+        if (index === correct) {
+          label.classList.add("correct");
+        } else if (index === selected) {
+          label.classList.add("incorrect");
+        }
+      });
+
+      if (selected === correct) {
+        score++;
+        feedback.innerHTML = "✅ Correct!";
+      } else {
+        feedback.innerHTML = `❌ Wrong. The correct answer is <strong>${questions[currentQuestion].choices[correct]}</strong>`;
+      }
+
+      document.getElementById("nextBtn").disabled = false;
+    }
+
+    function handleEnter(event) {
+      if (event.key === "Enter" && !document.getElementById("nextBtn").disabled) {
+        nextQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      document.removeEventListener("keydown", handleEnter);
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("quizContainer").innerHTML = "";
+      document.getElementById("result").innerHTML = `
+        🎉 Quiz completed!<br>
+        Your final score is <strong>${score} / ${questions.length}</strong><br><br>
+        <button class="btn" onclick="restartQuiz()">Restart Quiz</button>
+      `;
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      selected = null;
+      document.getElementById("result").innerHTML = "";
+      showQuestion();
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
 
