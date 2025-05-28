@@ -162,144 +162,216 @@
   <div id="bestScoreBox">🏆 Best Score: <strong id="bestScoreDisplay"></strong></div>
   <div class="result" id="result"></div>
 
-  <script>
-    const allQuestions = [
-      { flag: "fr", choices: ["France", "Italy", "Netherlands", "Belgium"], answer: 0 },
-      { flag: "de", choices: ["Germany", "Austria", "Belgium", "Switzerland"], answer: 0 },
-      { flag: "jp", choices: ["China", "Japan", "South Korea", "Vietnam"], answer: 1 },
-      { flag: "us", choices: ["USA", "Canada", "Australia", "UK"], answer: 0 },
-      { flag: "gb", choices: ["Ireland", "Scotland", "UK", "England"], answer: 2 },
-      { flag: "it", choices: ["Italy", "Mexico", "Hungary", "Iran"], answer: 0 },
-      { flag: "ca", choices: ["USA", "Canada", "UK", "France"], answer: 1 },
-      { flag: "es", choices: ["Portugal", "Spain", "Mexico", "Brazil"], answer: 1 },
-      { flag: "br", choices: ["Argentina", "Brazil", "Colombia", "Peru"], answer: 1 },
-      { flag: "cn", choices: ["Japan", "South Korea", "China", "Vietnam"], answer: 2 },
-      { flag: "ru", choices: ["Russia", "Slovakia", "Slovenia", "Serbia"], answer: 0 },
-      { flag: "au", choices: ["New Zealand", "Australia", "UK", "Fiji"], answer: 1 },
-      { flag: "kr", choices: ["South Korea", "North Korea", "Japan", "China"], answer: 0 },
-      { flag: "mx", choices: ["Mexico", "Italy", "Portugal", "Spain"], answer: 0 },
-      { flag: "ar", choices: ["Brazil", "Argentina", "Uruguay", "Chile"], answer: 1 },
-      { flag: "se", choices: ["Sweden", "Norway", "Finland", "Denmark"], answer: 0 },
-      { flag: "no", choices: ["Norway", "Sweden", "Finland", "Iceland"], answer: 0 },
-      { flag: "fi", choices: ["Finland", "Sweden", "Norway", "Denmark"], answer: 0 },
-      { flag: "dk", choices: ["Norway", "Denmark", "Sweden", "Germany"], answer: 1 },
-      { flag: "nl", choices: ["Belgium", "Netherlands", "France", "Germany"], answer: 1 },
-      { flag: "be", choices: ["Germany", "Netherlands", "Belgium", "France"], answer: 2 },
-      { flag: "ch", choices: ["Switzerland", "Austria", "Germany", "France"], answer: 0 },
-      { flag: "pl", choices: ["Poland", "Czechia", "Slovakia", "Austria"], answer: 0 },
-      { flag: "gr", choices: ["Greece", "Italy", "Cyprus", "Turkey"], answer: 0 },
-      { flag: "pt", choices: ["Spain", "Portugal", "Brazil", "Italy"], answer: 1 },
-      { flag: "at", choices: ["Austria", "Germany", "Switzerland", "Slovenia"], answer: 0 },
-      { flag: "ua", choices: ["Ukraine", "Russia", "Poland", "Belarus"], answer: 0 },
-      { flag: "hu", choices: ["Hungary", "Italy", "Bulgaria", "Romania"], answer: 0 },
-      { flag: "ro", choices: ["Romania", "Moldova", "Hungary", "Serbia"], answer: 0 },
-      { flag: "bg", choices: ["Bulgaria", "Hungary", "Romania", "Croatia"], answer: 0 },
-      // 70 autres questions (jusqu'à 96)
-      { flag: "dz", choices: ["Algeria", "Tunisia", "Morocco", "Libya"], answer: 0 },
-      { flag: "mg", choices: ["Madagascar", "Mozambique", "Mauritius", "Seychelles"], answer: 0 },
-      { flag: "cm", choices: ["Cameroon", "Chad", "Nigeria", "Gabon"], answer: 0 },
-      { flag: "sn", choices: ["Senegal", "Gambia", "Guinea", "Ivory Coast"], answer: 0 }
-    ];
+<script>
+  const allQuestions = [
+    { flag: "fr", choices: ["France", "Italy", "Netherlands", "Belgium"], answer: 0 },
+    { flag: "de", choices: ["Germany", "Austria", "Belgium", "Switzerland"], answer: 0 },
+    { flag: "jp", choices: ["China", "Japan", "South Korea", "Vietnam"], answer: 1 },
+    { flag: "us", choices: ["USA", "Canada", "Australia", "UK"], answer: 0 },
+    { flag: "gb", choices: ["Ireland", "Scotland", "UK", "England"], answer: 2 },
+    { flag: "it", choices: ["Italy", "Mexico", "Hungary", "Iran"], answer: 0 },
+    { flag: "ca", choices: ["USA", "Canada", "UK", "France"], answer: 1 },
+    { flag: "es", choices: ["Portugal", "Spain", "Mexico", "Brazil"], answer: 1 },
+    { flag: "br", choices: ["Argentina", "Brazil", "Colombia", "Peru"], answer: 1 },
+    { flag: "cn", choices: ["Japan", "South Korea", "China", "Vietnam"], answer: 2 },
+    { flag: "ru", choices: ["Russia", "Slovakia", "Slovenia", "Serbia"], answer: 0 },
+    { flag: "au", choices: ["New Zealand", "Australia", "UK", "Fiji"], answer: 1 },
+    { flag: "kr", choices: ["South Korea", "North Korea", "Japan", "China"], answer: 0 },
+    { flag: "mx", choices: ["Mexico", "Italy", "Portugal", "Spain"], answer: 0 },
+    { flag: "ar", choices: ["Brazil", "Argentina", "Uruguay", "Chile"], answer: 1 },
+    { flag: "se", choices: ["Sweden", "Norway", "Finland", "Denmark"], answer: 0 },
+    { flag: "no", choices: ["Norway", "Sweden", "Finland", "Iceland"], answer: 0 },
+    { flag: "fi", choices: ["Finland", "Sweden", "Norway", "Denmark"], answer: 0 },
+    { flag: "dk", choices: ["Norway", "Denmark", "Sweden", "Germany"], answer: 1 },
+    { flag: "nl", choices: ["Belgium", "Netherlands", "France", "Germany"], answer: 1 },
+    { flag: "be", choices: ["Germany", "Netherlands", "Belgium", "France"], answer: 2 },
+    { flag: "ch", choices: ["Switzerland", "Austria", "Germany", "France"], answer: 0 },
+    { flag: "pl", choices: ["Poland", "Czechia", "Slovakia", "Austria"], answer: 0 },
+    { flag: "gr", choices: ["Greece", "Italy", "Cyprus", "Turkey"], answer: 0 },
+    { flag: "pt", choices: ["Spain", "Portugal", "Brazil", "Italy"], answer: 1 },
+    { flag: "at", choices: ["Austria", "Germany", "Switzerland", "Slovenia"], answer: 0 },
+    { flag: "ua", choices: ["Ukraine", "Russia", "Poland", "Belarus"], answer: 0 },
+    { flag: "hu", choices: ["Hungary", "Italy", "Bulgaria", "Romania"], answer: 0 },
+    { flag: "ro", choices: ["Romania", "Moldova", "Hungary", "Serbia"], answer: 0 },
+    { flag: "bg", choices: ["Bulgaria", "Hungary", "Romania", "Croatia"], answer: 0 },
+    { flag: "cz", choices: ["Slovakia", "Czech Republic", "Slovenia", "Croatia"], answer: 1 },
+    { flag: "sk", choices: ["Slovakia", "Slovenia", "Czechia", "Hungary"], answer: 0 },
+    { flag: "ie", choices: ["Ireland", "UK", "Italy", "Germany"], answer: 0 },
+    { flag: "is", choices: ["Iceland", "Finland", "Norway", "Greenland"], answer: 0 },
+    { flag: "tr", choices: ["Turkey", "Tunisia", "Pakistan", "Iran"], answer: 0 },
+    { flag: "in", choices: ["Pakistan", "India", "Bangladesh", "Sri Lanka"], answer: 1 },
+    { flag: "pk", choices: ["India", "Pakistan", "Iran", "Afghanistan"], answer: 1 },
+    { flag: "bd", choices: ["Bangladesh", "India", "Pakistan", "Nepal"], answer: 0 },
+    { flag: "np", choices: ["Nepal", "Bhutan", "India", "Sri Lanka"], answer: 0 },
+    { flag: "lk", choices: ["India", "Sri Lanka", "Maldives", "Thailand"], answer: 1 },
+    { flag: "my", choices: ["Malaysia", "Indonesia", "Thailand", "Vietnam"], answer: 0 },
+    { flag: "sg", choices: ["Singapore", "Malaysia", "Brunei", "Thailand"], answer: 0 },
+    { flag: "id", choices: ["Indonesia", "Malaysia", "Thailand", "Philippines"], answer: 0 },
+    { flag: "ph", choices: ["Philippines", "Indonesia", "Vietnam", "Malaysia"], answer: 0 },
+    { flag: "vn", choices: ["Vietnam", "Laos", "Cambodia", "Thailand"], answer: 0 },
+    { flag: "th", choices: ["Thailand", "Vietnam", "Cambodia", "Malaysia"], answer: 0 },
+    { flag: "kz", choices: ["Kazakhstan", "Uzbekistan", "Mongolia", "Russia"], answer: 0 },
+    { flag: "sa", choices: ["Saudi Arabia", "Iran", "Iraq", "UAE"], answer: 0 },
+    { flag: "ir", choices: ["Iraq", "Iran", "Syria", "Lebanon"], answer: 1 },
+    { flag: "iq", choices: ["Iran", "Iraq", "Kuwait", "Syria"], answer: 1 },
+    { flag: "ae", choices: ["UAE", "Saudi Arabia", "Qatar", "Oman"], answer: 0 },
+    { flag: "qa", choices: ["Qatar", "Bahrain", "Kuwait", "UAE"], answer: 0 },
+    { flag: "jo", choices: ["Jordan", "Israel", "Palestine", "Lebanon"], answer: 0 },
+    { flag: "il", choices: ["Israel", "Jordan", "Lebanon", "Syria"], answer: 0 },
+    { flag: "eg", choices: ["Egypt", "Libya", "Sudan", "Tunisia"], answer: 0 },
+    { flag: "dz", choices: ["Algeria", "Morocco", "Tunisia", "Egypt"], answer: 0 },
+    { flag: "ma", choices: ["Morocco", "Algeria", "Tunisia", "Libya"], answer: 0 },
+    { flag: "tn", choices: ["Tunisia", "Algeria", "Libya", "Morocco"], answer: 0 },
+    { flag: "et", choices: ["Ethiopia", "Eritrea", "Kenya", "Somalia"], answer: 0 },
+    { flag: "ke", choices: ["Kenya", "Tanzania", "Uganda", "Rwanda"], answer: 0 },
+    { flag: "ng", choices: ["Nigeria", "Niger", "Ghana", "Cameroon"], answer: 0 },
+    { flag: "gh", choices: ["Ghana", "Nigeria", "Togo", "Benin"], answer: 0 },
+    { flag: "za", choices: ["South Africa", "Namibia", "Botswana", "Zimbabwe"], answer: 0 },
+    { flag: "tz", choices: ["Tanzania", "Kenya", "Rwanda", "Burundi"], answer: 0 },
+    { flag: "zw", choices: ["Zimbabwe", "Zambia", "Malawi", "Namibia"], answer: 0 },
+    { flag: "zm", choices: ["Zambia", "Zimbabwe", "Malawi", "Tanzania"], answer: 0 },
+    { flag: "mw", choices: ["Malawi", "Zambia", "Mozambique", "Tanzania"], answer: 0 },
+    { flag: "mu", choices: ["Mauritius", "Madagascar", "Seychelles", "Comoros"], answer: 0 },
+    { flag: "mg", choices: ["Madagascar", "Mozambique", "Mauritius", "Kenya"], answer: 0 },
+    { flag: "na", choices: ["Namibia", "Botswana", "Angola", "South Africa"], answer: 0 },
+    { flag: "cm", choices: ["Cameroon", "Nigeria", "Chad", "Gabon"], answer: 0 },
+    { flag: "sn", choices: ["Senegal", "Gambia", "Guinea", "Ivory Coast"], answer: 0 },
+    { flag: "pe", choices: ["Peru", "Ecuador", "Colombia", "Chile"], answer: 0 },
+    { flag: "cl", choices: ["Chile", "Argentina", "Uruguay", "Paraguay"], answer: 0 },
+    { flag: "ec", choices: ["Ecuador", "Peru", "Colombia", "Bolivia"], answer: 0 },
+    { flag: "ve", choices: ["Venezuela", "Colombia", "Ecuador", "Bolivia"], answer: 0 },
+    { flag: "bo", choices: ["Bolivia", "Peru", "Ecuador", "Paraguay"], answer: 0 }
+  ];
+  let questions = [...allQuestions];
+  let currentQuestion = 0;
+  let score = 0;
+  let selected = null;
 
-    let questions = [...allQuestions].sort(() => Math.random() - 0.5);
-    let currentQuestion = 0;
-    let score = 0;
+  function updateProgressBar() {
+    const bar = document.querySelector(".progress-bar");
+    const percent = (currentQuestion / questions.length) * 100;
+    bar.style.width = `${percent}%`;
+  }
 
-    function showQuestion() {
-      const q = questions[currentQuestion];
-      const container = document.getElementById("quizContainer");
-      const progress = Math.round((currentQuestion / questions.length) * 100);
+  function showQuestion() {
+    const q = questions[currentQuestion];
+    const container = document.getElementById("quizContainer");
 
-      container.innerHTML = `
-        <div class="progress-bar-container">
-          <div class="progress-bar" style="width: ${progress}%;"></div>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <p><strong>Question ${currentQuestion + 1} / ${questions.length}</strong></p>
-          <p><strong>Score: ${score}</strong></p>
-        </div>
-        <img src="https://flagcdn.com/w320/${q.flag}.png" alt="Flag" style="width: 200px; margin: 15px auto; display: block; border-radius: 12px;" />
-        <div class="choices">
-          ${q.choices.map((choice, i) =>
-            `<label><input type="radio" name="choice" value="${i}"> ${choice}</label>`
-          ).join("")}
-        </div>
-        <div class="feedback" id="feedback"></div>
-        <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
-      `;
+    container.innerHTML = `
+      <div class="progress-bar-container"><div class="progress-bar"></div></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <p><strong>Question ${currentQuestion + 1} / ${questions.length}</strong></p>
+        <p><strong>Score: ${score}</strong></p>
+      </div>
+      <div style="text-align:center">
+        <img src="https://flagcdn.com/256x192/${q.flag}.png" alt="Flag" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 15px;">
+      </div>
+      <div class="choices">
+        ${q.choices.map((choice, i) =>
+          `<label><input type="radio" name="choice" value="${i}"> ${choice}</label>`
+        ).join("")}
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Next</button>
+    `;
 
-      document.querySelectorAll('input[name="choice"]').forEach(input => {
-        input.addEventListener('change', e => validateAnswer(parseInt(e.target.value)));
+    updateProgressBar();
+    selected = null;
+
+    document.querySelectorAll('input[name="choice"]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        selected = parseInt(e.target.value);
+        validateAnswer();
       });
+    });
 
-      document.addEventListener("keydown", handleEnter);
+    document.addEventListener("keydown", handleEnter);
+  }
+
+  function validateAnswer() {
+    const correct = questions[currentQuestion].answer;
+    const feedback = document.getElementById("feedback");
+
+    const labels = document.querySelectorAll(".choices label");
+    labels.forEach((label, index) => {
+      const input = label.querySelector("input");
+      input.disabled = true;
+
+      if (index === correct) {
+        label.classList.add("correct");
+      } else if (index === selected) {
+        label.classList.add("incorrect");
+      }
+    });
+
+    if (selected === correct) {
+      score++;
+      feedback.innerHTML = "✅ Correct!";
+    } else {
+      feedback.innerHTML = `❌ Wrong! The correct answer is <strong>${questions[currentQuestion].choices[correct]}</strong>`;
     }
 
-    function validateAnswer(selected) {
-      const correct = questions[currentQuestion].answer;
-      const feedback = document.getElementById("feedback");
+    document.getElementById("nextBtn").disabled = false;
+  }
 
-      const labels = document.querySelectorAll(".choices label");
-      labels.forEach((label, index) => {
-        const input = label.querySelector("input");
-        input.disabled = true;
-        if (index === correct) label.classList.add("correct");
-        else if (index === selected) label.classList.add("incorrect");
-      });
-
-      score += selected === correct ? 1 : 0;
-      feedback.innerHTML = selected === correct ? "✅ Correct!" : `❌ Wrong. The correct answer is <strong>${questions[currentQuestion].choices[correct]}</strong>`;
-      document.getElementById("nextBtn").disabled = false;
+  function handleEnter(event) {
+    if (event.key === "Enter" && !document.getElementById("nextBtn").disabled) {
+      nextQuestion();
     }
+  }
 
-    function handleEnter(e) {
-      if (e.key === "Enter" && !document.getElementById("nextBtn").disabled) nextQuestion();
-    }
-
-    function nextQuestion() {
-      document.removeEventListener("keydown", handleEnter);
-      currentQuestion++;
-      if (currentQuestion < questions.length) showQuestion();
-      else showResult();
-    }
-
-    function saveBestScore(current) {
-      const best = localStorage.getItem("flagBestScore") || 0;
-      if (current > best) localStorage.setItem("flagBestScore", current);
-    }
-
-    function getBestScore() {
-      return localStorage.getItem("flagBestScore") || 0;
-    }
-
-    function showResult() {
-      saveBestScore(score);
-      const best = getBestScore();
-      document.getElementById("quizContainer").innerHTML = "";
-      document.getElementById("result").innerHTML = `
-        🎉 Quiz completed!<br>
-        Your final score is <strong>${score} / ${questions.length}</strong><br>
-        🏆 Best score: <strong>${best} / ${questions.length}</strong><br><br>
-        <button class="btn" onclick="restartQuiz()">Restart Quiz</button>
-      `;
-    }
-
-    function restartQuiz() {
-      currentQuestion = 0;
-      score = 0;
-      questions = [...allQuestions].sort(() => Math.random() - 0.5);
-      document.getElementById("result").innerHTML = "";
+  function nextQuestion() {
+    document.removeEventListener("keydown", handleEnter);
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
       showQuestion();
-      document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${questions.length}`;
+    } else {
+      showResult();
     }
+  }
 
-    document.getElementById("toggleMode").onclick = () => {
-      document.body.classList.toggle("dark");
-      toggleMode.textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
-    };
+  function saveBestScore(current) {
+    const best = localStorage.getItem("bestFlagScore") || 0;
+    if (current > best) {
+      localStorage.setItem("bestFlagScore", current);
+    }
+  }
 
+  function getBestScore() {
+    return localStorage.getItem("bestFlagScore") || 0;
+  }
+
+  function showResult() {
+    saveBestScore(score);
+    const best = getBestScore();
+
+    document.getElementById("quizContainer").innerHTML = "";
+    document.getElementById("result").innerHTML = `
+      🎉 Quiz completed!<br>
+      Final score: <strong>${score} / ${questions.length}</strong><br>
+      🏆 Best score: <strong>${best} / ${questions.length}</strong><br><br>
+      <button class="btn" onclick="restartQuiz()">Restart</button>
+    `;
+  }
+
+  function restartQuiz() {
+    currentQuestion = 0;
+    score = 0;
+    selected = null;
+    document.getElementById("result").innerHTML = "";
     showQuestion();
     document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${questions.length}`;
-  </script>
+  }
+
+  // Dark Mode Toggle
+  document.getElementById("toggleMode").addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    document.getElementById("toggleMode").textContent =
+      document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
+  });
+
+  showQuestion();
+  document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${questions.length}`;
+</script>
 </body>
 </html>
