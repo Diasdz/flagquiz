@@ -289,3 +289,120 @@ const allQuestions = [
     answer: 0
   }
 ];
+let currentQuestion = 0;
+let score = 0;
+let selected = null;
+
+function showQuestion() {
+  const q = allQuestions[currentQuestion];
+  const container = document.getElementById("quizContainer");
+  const progress = ((currentQuestion + 1) / allQuestions.length) * 100;
+
+  container.innerHTML = `
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+      <p><strong>Question ${currentQuestion + 1} / ${allQuestions.length}</strong></p>
+      <p><strong>Score: ${score}</strong></p>
+    </div>
+    <div style="text-align:center; margin-bottom:15px;">
+      <img src="${q.flag}" alt="Flag" style="width:160px; height:120px; object-fit:contain; border-radius:12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+    </div>
+    <div class="progress-bar" style="width: 100%; background: #eee; height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 15px;">
+      <div style="width: ${progress}%; height: 100%; background: #00bcd4;"></div>
+    </div>
+    <div class="choices">
+      ${q.choices.map((choice, i) =>
+        `<label><input type="radio" name="choice" value="${i}"> ${choice}</label>`
+      ).join("")}
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
+  `;
+
+  selected = null;
+  document.querySelectorAll('input[name="choice"]').forEach(input => {
+    input.addEventListener('change', (e) => {
+      selected = parseInt(e.target.value);
+      validateAnswer();
+    });
+  });
+
+  document.addEventListener("keydown", handleEnter);
+}
+
+function validateAnswer() {
+  const correct = allQuestions[currentQuestion].answer;
+  const feedback = document.getElementById("feedback");
+
+  const labels = document.querySelectorAll(".choices label");
+  labels.forEach((label, index) => {
+    const input = label.querySelector("input");
+    input.disabled = true;
+
+    if (index === correct) {
+      label.classList.add("correct");
+    } else if (index === selected) {
+      label.classList.add("incorrect");
+    }
+  });
+
+  if (selected === correct) {
+    score++;
+    feedback.innerHTML = "✅ Correct!";
+  } else {
+    feedback.innerHTML = `❌ Wrong. The correct answer is <strong>${allQuestions[currentQuestion].choices[correct]}</strong>`;
+  }
+
+  document.getElementById("nextBtn").disabled = false;
+}
+
+function handleEnter(event) {
+  if (event.key === "Enter" && !document.getElementById("nextBtn").disabled) {
+    nextQuestion();
+  }
+}
+
+function nextQuestion() {
+  document.removeEventListener("keydown", handleEnter);
+  currentQuestion++;
+  if (currentQuestion < allQuestions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function saveBestScore(current) {
+  const best = localStorage.getItem("bestScore") || 0;
+  if (current > best) {
+    localStorage.setItem("bestScore", current);
+  }
+}
+
+function getBestScore() {
+  return localStorage.getItem("bestScore") || 0;
+}
+
+function showResult() {
+  saveBestScore(score);
+  const best = getBestScore();
+
+  document.getElementById("quizContainer").innerHTML = "";
+  document.getElementById("result").innerHTML = `
+    🎉 Quiz finished!<br>
+    Your final score is <strong>${score} / ${allQuestions.length}</strong><br>
+    🏆 Best score: <strong>${best} / ${allQuestions.length}</strong><br><br>
+    <button class="btn" onclick="restartQuiz()">Restart Quiz</button>
+  `;
+}
+
+function restartQuiz() {
+  currentQuestion = 0;
+  score = 0;
+  selected = null;
+  document.getElementById("result").innerHTML = "";
+  showQuestion();
+  document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${allQuestions.length}`;
+}
+
+showQuestion();
+document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${allQuestions.length}`;
