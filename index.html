@@ -5,101 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Flag Quiz</title>
   <style>
-    :root {
-      --bg: #f8f9fa;
-      --text: #333;
-      --card-bg: #ffffff;
-      --label-bg: #e3f2fd;
-      --label-hover: #bbdefb;
-      --accent: #e91e63;
-      --progress-bg: #ddd;
-      --progress-fill: #2196f3;
-    }
-    body.dark {
-      --bg: #121212;
-      --text: #eee;
-      --card-bg: #1e1e1e;
-      --label-bg: #333;
-      --label-hover: #444;
-      --accent: #f06292;
-      --progress-bg: #444;
-      --progress-fill: #64b5f6;
-    }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: linear-gradient(to right, #fff7f0, #e0f7fa);
+      color: #3b3054;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
     }
     h1 {
-      font-size: 2.2em;
+      font-size: 2.4em;
+      color: #3b3054;
       margin-bottom: 10px;
     }
     .quiz-card {
-      background: var(--card-bg);
-      border-radius: 16px;
+      background: #ffffff;
+      border-radius: 20px;
       padding: 30px 25px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
       max-width: 600px;
       width: 100%;
-    }
-    .progress-container {
-      width: 100%;
-      background: var(--progress-bg);
-      border-radius: 8px;
-      height: 12px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%;
-      background-color: var(--progress-fill);
-      width: 0%;
-      transition: width 0.3s ease;
     }
     .choices {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
+      gap: 16px;
       margin-top: 20px;
     }
     .choices label {
-      background: var(--label-bg);
-      padding: 12px 14px;
-      border-radius: 10px;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
+      background: #e0f7fa;
+      padding: 14px 16px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
       display: flex;
       align-items: center;
     }
-    .choices label:hover {
-      background: var(--label-hover);
-    }
-    .choices input[type="radio"] {
-      margin-right: 8px;
-    }
-    .flag-img {
-      width: 160px;
-      height: 120px;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto 12px;
-      border-radius: 6px;
-    }
+    .choices label:hover { background: #b2ebf2; }
+    .choices input[type="radio"] { margin-right: 8px; }
     .correct {
-      background-color: #c8e6c9 !important;
-      border: 2px solid #388e3c;
-      color: #2e7d32;
+      background-color: #d4edda !important;
+      border: 2px solid #28a745;
+      color: #155724;
     }
     .incorrect {
-      background-color: #ffcdd2 !important;
-      border: 2px solid #c62828;
-      color: #b71c1c;
+      background-color: #f8d7da !important;
+      border: 2px solid #dc3545;
+      color: #721c24;
     }
     .feedback {
       font-weight: bold;
@@ -107,22 +61,17 @@
       text-align: center;
     }
     .btn {
-      background-color: var(--accent);
+      background-color: #ff6b6b;
       color: white;
-      padding: 12px 22px;
+      padding: 14px 24px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
       margin: 30px auto 0;
       display: block;
       font-size: 1em;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-      transition: background 0.3s ease, transform 0.1s ease;
     }
-    .btn:hover {
-      background-color: #d81b60;
-      transform: translateY(-2px);
-    }
+    .btn:hover { background-color: #ff4757; }
     .result {
       text-align: center;
       font-size: 1.4em;
@@ -130,279 +79,160 @@
       margin-top: 30px;
     }
     #bestScoreDisplayBox {
-      margin-top: 24px;
+      margin-top: 30px;
+      font-weight: 500;
       font-size: 1rem;
       text-align: center;
     }
-    #toggleMode {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      background: var(--label-bg);
-      color: var(--text);
-      cursor: pointer;
-      border: 1px solid #ccc;
-    }
     @media (max-width: 600px) {
-      .choices {
-        grid-template-columns: 1fr;
-      }
-      .quiz-card {
-        padding: 20px;
-      }
+      .choices { grid-template-columns: 1fr; }
+      .quiz-card { padding: 20px; }
+      .btn { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <h1>Flag Quiz</h1>
-  <button id="toggleMode">🌙 Dark Mode</button>
+  <h1>🌍 Flag Quiz</h1>
+
   <div class="quiz-card" id="quizContainer"></div>
-  <div id="bestScoreDisplayBox">🏆 Best Score: <strong id="bestScoreDisplay"></strong></div>
+  <div id="bestScoreDisplayBox">🏅 Best Score: <strong id="bestScoreDisplay"></strong></div>
   <div class="result" id="result"></div>
+
   <script>
-const allQuestions = [
-  {
-    flag: "https://flagcdn.com/w320/fr.png",
-    choices: ["France", "Italy", "Netherlands", "Croatia"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/de.png",
-    choices: ["Belgium", "Germany", "Austria", "Poland"],
-    answer: 1
-  },
-  {
-    flag: "https://flagcdn.com/w320/jp.png",
-    choices: ["Japan", "South Korea", "China", "Vietnam"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/br.png",
-    choices: ["Brazil", "Argentina", "Mexico", "Colombia"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/it.png",
-    choices: ["Ireland", "Italy", "Mexico", "Hungary"],
-    answer: 1
-  },
-  {
-    flag: "https://flagcdn.com/w320/ca.png",
-    choices: ["Austria", "Switzerland", "Canada", "Denmark"],
-    answer: 2
-  },
-  {
-    flag: "https://flagcdn.com/w320/gb.png",
-    choices: ["United Kingdom", "Australia", "New Zealand", "USA"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/au.png",
-    choices: ["Australia", "UK", "New Zealand", "South Africa"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/es.png",
-    choices: ["Portugal", "Spain", "Colombia", "Peru"],
-    answer: 1
-  },
-  {
-    flag: "https://flagcdn.com/w320/in.png",
-    choices: ["India", "Pakistan", "Bangladesh", "Nepal"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/ru.png",
-    choices: ["Russia", "Slovakia", "Czech Republic", "Serbia"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/mx.png",
-    choices: ["Mexico", "Spain", "Italy", "Guatemala"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/cn.png",
-    choices: ["China", "Vietnam", "Taiwan", "Japan"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/kr.png",
-    choices: ["South Korea", "Japan", "North Korea", "China"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/za.png",
-    choices: ["South Africa", "Kenya", "Namibia", "Zimbabwe"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/ke.png",
-    choices: ["Kenya", "Tanzania", "Ethiopia", "Ghana"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/ng.png",
-    choices: ["Nigeria", "Niger", "Ivory Coast", "Gabon"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/eg.png",
-    choices: ["Morocco", "Tunisia", "Egypt", "Algeria"],
-    answer: 2
-  },
-  {
-    flag: "https://flagcdn.com/w320/ar.png",
-    choices: ["Argentina", "Uruguay", "Paraguay", "Chile"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/cl.png",
-    choices: ["Chile", "Cuba", "Panama", "Costa Rica"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/tr.png",
-    choices: ["Turkey", "Tunisia", "Morocco", "Pakistan"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/sa.png",
-    choices: ["Iran", "Saudi Arabia", "Iraq", "Pakistan"],
-    answer: 1
-  },
-  {
-    flag: "https://flagcdn.com/w320/ir.png",
-    choices: ["Iran", "Iraq", "Afghanistan", "Pakistan"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/th.png",
-    choices: ["Thailand", "Cambodia", "Malaysia", "Indonesia"],
-    answer: 0
-  },
-  {
-    flag: "https://flagcdn.com/w320/id.png",
-    choices: ["Indonesia", "Poland", "Singapore", "Philippines"],
-    answer: 0
-  }
-];
-let currentQuestion = 0;
-let score = 0;
-let selected = null;
-
-function showQuestion() {
-  const q = allQuestions[currentQuestion];
-  const container = document.getElementById("quizContainer");
-  const progress = ((currentQuestion + 1) / allQuestions.length) * 100;
-
-  container.innerHTML = `
-    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-      <p><strong>Question ${currentQuestion + 1} / ${allQuestions.length}</strong></p>
-      <p><strong>Score: ${score}</strong></p>
-    </div>
-    <div style="text-align:center; margin-bottom:15px;">
-      <img src="${q.flag}" alt="Flag" style="width:160px; height:120px; object-fit:contain; border-radius:12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
-    </div>
-    <div class="progress-bar" style="width: 100%; background: #eee; height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 15px;">
-      <div style="width: ${progress}%; height: 100%; background: #00bcd4;"></div>
-    </div>
-    <div class="choices">
-      ${q.choices.map((choice, i) =>
-        `<label><input type="radio" name="choice" value="${i}"> ${choice}</label>`
-      ).join("")}
-    </div>
-    <div class="feedback" id="feedback"></div>
-    <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
-  `;
-
-  selected = null;
-  document.querySelectorAll('input[name="choice"]').forEach(input => {
-    input.addEventListener('change', (e) => {
-      selected = parseInt(e.target.value);
-      validateAnswer();
+    const questions = [...Array(100).keys()].map(i => {
+      const countries = [
+        ["France", "https://flagcdn.com/w320/fr.png"],
+        ["Germany", "https://flagcdn.com/w320/de.png"],
+        ["Brazil", "https://flagcdn.com/w320/br.png"],
+        ["Canada", "https://flagcdn.com/w320/ca.png"],
+        ["Japan", "https://flagcdn.com/w320/jp.png"],
+        ["Italy", "https://flagcdn.com/w320/it.png"],
+        ["India", "https://flagcdn.com/w320/in.png"],
+        ["Russia", "https://flagcdn.com/w320/ru.png"],
+        ["Australia", "https://flagcdn.com/w320/au.png"],
+        ["United Kingdom", "https://flagcdn.com/w320/gb.png"]
+      ];
+      const correct = countries[i % countries.length];
+      const choices = [...countries];
+      const shuffled = choices.sort(() => 0.5 - Math.random()).slice(0, 4);
+      if (!shuffled.includes(correct)) shuffled[0] = correct;
+      return {
+        question: `<img src="${correct[1]}" alt="Flag" style="max-width: 100%; height: 100px; object-fit: contain;">`,
+        choices: shuffled.map(c => c[0]),
+        answer: shuffled.findIndex(c => c[0] === correct[0])
+      };
     });
-  });
 
-  document.addEventListener("keydown", handleEnter);
-}
+    let currentQuestion = 0;
+    let score = 0;
+    let selected = null;
 
-function validateAnswer() {
-  const correct = allQuestions[currentQuestion].answer;
-  const feedback = document.getElementById("feedback");
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      const container = document.getElementById("quizContainer");
+      container.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <p><strong>Question ${currentQuestion + 1} / ${questions.length}</strong></p>
+          <p><strong>Score: ${score}</strong></p>
+        </div>
+        <p>${q.question}</p>
+        <div class="choices">
+          ${q.choices.map((choice, i) =>
+            `<label><input type="radio" name="choice" value="${i}"> ${choice}</label>`
+          ).join("")}
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
+      `;
 
-  const labels = document.querySelectorAll(".choices label");
-  labels.forEach((label, index) => {
-    const input = label.querySelector("input");
-    input.disabled = true;
+      selected = null;
+      document.querySelectorAll('input[name="choice"]').forEach(input => {
+        input.addEventListener('change', (e) => {
+          selected = parseInt(e.target.value);
+          validateAnswer();
+        });
+      });
 
-    if (index === correct) {
-      label.classList.add("correct");
-    } else if (index === selected) {
-      label.classList.add("incorrect");
+      document.addEventListener("keydown", handleEnter);
     }
-  });
 
-  if (selected === correct) {
-    score++;
-    feedback.innerHTML = "✅ Correct!";
-  } else {
-    feedback.innerHTML = `❌ Wrong. The correct answer is <strong>${allQuestions[currentQuestion].choices[correct]}</strong>`;
-  }
+    function validateAnswer() {
+      const correct = questions[currentQuestion].answer;
+      const feedback = document.getElementById("feedback");
 
-  document.getElementById("nextBtn").disabled = false;
-}
+      const labels = document.querySelectorAll(".choices label");
+      labels.forEach((label, index) => {
+        const input = label.querySelector("input");
+        input.disabled = true;
 
-function handleEnter(event) {
-  if (event.key === "Enter" && !document.getElementById("nextBtn").disabled) {
-    nextQuestion();
-  }
-}
+        if (index === correct) {
+          label.classList.add("correct");
+        } else if (index === selected) {
+          label.classList.add("incorrect");
+        }
+      });
 
-function nextQuestion() {
-  document.removeEventListener("keydown", handleEnter);
-  currentQuestion++;
-  if (currentQuestion < allQuestions.length) {
+      if (selected === correct) {
+        score++;
+        feedback.innerHTML = "✅ Correct!";
+      } else {
+        feedback.innerHTML = `❌ Wrong. The correct answer is <strong>${questions[currentQuestion].choices[correct]}</strong>`;
+      }
+
+      document.getElementById("nextBtn").disabled = false;
+    }
+
+    function handleEnter(event) {
+      if (event.key === "Enter" && !document.getElementById("nextBtn").disabled) {
+        nextQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      document.removeEventListener("keydown", handleEnter);
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function saveBestScore(current) {
+      const best = localStorage.getItem("bestScore") || 0;
+      if (current > best) {
+        localStorage.setItem("bestScore", current);
+      }
+    }
+
+    function getBestScore() {
+      return localStorage.getItem("bestScore") || 0;
+    }
+
+    function showResult() {
+      saveBestScore(score);
+      const best = getBestScore();
+
+      document.getElementById("quizContainer").innerHTML = "";
+      document.getElementById("result").innerHTML = `
+        🎉 Quiz finished!<br>
+        Your final score is <strong>${score} / ${questions.length}</strong><br>
+        🏆 Best score: <strong>${best} / ${questions.length}</strong><br><br>
+        <button class="btn" onclick="restartQuiz()">Restart Quiz</button>
+      `;
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      selected = null;
+      document.getElementById("result").innerHTML = "";
+      showQuestion();
+      document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${questions.length}`;
+    }
+
     showQuestion();
-  } else {
-    showResult();
-  }
-}
-
-function saveBestScore(current) {
-  const best = localStorage.getItem("bestScore") || 0;
-  if (current > best) {
-    localStorage.setItem("bestScore", current);
-  }
-}
-
-function getBestScore() {
-  return localStorage.getItem("bestScore") || 0;
-}
-
-function showResult() {
-  saveBestScore(score);
-  const best = getBestScore();
-
-  document.getElementById("quizContainer").innerHTML = "";
-  document.getElementById("result").innerHTML = `
-    🎉 Quiz finished!<br>
-    Your final score is <strong>${score} / ${allQuestions.length}</strong><br>
-    🏆 Best score: <strong>${best} / ${allQuestions.length}</strong><br><br>
-    <button class="btn" onclick="restartQuiz()">Restart Quiz</button>
-  `;
-}
-
-function restartQuiz() {
-  currentQuestion = 0;
-  score = 0;
-  selected = null;
-  document.getElementById("result").innerHTML = "";
-  showQuestion();
-  document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${allQuestions.length}`;
-}
-
-showQuestion();
-document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${allQuestions.length}`;
+    document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${questions.length}`;
+  </script>
+</body>
+</html>
