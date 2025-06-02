@@ -6,22 +6,24 @@
   <title>Flag Quiz</title>
   <style>
     :root {
-      --bg: #f0f8ff;
+      --bg: #f8f9fa;
+      --text: #333;
       --card-bg: #ffffff;
-      --text: #2c3e50;
-      --primary: #3498db;
-      --accent: #e74c3c;
-      --label-bg: #dff9fb;
-      --label-hover: #c7ecee;
+      --label-bg: #e3f2fd;
+      --label-hover: #bbdefb;
+      --accent: #e91e63;
+      --progress-bg: #ddd;
+      --progress-fill: #2196f3;
     }
     body.dark {
-      --bg: #1f1f1f;
-      --card-bg: #2b2b2b;
-      --text: #f4f4f4;
-      --primary: #2980b9;
-      --accent: #ff6b6b;
-      --label-bg: #3b3b3b;
+      --bg: #121212;
+      --text: #eee;
+      --card-bg: #1e1e1e;
+      --label-bg: #333;
       --label-hover: #444;
+      --accent: #f06292;
+      --progress-bg: #444;
+      --progress-fill: #64b5f6;
     }
     body {
       margin: 0;
@@ -34,44 +36,44 @@
       padding: 20px;
     }
     h1 {
-      font-size: 2.4em;
+      font-size: 2.2em;
       margin-bottom: 10px;
     }
     .quiz-card {
       background: var(--card-bg);
-      border-radius: 20px;
+      border-radius: 16px;
       padding: 30px 25px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
       max-width: 600px;
       width: 100%;
     }
-    .progress-bar-container {
+    .progress-container {
       width: 100%;
-      background-color: #ccc;
-      border-radius: 10px;
-      overflow: hidden;
+      background: var(--progress-bg);
+      border-radius: 8px;
+      height: 12px;
       margin-bottom: 20px;
-      height: 14px;
+      overflow: hidden;
     }
     .progress-bar {
       height: 100%;
-      background-color: var(--primary);
+      background-color: var(--progress-fill);
       width: 0%;
-      transition: width 0.4s ease;
+      transition: width 0.3s ease;
     }
     .choices {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+      gap: 14px;
       margin-top: 20px;
     }
     .choices label {
       background: var(--label-bg);
-      padding: 14px 16px;
-      border-radius: 12px;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.06);
+      padding: 12px 14px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
       display: flex;
       align-items: center;
     }
@@ -81,15 +83,23 @@
     .choices input[type="radio"] {
       margin-right: 8px;
     }
+    .flag-img {
+      width: 160px;
+      height: 120px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 12px;
+      border-radius: 6px;
+    }
     .correct {
-      background-color: #d4edda !important;
-      border: 2px solid var(--primary);
-      color: #155724;
+      background-color: #c8e6c9 !important;
+      border: 2px solid #388e3c;
+      color: #2e7d32;
     }
     .incorrect {
-      background-color: #f8d7da !important;
-      border: 2px solid #dc3545;
-      color: #721c24;
+      background-color: #ffcdd2 !important;
+      border: 2px solid #c62828;
+      color: #b71c1c;
     }
     .feedback {
       font-weight: bold;
@@ -99,7 +109,7 @@
     .btn {
       background-color: var(--accent);
       color: white;
-      padding: 14px 24px;
+      padding: 12px 22px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
@@ -110,7 +120,7 @@
       transition: background 0.3s ease, transform 0.1s ease;
     }
     .btn:hover {
-      background-color: #c0392b;
+      background-color: #d81b60;
       transform: translateY(-2px);
     }
     .result {
@@ -119,15 +129,15 @@
       font-weight: bold;
       margin-top: 30px;
     }
-    #bestScoreBox {
-      margin-top: 20px;
+    #bestScoreDisplayBox {
+      margin-top: 24px;
       font-size: 1rem;
       text-align: center;
     }
     #toggleMode {
       position: absolute;
-      top: 15px;
-      right: 15px;
+      top: 16px;
+      right: 16px;
       padding: 8px 14px;
       border-radius: 8px;
       background: var(--label-bg);
@@ -139,6 +149,9 @@
       .choices {
         grid-template-columns: 1fr;
       }
+      .quiz-card {
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -146,214 +159,133 @@
   <h1>Flag Quiz</h1>
   <button id="toggleMode">🌙 Dark Mode</button>
   <div class="quiz-card" id="quizContainer"></div>
-  <div id="bestScoreBox">🏆 Best Score: <strong id="bestScoreDisplay"></strong></div>
+  <div id="bestScoreDisplayBox">🏆 Best Score: <strong id="bestScoreDisplay"></strong></div>
   <div class="result" id="result"></div>
   <script>
 const allQuestions = [
-  { flag: "fr", choices: ["France", "Italy", "Netherlands", "Romania"], answer: 0 },
-  { flag: "de", choices: ["Belgium", "Austria", "Germany", "Sweden"], answer: 2 },
-  { flag: "it", choices: ["Ireland", "Italy", "Mexico", "Hungary"], answer: 1 },
-  { flag: "es", choices: ["Spain", "Portugal", "Colombia", "Venezuela"], answer: 0 },
-  { flag: "pt", choices: ["Brazil", "Portugal", "Spain", "Argentina"], answer: 1 },
-  { flag: "gb", choices: ["Australia", "United Kingdom", "New Zealand", "Canada"], answer: 1 },
-  { flag: "us", choices: ["USA", "Liberia", "Cuba", "Chile"], answer: 0 },
-  { flag: "ca", choices: ["Austria", "Canada", "Switzerland", "Norway"], answer: 1 },
-  { flag: "br", choices: ["Argentina", "Brazil", "Colombia", "Mexico"], answer: 1 },
-  { flag: "ar", choices: ["Uruguay", "Argentina", "Chile", "Paraguay"], answer: 1 },
-  { flag: "mx", choices: ["Spain", "Mexico", "Italy", "Portugal"], answer: 1 },
-  { flag: "jp", choices: ["South Korea", "China", "Japan", "Vietnam"], answer: 2 },
-  { flag: "cn", choices: ["Vietnam", "China", "Japan", "Thailand"], answer: 1 },
-  { flag: "kr", choices: ["Japan", "South Korea", "Thailand", "Philippines"], answer: 1 },
-  { flag: "in", choices: ["India", "Pakistan", "Bangladesh", "Nepal"], answer: 0 },
-  { flag: "ru", choices: ["Russia", "Slovakia", "Serbia", "Czech Republic"], answer: 0 },
-  { flag: "au", choices: ["Australia", "New Zealand", "United Kingdom", "USA"], answer: 0 },
-  { flag: "nz", choices: ["Australia", "New Zealand", "Canada", "Ireland"], answer: 1 },
-  { flag: "za", choices: ["Zimbabwe", "South Africa", "Namibia", "Nigeria"], answer: 1 },
-  { flag: "ng", choices: ["Ghana", "Nigeria", "Cameroon", "Kenya"], answer: 1 },
-  { flag: "ke", choices: ["Tanzania", "Uganda", "Kenya", "Ethiopia"], answer: 2 },
-  { flag: "eg", choices: ["Morocco", "Tunisia", "Egypt", "Sudan"], answer: 2 },
-  { flag: "ma", choices: ["Algeria", "Libya", "Morocco", "Tunisia"], answer: 2 },
-  { flag: "dz", choices: ["Tunisia", "Algeria", "Libya", "Morocco"], answer: 1 },
-  { flag: "sa", choices: ["Iran", "Iraq", "Saudi Arabia", "Yemen"], answer: 2 },
-  { flag: "ae", choices: ["Qatar", "Kuwait", "UAE", "Bahrain"], answer: 2 },
-  { flag: "ir", choices: ["Iraq", "Iran", "Pakistan", "Afghanistan"], answer: 1 },
-  { flag: "iq", choices: ["Iran", "Iraq", "Syria", "Jordan"], answer: 1 },
-  { flag: "tr", choices: ["Greece", "Turkey", "Cyprus", "Lebanon"], answer: 1 },
-  { flag: "gr", choices: ["Italy", "Greece", "Cyprus", "Malta"], answer: 1 },
-  { flag: "pl", choices: ["Austria", "Poland", "Czech Republic", "Slovakia"], answer: 1 },
-  { flag: "cz", choices: ["Slovenia", "Czech Republic", "Slovakia", "Serbia"], answer: 1 },
-  { flag: "hu", choices: ["Bulgaria", "Romania", "Hungary", "Croatia"], answer: 2 },
-  { flag: "ro", choices: ["Romania", "Moldova", "Ukraine", "Hungary"], answer: 0 },
-  { flag: "ua", choices: ["Russia", "Ukraine", "Belarus", "Moldova"], answer: 1 },
-  { flag: "by", choices: ["Poland", "Latvia", "Belarus", "Lithuania"], answer: 2 },
-  { flag: "no", choices: ["Norway", "Sweden", "Finland", "Iceland"], answer: 0 },
-  { flag: "se", choices: ["Sweden", "Norway", "Denmark", "Finland"], answer: 0 },
-  { flag: "fi", choices: ["Estonia", "Finland", "Sweden", "Latvia"], answer: 1 },
-  { flag: "dk", choices: ["Denmark", "Sweden", "Norway", "Finland"], answer: 0 },
-  { flag: "is", choices: ["Iceland", "Ireland", "Greenland", "Finland"], answer: 0 },
-  { flag: "ie", choices: ["Ireland", "Italy", "Iceland", "India"], answer: 0 },
-  { flag: "ch", choices: ["Switzerland", "Austria", "Germany", "France"], answer: 0 },
-  { flag: "at", choices: ["Austria", "Germany", "Switzerland", "Liechtenstein"], answer: 0 },
-  { flag: "be", choices: ["Belgium", "Germany", "France", "Netherlands"], answer: 0 },
-  { flag: "nl", choices: ["Luxembourg", "Netherlands", "Belgium", "France"], answer: 1 },
-  { flag: "lu", choices: ["Luxembourg", "Belgium", "France", "Switzerland"], answer: 0 },
-  { flag: "cz", choices: ["Czech Republic", "Slovakia", "Poland", "Hungary"], answer: 0 },
-  { flag: "sk", choices: ["Czech Republic", "Slovakia", "Poland", "Serbia"], answer: 1 },
-  { flag: "si", choices: ["Slovenia", "Croatia", "Serbia", "Bosnia"], answer: 0 },
-  { flag: "hr", choices: ["Croatia", "Serbia", "Slovenia", "Bosnia"], answer: 0 },
-  { flag: "ba", choices: ["Bosnia", "Montenegro", "Serbia", "Kosovo"], answer: 0 },
-  { flag: "rs", choices: ["Serbia", "Kosovo", "Montenegro", "Bosnia"], answer: 0 },
-  { flag: "me", choices: ["Montenegro", "Kosovo", "Serbia", "Albania"], answer: 0 },
-  { flag: "al", choices: ["Albania", "North Macedonia", "Kosovo", "Serbia"], answer: 0 },
-  { flag: "mk", choices: ["North Macedonia", "Kosovo", "Albania", "Bulgaria"], answer: 0 },
-  { flag: "bg", choices: ["Bulgaria", "Romania", "Serbia", "Hungary"], answer: 0 },
-  { flag: "lt", choices: ["Lithuania", "Latvia", "Estonia", "Finland"], answer: 0 },
-  { flag: "lv", choices: ["Latvia", "Lithuania", "Estonia", "Finland"], answer: 0 },
-  { flag: "ee", choices: ["Estonia", "Latvia", "Lithuania", "Russia"], answer: 0 },
-  { flag: "ph", choices: ["Malaysia", "Philippines", "Thailand", "Indonesia"], answer: 1 },
-  { flag: "id", choices: ["Indonesia", "Poland", "Singapore", "Thailand"], answer: 0 },
-  { flag: "th", choices: ["Thailand", "Laos", "Cambodia", "Vietnam"], answer: 0 },
-  { flag: "vn", choices: ["Vietnam", "Cambodia", "Thailand", "Laos"], answer: 0 },
-  { flag: "my", choices: ["Malaysia", "Singapore", "Thailand", "Brunei"], answer: 0 },
-  { flag: "sg", choices: ["Singapore", "Malaysia", "Brunei", "Thailand"], answer: 0 },
-  { flag: "bd", choices: ["Bangladesh", "Pakistan", "India", "Nepal"], answer: 0 },
-  { flag: "pk", choices: ["Pakistan", "Bangladesh", "Afghanistan", "Iran"], answer: 0 },
-  { flag: "af", choices: ["Iran", "Pakistan", "Afghanistan", "Iraq"], answer: 2 },
-  { flag: "il", choices: ["Israel", "Jordan", "Lebanon", "Syria"], answer: 0 },
-  { flag: "jo", choices: ["Jordan", "Israel", "Lebanon", "Syria"], answer: 0 },
-  { flag: "sy", choices: ["Lebanon", "Syria", "Jordan", "Iraq"], answer: 1 },
-  { flag: "lb", choices: ["Syria", "Lebanon", "Israel", "Jordan"], answer: 1 },
-  { flag: "qa", choices: ["Bahrain", "Qatar", "UAE", "Oman"], answer: 1 },
-  { flag: "bh", choices: ["Bahrain", "Qatar", "Kuwait", "UAE"], answer: 0 },
-  { flag: "om", choices: ["Yemen", "Oman", "Saudi Arabia", "Qatar"], answer: 1 },
-  { flag: "ye", choices: ["Yemen", "Oman", "Saudi Arabia", "UAE"], answer: 0 },
-  { flag: "tn", choices: ["Tunisia", "Morocco", "Libya", "Algeria"], answer: 0 },
-  { flag: "ly", choices: ["Libya", "Tunisia", "Algeria", "Egypt"], answer: 0 },
-  { flag: "et", choices: ["Ethiopia", "Eritrea", "Somalia", "Kenya"], answer: 0 },
-  { flag: "gh", choices: ["Ghana", "Nigeria", "Ivory Coast", "Togo"], answer: 0 },
-  { flag: "cm", choices: ["Cameroon", "Chad", "Nigeria", "Gabon"], answer: 0 },
-  { flag: "sn", choices: ["Senegal", "Mali", "Gambia", "Guinea"], answer: 0 },
-  { flag: "ml", choices: ["Mali", "Mauritania", "Niger", "Senegal"], answer: 0 },
-  { flag: "tz", choices: ["Kenya", "Tanzania", "Uganda", "Mozambique"], answer: 1 },
-  { flag: "zm", choices: ["Zimbabwe", "Zambia", "Malawi", "Namibia"], answer: 1 },
-  { flag: "zw", choices: ["Zimbabwe", "Zambia", "Botswana", "Namibia"], answer: 0 },
-  { flag: "mw", choices: ["Malawi", "Zambia", "Mozambique", "Tanzania"], answer: 0 },
-  { flag: "bw", choices: ["Botswana", "Namibia", "South Africa", "Angola"], answer: 0 },
+  {
+    flag: "https://flagcdn.com/w320/fr.png",
+    choices: ["France", "Italy", "Netherlands", "Croatia"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/de.png",
+    choices: ["Belgium", "Germany", "Austria", "Poland"],
+    answer: 1
+  },
+  {
+    flag: "https://flagcdn.com/w320/jp.png",
+    choices: ["Japan", "South Korea", "China", "Vietnam"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/br.png",
+    choices: ["Brazil", "Argentina", "Mexico", "Colombia"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/it.png",
+    choices: ["Ireland", "Italy", "Mexico", "Hungary"],
+    answer: 1
+  },
+  {
+    flag: "https://flagcdn.com/w320/ca.png",
+    choices: ["Austria", "Switzerland", "Canada", "Denmark"],
+    answer: 2
+  },
+  {
+    flag: "https://flagcdn.com/w320/gb.png",
+    choices: ["United Kingdom", "Australia", "New Zealand", "USA"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/au.png",
+    choices: ["Australia", "UK", "New Zealand", "South Africa"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/es.png",
+    choices: ["Portugal", "Spain", "Colombia", "Peru"],
+    answer: 1
+  },
+  {
+    flag: "https://flagcdn.com/w320/in.png",
+    choices: ["India", "Pakistan", "Bangladesh", "Nepal"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/ru.png",
+    choices: ["Russia", "Slovakia", "Czech Republic", "Serbia"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/mx.png",
+    choices: ["Mexico", "Spain", "Italy", "Guatemala"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/cn.png",
+    choices: ["China", "Vietnam", "Taiwan", "Japan"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/kr.png",
+    choices: ["South Korea", "Japan", "North Korea", "China"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/za.png",
+    choices: ["South Africa", "Kenya", "Namibia", "Zimbabwe"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/ke.png",
+    choices: ["Kenya", "Tanzania", "Ethiopia", "Ghana"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/ng.png",
+    choices: ["Nigeria", "Niger", "Ivory Coast", "Gabon"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/eg.png",
+    choices: ["Morocco", "Tunisia", "Egypt", "Algeria"],
+    answer: 2
+  },
+  {
+    flag: "https://flagcdn.com/w320/ar.png",
+    choices: ["Argentina", "Uruguay", "Paraguay", "Chile"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/cl.png",
+    choices: ["Chile", "Cuba", "Panama", "Costa Rica"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/tr.png",
+    choices: ["Turkey", "Tunisia", "Morocco", "Pakistan"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/sa.png",
+    choices: ["Iran", "Saudi Arabia", "Iraq", "Pakistan"],
+    answer: 1
+  },
+  {
+    flag: "https://flagcdn.com/w320/ir.png",
+    choices: ["Iran", "Iraq", "Afghanistan", "Pakistan"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/th.png",
+    choices: ["Thailand", "Cambodia", "Malaysia", "Indonesia"],
+    answer: 0
+  },
+  {
+    flag: "https://flagcdn.com/w320/id.png",
+    choices: ["Indonesia", "Poland", "Singapore", "Philippines"],
+    answer: 0
+  }
 ];
-let currentQuestion = 0;
-let score = 0;
-let selected = null;
-
-function showQuestion() {
-  const q = allQuestions[currentQuestion];
-  const container = document.getElementById("quizContainer");
-  const percent = Math.round((currentQuestion / allQuestions.length) * 100);
-  container.innerHTML = `
-    <div class="progress-bar-container">
-      <div class="progress-bar" style="width:${percent}%"></div>
-    </div>
-    <div style="text-align:center;">
-      <img src="https://flagcdn.com/w160/${q.flag}.png" alt="Flag" width="160" height="120" style="border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
-    </div>
-    <p style="text-align:center;"><strong>Question ${currentQuestion + 1} / ${allQuestions.length}</strong><br>Score: ${score}</p>
-    <div class="choices">
-      ${q.choices.map((choice, i) =>
-        `<label><input type="radio" name="choice" value="${i}"> ${choice}</label>`
-      ).join("")}
-    </div>
-    <div class="feedback" id="feedback"></div>
-    <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Next</button>
-  `;
-
-  selected = null;
-  document.querySelectorAll('input[name="choice"]').forEach(input => {
-    input.addEventListener('change', (e) => {
-      selected = parseInt(e.target.value);
-      validateAnswer();
-    });
-  });
-
-  document.addEventListener("keydown", handleEnter);
-}
-
-function validateAnswer() {
-  const correct = allQuestions[currentQuestion].answer;
-  const feedback = document.getElementById("feedback");
-  const labels = document.querySelectorAll(".choices label");
-
-  labels.forEach((label, index) => {
-    const input = label.querySelector("input");
-    input.disabled = true;
-    if (index === correct) {
-      label.classList.add("correct");
-    } else if (index === selected) {
-      label.classList.add("incorrect");
-    }
-  });
-
-  if (selected === correct) {
-    score++;
-    feedback.innerHTML = "✅ Correct!";
-  } else {
-    feedback.innerHTML = `❌ Wrong. Correct answer is <strong>${allQuestions[currentQuestion].choices[correct]}</strong>`;
-  }
-
-  document.getElementById("nextBtn").disabled = false;
-}
-
-function handleEnter(event) {
-  if (event.key === "Enter" && !document.getElementById("nextBtn").disabled) {
-    nextQuestion();
-  }
-}
-
-function nextQuestion() {
-  document.removeEventListener("keydown", handleEnter);
-  currentQuestion++;
-  if (currentQuestion < allQuestions.length) {
-    showQuestion();
-  } else {
-    showResult();
-  }
-}
-
-function saveBestScore(current) {
-  const best = parseInt(localStorage.getItem("bestFlagScore") || "0");
-  if (current > best) {
-    localStorage.setItem("bestFlagScore", current);
-  }
-}
-
-function getBestScore() {
-  return localStorage.getItem("bestFlagScore") || 0;
-}
-
-function showResult() {
-  saveBestScore(score);
-  const best = getBestScore();
-  document.getElementById("quizContainer").innerHTML = "";
-  document.getElementById("result").innerHTML = `
-    🎉 Quiz finished!<br>
-    Your final score is <strong>${score} / ${allQuestions.length}</strong><br>
-    🏆 Best score: <strong>${best} / ${allQuestions.length}</strong><br><br>
-    <button class="btn" onclick="restartQuiz()">Restart Quiz</button>
-  `;
-}
-
-function restartQuiz() {
-  currentQuestion = 0;
-  score = 0;
-  selected = null;
-  document.getElementById("result").innerHTML = "";
-  showQuestion();
-  document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${allQuestions.length}`;
-}
-
-document.getElementById("toggleMode").addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-  const btn = document.getElementById("toggleMode");
-  btn.textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
-});
-
-showQuestion();
-document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${allQuestions.length}`;
