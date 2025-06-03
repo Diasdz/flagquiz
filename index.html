@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz des Drapeaux</title>
+  <title>Ultimate Flag Quiz</title>
   <style>
+    :root {
+      --correct-color: #28a745;
+      --incorrect-color: #dc3545;
+      --primary-color: #ff6b6b;
+    }
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -22,7 +27,7 @@
       margin-bottom: 10px;
       text-align: center;
     }
-    .start-screen, .quiz-card {
+    .start-screen, .quiz-card, .result-card {
       background: #ffffff;
       border-radius: 20px;
       padding: 30px 25px;
@@ -30,6 +35,11 @@
       max-width: 600px;
       width: 100%;
       margin: 20px 0;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .quiz-card:hover, .start-screen:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     }
     .choices {
       display: grid;
@@ -53,13 +63,14 @@
     }
     .correct {
       background-color: #d4edda !important;
-      border: 2px solid #28a745;
+      border: 2px solid var(--correct-color);
       color: #155724;
     }
     .incorrect {
       background-color: #f8d7da !important;
-      border: 2px solid #dc3545;
+      border: 2px solid var(--incorrect-color);
       color: #721c24;
+      animation: shake 0.4s;
     }
     .feedback {
       font-weight: bold;
@@ -68,7 +79,7 @@
       min-height: 24px;
     }
     .btn {
-      background-color: #ff6b6b;
+      background-color: var(--primary-color);
       color: white;
       padding: 14px 24px;
       border: none;
@@ -77,24 +88,22 @@
       margin: 30px auto 0;
       display: block;
       font-size: 1em;
-      transition: background-color 0.3s;
+      transition: all 0.3s;
     }
-    .btn:hover { background-color: #ff4757; }
+    .btn:hover { 
+      background-color: #ff4757;
+      transform: scale(1.02);
+    }
     .btn:disabled {
       background-color: #cccccc;
       cursor: not-allowed;
+      transform: none;
     }
-    .result {
-      text-align: center;
-      font-size: 1.4em;
-      font-weight: bold;
-      margin-top: 30px;
+    .btn-secondary {
+      background-color: #6c757d;
     }
-    #bestScoreDisplayBox {
-      margin-top: 30px;
-      font-weight: 500;
-      font-size: 1rem;
-      text-align: center;
+    .btn-secondary:hover {
+      background-color: #5a6268;
     }
     .flag-image {
       max-width: 100%;
@@ -104,6 +113,10 @@
       display: block;
       border: 1px solid #ddd;
       border-radius: 4px;
+      transition: transform 0.3s;
+    }
+    .flag-image:hover {
+      transform: scale(1.05);
     }
     .progress-container {
       width: 100%;
@@ -118,31 +131,121 @@
       width: 0%;
       transition: width 0.5s;
     }
+    #timer-container {
+      display: none;
+      background: #3b3054;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      margin-bottom: 15px;
+    }
+    #lives {
+      font-size: 1.5em;
+      color: #ff4757;
+      margin-left: 10px;
+    }
+    .difficulty-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    .easy { background: #d4edda; color: #155724; }
+    .medium { background: #fff3cd; color: #856404; }
+    .hard { background: #f8d7da; color: #721c24; }
+    .leaderboard {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .leaderboard th, .leaderboard td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    .leaderboard tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .pulse {
+      animation: pulse 1.5s infinite;
+    }
     @media (max-width: 600px) {
       .choices { grid-template-columns: 1fr; }
       .quiz-card, .start-screen { padding: 20px 15px; }
       .btn { width: 100%; }
+      h1 { font-size: 1.8em; }
     }
   </style>
 </head>
 <body>
-  <h1>🌍 Quiz des Drapeaux</h1>
+  <h1>🌍 Ultimate Flag Quiz</h1>
 
+  <!-- Écran de démarrage -->
   <div class="start-screen" id="startScreen">
     <h2>Testez vos connaissances des drapeaux !</h2>
-    <p>Combien de questions souhaitez-vous ?</p>
-    <div style="display: flex; gap: 10px; justify-content: center;">
-      <button class="btn" onclick="startQuiz(10)">10 questions</button>
-      <button class="btn" onclick="startQuiz(20)">20 questions</button>
+    <p>Choisissez votre mode de jeu :</p>
+    
+    <div style="margin: 25px 0;">
+      <button class="btn" onclick="startClassicMode()">Mode Classique</button>
+      <button class="btn btn-secondary" onclick="startChallengeMode()">Mode Défi ⏱️</button>
+    </div>
+    
+    <div>
+      <h3>Options :</h3>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+        <button class="btn-secondary" onclick="setColorblindMode('normal')">Normal</button>
+        <button class="btn-secondary" onclick="setColorblindMode('protanopie')">Protanopie</button>
+        <button class="btn-secondary" onclick="setColorblindMode('deuteranopie')">Deutéranopie</button>
+      </div>
+    </div>
+    
+    <div id="leaderboard" style="margin-top: 30px; display: none;">
+      <h3>🏆 Classement</h3>
+      <table class="leaderboard">
+        <thead>
+          <tr>
+            <th>Position</th>
+            <th>Nom</th>
+            <th>Score</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboardBody"></tbody>
+      </table>
     </div>
   </div>
 
+  <!-- Conteneur du quiz -->
+  <div id="timer-container">
+    ⏱️ Temps restant : <span id="timer">15</span>s 
+    <span id="lives">❤️❤️❤️</span>
+    <span id="difficultyBadge" class="difficulty-badge easy">Facile</span>
+  </div>
+
   <div class="quiz-card" id="quizContainer" style="display: none;"></div>
-  <div id="bestScoreDisplayBox" style="display: none;">🏅 Meilleur score: <strong id="bestScoreDisplay"></strong></div>
-  <div class="result" id="result"></div>
+  
+  <!-- Résultats -->
+  <div class="result-card" id="result" style="display: none;"></div>
+
+  <!-- Sons -->
+  <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
+  <audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+  <audio id="timeoutSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-explosion-2759.mp3"></audio>
 
   <script>
-    // Liste complète des pays avec leurs drapeaux
+    // Liste complète des pays
     const allCountries = [
       ["France", "https://flagcdn.com/w320/fr.png"],
       ["Allemagne", "https://flagcdn.com/w320/de.png"],
@@ -170,27 +273,103 @@
       ["Belgique", "https://flagcdn.com/w320/be.png"]
     ];
 
+    // Variables globales
     let questions = [];
     let currentQuestion = 0;
     let score = 0;
     let selected = null;
     let totalQuestions = 0;
     let controller = new AbortController();
+    let timer;
+    let timeLeft = 15;
+    let lives = 3;
+    let isChallengeMode = false;
+    let currentDifficulty = {
+      level: 'easy',
+      time: 20,
+      countries: allCountries.slice(0, 15)
+    };
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', () => {
+      preloadImages();
+      showLeaderboard();
+    });
+
+    // Précharge les images des drapeaux
+    function preloadImages() {
+      allCountries.forEach(([_, url]) => {
+        new Image().src = url;
+      });
+    }
+
+    // Affiche le classement
+    function showLeaderboard() {
+      const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || []);
+      const tbody = document.getElementById('leaderboardBody');
+      tbody.innerHTML = leaderboard.slice(0, 5).map((entry, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${entry.name || 'Anonyme'}</td>
+          <td>${entry.score}</td>
+          <td>${entry.date}</td>
+        </tr>
+      `).join('');
+      document.getElementById('leaderboard').style.display = leaderboard.length ? 'block' : 'none';
+    }
+
+    // Définit le mode daltonien
+    function setColorblindMode(type) {
+      const colors = {
+        normal: { correct: '#28a745', incorrect: '#dc3545' },
+        protanopie: { correct: '#00AAFF', incorrect: '#FFAA00' },
+        deuteranopie: { correct: '#FF00AA', incorrect: '#AA00FF' }
+      };
+      document.documentElement.style.setProperty('--correct-color', colors[type].correct);
+      document.documentElement.style.setProperty('--incorrect-color', colors[type].incorrect);
+    }
+
+    // Démarre le mode classique
+    function startClassicMode() {
+      isChallengeMode = false;
+      lives = 3;
+      startQuiz(10);
+      setDifficulty('easy');
+      document.getElementById('timer-container').style.display = 'none';
+    }
+
+    // Démarre le mode défi
+    function startChallengeMode() {
+      isChallengeMode = true;
+      lives = 3;
+      startQuiz(15);
+      setDifficulty('hard');
+      document.getElementById('timer-container').style.display = 'flex';
+      updateLivesDisplay();
+    }
+
+    // Définit la difficulté
+    function setDifficulty(level) {
+      const difficulties = {
+        easy: { time: 20, countries: allCountries.slice(0, 15) },
+        medium: { time: 15, countries: allCountries },
+        hard: { time: 10, countries: allCountries }
+      };
+      currentDifficulty = { level, ...difficulties[level] };
+      document.getElementById('difficultyBadge').className = `difficulty-badge ${level}`;
+      document.getElementById('difficultyBadge').textContent = 
+        level === 'easy' ? 'Facile' : level === 'medium' ? 'Moyen' : 'Difficile';
+    }
 
     // Génère des questions uniques
     function generateUniqueQuestions(count) {
-      // Mélange tous les pays
-      const shuffledCountries = [...allCountries].sort(() => Math.random() - 0.5);
-      
-      // Prend les 'count' premiers pour les questions
+      const shuffledCountries = [...currentDifficulty.countries].sort(() => Math.random() - 0.5);
       return shuffledCountries.slice(0, count).map(correct => {
-        // Filtre les pays incorrects
-        const incorrectChoices = allCountries
+        const incorrectChoices = currentDifficulty.countries
           .filter(c => c[0] !== correct[0])
           .sort(() => Math.random() - 0.5)
-          .slice(0, 3); // 3 mauvaises réponses
+          .slice(0, 3);
         
-        // Mélange les choix
         const choices = [...incorrectChoices.map(c => c[0]), correct[0]]
           .sort(() => Math.random() - 0.5);
         
@@ -205,17 +384,17 @@
 
     // Démarrer le quiz
     function startQuiz(count) {
-      totalQuestions = Math.min(count, allCountries.length);
+      totalQuestions = Math.min(count, currentDifficulty.countries.length);
       questions = generateUniqueQuestions(totalQuestions);
       currentQuestion = 0;
       score = 0;
       
       document.getElementById('startScreen').style.display = 'none';
       document.getElementById('quizContainer').style.display = 'block';
-      document.getElementById('bestScoreDisplayBox').style.display = 'block';
-      document.getElementById('bestScoreDisplay').textContent = `${getBestScore()} / ${totalQuestions}`;
+      document.getElementById('result').style.display = 'none';
       
       showQuestion();
+      if (isChallengeMode) startTimer();
     }
 
     // Affiche la question actuelle
@@ -241,7 +420,9 @@
           `).join("")}
         </div>
         <div class="feedback" id="feedback"></div>
-        <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>Question Suivante</button>
+        <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>
+          ${currentQuestion < totalQuestions - 1 ? 'Question Suivante' : 'Voir les Résultats'}
+        </button>
       `;
 
       selected = null;
@@ -253,7 +434,7 @@
       });
 
       // Gestion de la touche Entrée
-      controller.abort(); // Nettoie les anciens écouteurs
+      controller.abort();
       controller = new AbortController();
       document.addEventListener(
         "keydown", 
@@ -262,8 +443,44 @@
       );
     }
 
+    // Gestion du timer
+    function startTimer() {
+      clearInterval(timer);
+      timeLeft = currentDifficulty.time;
+      document.getElementById('timer').textContent = timeLeft;
+      document.getElementById('timer').className = '';
+      
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft;
+        
+        if(timeLeft <= 5) {
+          document.getElementById('timer').classList.add('pulse');
+        }
+        
+        if(timeLeft <= 0) {
+          clearInterval(timer);
+          document.getElementById('timeoutSound').play();
+          document.getElementById('feedback').innerHTML = '⏱️ Temps écoulé !';
+          lives--;
+          updateLivesDisplay();
+          if(lives <= 0) {
+            setTimeout(() => endGame(), 1500);
+          } else {
+            setTimeout(() => nextQuestion(), 1500);
+          }
+        }
+      }, 1000);
+    }
+
+    // Met à jour l'affichage des vies
+    function updateLivesDisplay() {
+      document.getElementById('lives').innerHTML = '❤️'.repeat(lives);
+    }
+
     // Valide la réponse sélectionnée
     function validateAnswer() {
+      clearInterval(timer);
       const correctIndex = questions[currentQuestion].answer;
       const feedback = document.getElementById("feedback");
       const labels = document.querySelectorAll(".choices label");
@@ -281,9 +498,19 @@
 
       if (selected === correctIndex) {
         score++;
+        document.getElementById('correctSound').play();
         feedback.innerHTML = "✅ Correct !";
       } else {
+        document.getElementById('wrongSound').play();
         feedback.innerHTML = `❌ Incorrect. La bonne réponse était <strong>${questions[currentQuestion].country}</strong>`;
+        if (isChallengeMode) {
+          lives--;
+          updateLivesDisplay();
+          if(lives <= 0) {
+            setTimeout(() => endGame(), 1500);
+            return;
+          }
+        }
       }
 
       document.getElementById("nextBtn").disabled = false;
@@ -291,49 +518,110 @@
 
     // Passe à la question suivante
     function nextQuestion() {
+      clearInterval(timer);
       currentQuestion++;
       if (currentQuestion < totalQuestions) {
         showQuestion();
+        if (isChallengeMode) startTimer();
       } else {
         showResult();
       }
     }
 
-    // Sauvegarde le meilleur score
-    function saveBestScore(current) {
-      const best = localStorage.getItem("bestScore") || 0;
-      if (current > best) {
-        localStorage.setItem("bestScore", current);
+    // Termine le jeu (quand plus de vies)
+    function endGame() {
+      clearInterval(timer);
+      showResult();
+    }
+
+    // Affiche les résultats finaux
+    function showResult() {
+      saveScore();
+      const best = getBestScore();
+
+      document.getElementById("quizContainer").style.display = "none";
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").innerHTML = `
+        <h2>🎉 Quiz terminé !</h2>
+        <p>Votre score final: <strong>${score} / ${totalQuestions}</strong></p>
+        ${isChallengeMode ? `<p>Vies restantes: ${'❤️'.repeat(lives)}</p>` : ''}
+        <p>🏆 Meilleur score: <strong>${best} / ${totalQuestions}</strong></p>
+        
+        <div id="playerNameInput" style="margin: 20px 0;">
+          <p>Enregistrez votre score :</p>
+          <input type="text" id="playerName" placeholder="Votre nom" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
+          <button class="btn" onclick="savePlayerScore()">Enregistrer</button>
+        </div>
+        
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button class="btn" onclick="restartQuiz()">Rejouer</button>
+          <button class="btn btn-secondary" onclick="showStartScreen()">Menu Principal</button>
+        </div>
+        
+        ${navigator.share ? `
+        <button class="btn" onclick="shareResult()" style="margin-top: 15px;">
+          📱 Partager mon score
+        </button>` : ''}
+      `;
+    }
+
+    // Sauvegarde le score actuel
+    function saveScore() {
+      const best = localStorage.getItem(`bestScore${currentDifficulty.level}`) || 0;
+      if (score > best) {
+        localStorage.setItem(`bestScore${currentDifficulty.level}`, score);
       }
     }
 
     // Récupère le meilleur score
     function getBestScore() {
-      return localStorage.getItem("bestScore") || 0;
+      return localStorage.getItem(`bestScore${currentDifficulty.level}`) || 0;
     }
 
-    // Affiche les résultats finaux
-    function showResult() {
-      saveBestScore(score);
-      const best = getBestScore();
-
-      document.getElementById("quizContainer").style.display = "none";
-      document.getElementById("result").innerHTML = `
-        <div class="quiz-card">
-          <h2>🎉 Quiz terminé !</h2>
-          <p>Votre score final: <strong>${score} / ${totalQuestions}</strong></p>
-          <p>🏆 Meilleur score: <strong>${best} / ${totalQuestions}</strong></p>
-          <button class="btn" onclick="restartQuiz()">Recommencer</button>
-        </div>
+    // Sauvegarde le score du joueur
+    function savePlayerScore() {
+      const name = document.getElementById('playerName').value || 'Anonyme';
+      savePlayerScoreToLeaderboard(name, score);
+      document.getElementById('playerNameInput').innerHTML = `
+        <p>✅ Score enregistré pour <strong>${name}</strong> !</p>
       `;
+      showLeaderboard();
+    }
+
+    // Sauvegarde dans le classement
+    function savePlayerScoreToLeaderboard(name, score) {
+      const scores = JSON.parse(localStorage.getItem('leaderboard') || []);
+      scores.push({
+        name,
+        score,
+        date: new Date().toLocaleDateString(),
+        difficulty: currentDifficulty.level
+      });
+      scores.sort((a,b) => b.score - a.score);
+      localStorage.setItem('leaderboard', JSON.stringify(scores.slice(0,10)));
+    }
+
+    // Partage des résultats
+    function shareResult() {
+      navigator.share({
+        title: 'Mon score au Ultimate Flag Quiz',
+        text: `J'ai obtenu ${score}/${totalQuestions} en mode ${currentDifficulty.level === 'easy' ? 'Facile' : currentDifficulty.level === 'medium' ? 'Moyen' : 'Difficile'} !`,
+        url: window.location.href
+      }).catch(() => alert('Partage annulé'));
     }
 
     // Redémarre le quiz
     function restartQuiz() {
-      document.getElementById("result").innerHTML = "";
-      document.getElementById("quizContainer").style.display = "block";
-      document.getElementById("bestScoreDisplay").textContent = `${getBestScore()} / ${totalQuestions}`;
+      document.getElementById("result").style.display = "none";
       startQuiz(totalQuestions);
+    }
+
+    // Retour à l'écran de démarrage
+    function showStartScreen() {
+      document.getElementById("result").style.display = "none";
+      document.getElementById("startScreen").style.display = "block";
+      document.getElementById("timer-container").style.display = "none";
+      showLeaderboard();
     }
   </script>
 </body>
