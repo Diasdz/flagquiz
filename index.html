@@ -143,11 +143,6 @@
       border-radius: 20px;
       margin-bottom: 15px;
     }
-    #lives {
-      font-size: 1.5em;
-      color: #ff4757;
-      margin-left: 10px;
-    }
     .difficulty-badge {
       display: inline-block;
       padding: 3px 8px;
@@ -205,8 +200,7 @@
 
   <!-- Conteneur du quiz -->
   <div id="timer-container">
-    ⏱️ Temps restant : <span id="timer">10</span>s 
-    <span id="lives">❤️❤️❤️</span>
+    ⏱️ Temps restant : <span id="timer">10</span>s
     <span id="difficultyBadge" class="difficulty-badge easy">Facile</span>
   </div>
 
@@ -258,7 +252,6 @@
     let controller = new AbortController();
     let timer;
     let timeLeft = 10;
-    let lives = 3;
     let isChallengeMode = false;
     let currentDifficulty = {
       level: 'easy',
@@ -297,7 +290,6 @@
     // Démarre le mode classique
     function startClassicMode() {
       isChallengeMode = false;
-      lives = 3;
       startQuiz(10);
       document.getElementById('timer-container').style.display = 'none';
     }
@@ -305,10 +297,8 @@
     // Démarre le mode défi
     function startChallengeMode() {
       isChallengeMode = true;
-      lives = 3;
       startQuiz(15);
       document.getElementById('timer-container').style.display = 'flex';
-      updateLivesDisplay();
     }
 
     // Définit la difficulté
@@ -439,20 +429,9 @@
           // Désactiver tous les choix
           enableAllChoices(false);
           
-          lives--;
-          updateLivesDisplay();
-          if(lives <= 0) {
-            setTimeout(() => endGame(), 1500);
-          } else {
-            setTimeout(() => nextQuestion(), 1500);
-          }
+          setTimeout(() => nextQuestion(), 1500);
         }
       }, 1000);
-    }
-
-    // Met à jour l'affichage des vies
-    function updateLivesDisplay() {
-      document.getElementById('lives').innerHTML = '❤️'.repeat(lives);
     }
 
     // Valide la réponse sélectionnée
@@ -488,14 +467,6 @@
       } else {
         document.getElementById('wrongSound').play();
         feedback.innerHTML = `❌ Incorrect. La bonne réponse était <strong>${questions[currentQuestion].country}</strong>`;
-        if (isChallengeMode) {
-          lives--;
-          updateLivesDisplay();
-          if(lives <= 0) {
-            setTimeout(() => endGame(), 1500);
-            return;
-          }
-        }
       }
 
       document.getElementById("nextBtn").disabled = false;
@@ -513,12 +484,6 @@
       }
     }
 
-    // Termine le jeu (quand plus de vies)
-    function endGame() {
-      clearInterval(timer);
-      showResult();
-    }
-
     // Affiche les résultats finaux
     function showResult() {
       saveScore();
@@ -529,7 +494,6 @@
       document.getElementById("result").innerHTML = `
         <h2>🎉 Quiz terminé !</h2>
         <p>Votre score final: <strong>${score} / ${totalQuestions}</strong></p>
-        ${isChallengeMode ? `<p>Vies restantes: ${'❤️'.repeat(lives)}</p>` : ''}
         <p>🏆 Meilleur score: <strong>${best} / ${totalQuestions}</strong></p>
         
         <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
