@@ -154,6 +154,27 @@
     .easy { background: #d4edda; color: #155724; }
     .medium { background: #fff3cd; color: #856404; }
     .hard { background: #f8d7da; color: #721c24; }
+    .difficulty-btn {
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+    .difficulty-btn.selected {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border-color: currentColor;
+    }
+    .easy.selected {
+      background-color: #28a745;
+      color: white;
+    }
+    .medium.selected {
+      background-color: #ffc107;
+      color: white;
+    }
+    .hard.selected {
+      background-color: #dc3545;
+      color: white;
+    }
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-5px); }
@@ -172,6 +193,9 @@
       .quiz-card, .start-screen { padding: 20px 15px; }
       .btn { width: 100%; }
       h1 { font-size: 1.8em; }
+      .difficulty-buttons {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -190,10 +214,10 @@
     
     <div style="margin-top: 20px;">
       <h3>Choisissez la difficulté :</h3>
-      <div style="display: flex; gap: 10px; justify-content: center;">
-        <button class="btn easy" onclick="setDifficulty('easy')">Facile (10s)</button>
-        <button class="btn medium" onclick="setDifficulty('medium')">Moyen (8s)</button>
-        <button class="btn hard" onclick="setDifficulty('hard')">Difficile (5s)</button>
+      <div class="difficulty-buttons" style="display: flex; gap: 10px; justify-content: center;">
+        <button class="btn easy difficulty-btn selected" onclick="setDifficulty('easy')">Facile (10s)</button>
+        <button class="btn medium difficulty-btn" onclick="setDifficulty('medium')">Moyen (8s)</button>
+        <button class="btn hard difficulty-btn" onclick="setDifficulty('hard')">Difficile (5s)</button>
       </div>
     </div>
   </div>
@@ -201,7 +225,7 @@
   <!-- Conteneur du quiz -->
   <div id="timer-container">
     ⏱️ Temps restant : <span id="timer">10</span>s
-    <span id="difficultyBadge" class="difficulty-badge easy">Facile</span>
+    <span id="difficultyBadge" class="difficulty-badge easy">Facile (10s)</span>
   </div>
 
   <div class="quiz-card" id="quizContainer" style="display: none;"></div>
@@ -303,6 +327,14 @@
 
     // Définit la difficulté
     function setDifficulty(level) {
+      // Retire la classe 'selected' de tous les boutons
+      document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+      
+      // Ajoute la classe 'selected' au bouton cliqué
+      document.querySelector(`.difficulty-btn.${level}`).classList.add('selected');
+      
       const difficulties = {
         easy: { time: 10, countries: allCountries },
         medium: { time: 8, countries: allCountries },
