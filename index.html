@@ -202,15 +202,6 @@
       <button class="btn btn-secondary" onclick="startChallengeMode()">Mode Défi ⏱️</button>
     </div>
     
-    <div>
-      <h3>Options :</h3>
-      <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-        <button class="btn-secondary" onclick="setColorblindMode('normal')">Normal</button>
-        <button class="btn-secondary" onclick="setColorblindMode('protanopie')">Protanopie</button>
-        <button class="btn-secondary" onclick="setColorblindMode('deuteranopie')">Deutéranopie</button>
-      </div>
-    </div>
-    
     <div id="leaderboard" style="margin-top: 30px; display: none;">
       <h3>🏆 Classement</h3>
       <table class="leaderboard">
@@ -316,17 +307,6 @@
         </tr>
       `).join('');
       document.getElementById('leaderboard').style.display = leaderboard.length ? 'block' : 'none';
-    }
-
-    // Définit le mode daltonien
-    function setColorblindMode(type) {
-      const colors = {
-        normal: { correct: '#28a745', incorrect: '#dc3545' },
-        protanopie: { correct: '#00AAFF', incorrect: '#FFAA00' },
-        deuteranopie: { correct: '#FF00AA', incorrect: '#AA00FF' }
-      };
-      document.documentElement.style.setProperty('--correct-color', colors[type].correct);
-      document.documentElement.style.setProperty('--incorrect-color', colors[type].incorrect);
     }
 
     // Démarre le mode classique
