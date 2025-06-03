@@ -56,7 +56,11 @@
       display: flex;
       align-items: center;
     }
-    .choices label:hover { background: #b2ebf2; }
+    .choices label.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .choices label:hover:not(.disabled) { background: #b2ebf2; }
     .choices input[type="radio"] { 
       margin-right: 8px;
       cursor: pointer;
@@ -265,6 +269,22 @@
       });
     }
 
+    // Active ou désactive tous les choix de réponse
+    function enableAllChoices(enable) {
+      const inputs = document.querySelectorAll('input[name="choice"]');
+      inputs.forEach(input => {
+        input.disabled = !enable;
+        const label = input.closest('label');
+        if (label) {
+          if (enable) {
+            label.classList.remove('disabled');
+          } else {
+            label.classList.add('disabled');
+          }
+        }
+      });
+    }
+
     // Démarre le mode classique
     function startClassicMode() {
       isChallengeMode = false;
@@ -386,6 +406,9 @@
       document.getElementById('timer').textContent = timeLeft;
       document.getElementById('timer').className = '';
       
+      // Activer tous les choix au début du timer
+      enableAllChoices(true);
+      
       timer = setInterval(() => {
         timeLeft--;
         document.getElementById('timer').textContent = timeLeft;
@@ -398,6 +421,10 @@
           clearInterval(timer);
           document.getElementById('timeoutSound').play();
           document.getElementById('feedback').innerHTML = '⏱️ Temps écoulé !';
+          
+          // Désactiver tous les choix
+          enableAllChoices(false);
+          
           lives--;
           updateLivesDisplay();
           if(lives <= 0) {
@@ -416,10 +443,18 @@
 
     // Valide la réponse sélectionnée
     function validateAnswer() {
+      // Ne pas valider si le temps est écoulé en mode défi
+      if (isChallengeMode && timeLeft <= 0) {
+        return;
+      }
+
       clearInterval(timer);
       const correctIndex = questions[currentQuestion].answer;
       const feedback = document.getElementById("feedback");
       const labels = document.querySelectorAll(".choices label");
+      
+      // Désactiver tous les choix après validation
+      enableAllChoices(false);
       
       labels.forEach((label, index) => {
         const input = label.querySelector("input");
