@@ -155,19 +155,6 @@
     .easy { background: #d4edda; color: #155724; }
     .medium { background: #fff3cd; color: #856404; }
     .hard { background: #f8d7da; color: #721c24; }
-    .leaderboard {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    .leaderboard th, .leaderboard td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    .leaderboard tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-5px); }
@@ -200,21 +187,6 @@
     <div style="margin: 25px 0;">
       <button class="btn" onclick="startClassicMode()">Mode Classique</button>
       <button class="btn btn-secondary" onclick="startChallengeMode()">Mode Défi ⏱️</button>
-    </div>
-    
-    <div id="leaderboard" style="margin-top: 30px; display: none;">
-      <h3>🏆 Classement</h3>
-      <table class="leaderboard">
-        <thead>
-          <tr>
-            <th>Position</th>
-            <th>Nom</th>
-            <th>Score</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboardBody"></tbody>
-      </table>
     </div>
   </div>
 
@@ -284,7 +256,6 @@
     // Initialisation
     document.addEventListener('DOMContentLoaded', () => {
       preloadImages();
-      showLeaderboard();
     });
 
     // Précharge les images des drapeaux
@@ -292,21 +263,6 @@
       allCountries.forEach(([_, url]) => {
         new Image().src = url;
       });
-    }
-
-    // Affiche le classement
-    function showLeaderboard() {
-      const leaderboard = JSON.parse(localStorage.getItem('leaderboard') || []);
-      const tbody = document.getElementById('leaderboardBody');
-      tbody.innerHTML = leaderboard.slice(0, 5).map((entry, index) => `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${entry.name || 'Anonyme'}</td>
-          <td>${entry.score}</td>
-          <td>${entry.date}</td>
-        </tr>
-      `).join('');
-      document.getElementById('leaderboard').style.display = leaderboard.length ? 'block' : 'none';
     }
 
     // Démarre le mode classique
@@ -527,21 +483,10 @@
         ${isChallengeMode ? `<p>Vies restantes: ${'❤️'.repeat(lives)}</p>` : ''}
         <p>🏆 Meilleur score: <strong>${best} / ${totalQuestions}</strong></p>
         
-        <div id="playerNameInput" style="margin: 20px 0;">
-          <p>Enregistrez votre score :</p>
-          <input type="text" id="playerName" placeholder="Votre nom" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd;">
-          <button class="btn" onclick="savePlayerScore()">Enregistrer</button>
-        </div>
-        
-        <div style="display: flex; gap: 10px; justify-content: center;">
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
           <button class="btn" onclick="restartQuiz()">Rejouer</button>
           <button class="btn btn-secondary" onclick="showStartScreen()">Menu Principal</button>
         </div>
-        
-        ${navigator.share ? `
-        <button class="btn" onclick="shareResult()" style="margin-top: 15px;">
-          📱 Partager mon score
-        </button>` : ''}
       `;
     }
 
@@ -558,38 +503,6 @@
       return localStorage.getItem(`bestScore${currentDifficulty.level}`) || 0;
     }
 
-    // Sauvegarde le score du joueur
-    function savePlayerScore() {
-      const name = document.getElementById('playerName').value || 'Anonyme';
-      savePlayerScoreToLeaderboard(name, score);
-      document.getElementById('playerNameInput').innerHTML = `
-        <p>✅ Score enregistré pour <strong>${name}</strong> !</p>
-      `;
-      showLeaderboard();
-    }
-
-    // Sauvegarde dans le classement
-    function savePlayerScoreToLeaderboard(name, score) {
-      const scores = JSON.parse(localStorage.getItem('leaderboard') || []);
-      scores.push({
-        name,
-        score,
-        date: new Date().toLocaleDateString(),
-        difficulty: currentDifficulty.level
-      });
-      scores.sort((a,b) => b.score - a.score);
-      localStorage.setItem('leaderboard', JSON.stringify(scores.slice(0,10)));
-    }
-
-    // Partage des résultats
-    function shareResult() {
-      navigator.share({
-        title: 'Mon score au Ultimate Flag Quiz',
-        text: `J'ai obtenu ${score}/${totalQuestions} en mode ${currentDifficulty.level === 'easy' ? 'Facile' : currentDifficulty.level === 'medium' ? 'Moyen' : 'Difficile'} !`,
-        url: window.location.href
-      }).catch(() => alert('Partage annulé'));
-    }
-
     // Redémarre le quiz
     function restartQuiz() {
       document.getElementById("result").style.display = "none";
@@ -601,7 +514,6 @@
       document.getElementById("result").style.display = "none";
       document.getElementById("startScreen").style.display = "block";
       document.getElementById("timer-container").style.display = "none";
-      showLeaderboard();
     }
   </script>
 </body>
