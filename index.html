@@ -9,46 +9,70 @@
       --correct-color: #28a745;
       --incorrect-color: #dc3545;
       --primary-color: #ff6b6b;
+      --bg-color: #f8f9fa;
+      --text-color: #212529;
+      --card-bg: #ffffff;
+      --choices-bg: #e0f7fa;
+      --choices-hover: #b2ebf2;
+      --progress-bg: #f1f1f1;
+      --timer-bg: #3b3054;
     }
+
+    .dark-mode {
+      --bg-color: #121212;
+      --text-color: #f8f9fa;
+      --card-bg: #1e1e1e;
+      --choices-bg: #2d2d2d;
+      --choices-hover: #3d3d3d;
+      --progress-bg: #2d2d2d;
+      --timer-bg: #2d2d2d;
+    }
+
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #fff7f0, #e0f7fa);
-      color: #3b3054;
+      background: var(--bg-color);
+      color: var(--text-color);
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
       min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
     }
+
     h1 {
       font-size: 2.4em;
-      color: #3b3054;
+      color: var(--text-color);
       margin-bottom: 10px;
       text-align: center;
     }
+
     .start-screen, .quiz-card, .result-card {
-      background: #ffffff;
+      background: var(--card-bg);
       border-radius: 20px;
       padding: 30px 25px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.12);
       max-width: 600px;
       width: 100%;
       margin: 20px 0;
-      transition: transform 0.3s, box-shadow 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
     }
+
     .quiz-card:hover, .start-screen:hover {
       transform: translateY(-5px);
       box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     }
+
     .choices {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       margin-top: 20px;
     }
+
     .choices label {
-      background: #e0f7fa;
+      background: var(--choices-bg);
       padding: 14px 16px;
       border-radius: 12px;
       cursor: pointer;
@@ -56,32 +80,39 @@
       display: flex;
       align-items: center;
     }
+
     .choices label.disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
-    .choices label:hover:not(.disabled) { background: #b2ebf2; }
+
+    .choices label:hover:not(.disabled) { background: var(--choices-hover); }
+    
     .choices input[type="radio"] { 
       margin-right: 8px;
       cursor: pointer;
     }
+
     .correct {
       background-color: #d4edda !important;
       border: 2px solid var(--correct-color);
       color: #155724;
     }
+
     .incorrect {
       background-color: #f8d7da !important;
       border: 2px solid var(--incorrect-color);
       color: #721c24;
       animation: shake 0.4s;
     }
+
     .feedback {
       font-weight: bold;
       margin-top: 15px;
       text-align: center;
       min-height: 24px;
     }
+
     .btn {
       background-color: var(--primary-color);
       color: white;
@@ -94,21 +125,26 @@
       font-size: 1em;
       transition: all 0.3s;
     }
+
     .btn:hover { 
       background-color: #ff4757;
       transform: scale(1.02);
     }
+
     .btn:disabled {
       background-color: #cccccc;
       cursor: not-allowed;
       transform: none;
     }
+
     .btn-secondary {
       background-color: #6c757d;
     }
+
     .btn-secondary:hover {
       background-color: #5a6268;
     }
+
     .flag-image {
       max-width: 100%;
       height: 120px;
@@ -119,15 +155,18 @@
       border-radius: 4px;
       transition: transform 0.3s;
     }
+
     .flag-image:hover {
       transform: scale(1.05);
     }
+
     .progress-container {
       width: 100%;
-      background-color: #f1f1f1;
+      background-color: var(--progress-bg);
       border-radius: 10px;
       margin: 15px 0;
     }
+
     .progress-bar {
       height: 10px;
       background-color: #4CAF50;
@@ -135,14 +174,17 @@
       width: 0%;
       transition: width 0.5s;
     }
+
     #timer-container {
       display: none;
-      background: #3b3054;
+      background: var(--timer-bg);
       color: white;
       padding: 8px 15px;
       border-radius: 20px;
       margin-bottom: 15px;
+      transition: background 0.3s;
     }
+
     .difficulty-badge {
       display: inline-block;
       padding: 3px 8px;
@@ -151,43 +193,69 @@
       font-weight: bold;
       margin-left: 10px;
     }
+
     .easy { background: #d4edda; color: #155724; }
     .medium { background: #fff3cd; color: #856404; }
     .hard { background: #f8d7da; color: #721c24; }
+
     .difficulty-btn {
       transition: all 0.3s;
       border: 2px solid transparent;
     }
+
     .difficulty-btn.selected {
       transform: scale(1.05);
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
       border-color: currentColor;
     }
+
     .easy.selected {
       background-color: #28a745;
       color: white;
     }
+
     .medium.selected {
       background-color: #ffc107;
       color: white;
     }
+
     .hard.selected {
       background-color: #dc3545;
       color: white;
     }
+
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-5px); }
       75% { transform: translateX(5px); }
     }
+
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
+
     .pulse {
       animation: pulse 1.5s infinite;
     }
+
+    .dark-mode-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.5em;
+      cursor: pointer;
+      color: var(--text-color);
+      transition: transform 0.3s;
+    }
+
+    .dark-mode-toggle:hover {
+      transform: rotate(30deg);
+    }
+
     @media (max-width: 600px) {
       .choices { grid-template-columns: 1fr; }
       .quiz-card, .start-screen { padding: 20px 15px; }
@@ -196,10 +264,16 @@
       .difficulty-buttons {
         flex-direction: column;
       }
+      .dark-mode-toggle {
+        top: 10px;
+        right: 10px;
+      }
     }
   </style>
 </head>
 <body>
+  <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
+  
   <h1>🌍 Ultimate Flag Quiz</h1>
 
   <!-- Écran de démarrage -->
@@ -237,6 +311,7 @@
   <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
   <audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
   <audio id="timeoutSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-explosion-2759.mp3"></audio>
+  <audio id="tickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-clock-countdown-bleeps-916.mp3"></audio>
 
   <script>
     // Liste complète des pays
@@ -283,9 +358,19 @@
       countries: allCountries
     };
 
+    // Sons
+    const correctSound = document.getElementById('correctSound');
+    const wrongSound = document.getElementById('wrongSound');
+    const timeoutSound = document.getElementById('timeoutSound');
+    const tickSound = document.getElementById('tickSound');
+    tickSound.volume = 0.3;
+
     // Initialisation
     document.addEventListener('DOMContentLoaded', () => {
       preloadImages();
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
     });
 
     // Précharge les images des drapeaux
@@ -293,6 +378,12 @@
       allCountries.forEach(([_, url]) => {
         new Image().src = url;
       });
+    }
+
+    // Basculer le mode sombre
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
     }
 
     // Active ou désactive tous les choix de réponse
@@ -327,12 +418,9 @@
 
     // Définit la difficulté
     function setDifficulty(level) {
-      // Retire la classe 'selected' de tous les boutons
       document.querySelectorAll('.difficulty-btn').forEach(btn => {
         btn.classList.remove('selected');
       });
-      
-      // Ajoute la classe 'selected' au bouton cliqué
       document.querySelector(`.difficulty-btn.${level}`).classList.add('selected');
       
       const difficulties = {
@@ -346,7 +434,6 @@
         level === 'easy' ? 'Facile (10s)' : 
         level === 'medium' ? 'Moyen (8s)' : 'Difficile (5s)';
       
-      // Mise à jour du timer si le quiz est en cours
       if (isChallengeMode && document.getElementById('quizContainer').style.display !== 'none') {
         timeLeft = currentDifficulty.time;
         document.getElementById('timer').textContent = timeLeft;
@@ -425,7 +512,6 @@
         });
       });
 
-      // Gestion de la touche Entrée
       controller.abort();
       controller = new AbortController();
       document.addEventListener(
@@ -442,7 +528,6 @@
       document.getElementById('timer').textContent = timeLeft;
       document.getElementById('timer').className = '';
       
-      // Activer tous les choix au début du timer
       enableAllChoices(true);
       
       timer = setInterval(() => {
@@ -450,17 +535,16 @@
         document.getElementById('timer').textContent = timeLeft;
         
         if(timeLeft <= 5) {
+          tickSound.currentTime = 0;
+          tickSound.play();
           document.getElementById('timer').classList.add('pulse');
         }
         
         if(timeLeft <= 0) {
           clearInterval(timer);
-          document.getElementById('timeoutSound').play();
+          timeoutSound.play();
           document.getElementById('feedback').innerHTML = '⏱️ Temps écoulé !';
-          
-          // Désactiver tous les choix
           enableAllChoices(false);
-          
           setTimeout(() => nextQuestion(), 1500);
         }
       }, 1000);
@@ -468,7 +552,6 @@
 
     // Valide la réponse sélectionnée
     function validateAnswer() {
-      // Ne pas valider si le temps est écoulé en mode défi
       if (isChallengeMode && timeLeft <= 0) {
         return;
       }
@@ -478,7 +561,6 @@
       const feedback = document.getElementById("feedback");
       const labels = document.querySelectorAll(".choices label");
       
-      // Désactiver tous les choix après validation
       enableAllChoices(false);
       
       labels.forEach((label, index) => {
@@ -494,10 +576,10 @@
 
       if (selected === correctIndex) {
         score++;
-        document.getElementById('correctSound').play();
+        correctSound.play();
         feedback.innerHTML = "✅ Correct !";
       } else {
-        document.getElementById('wrongSound').play();
+        wrongSound.play();
         feedback.innerHTML = `❌ Incorrect. La bonne réponse était <strong>${questions[currentQuestion].country}</strong>`;
       }
 
