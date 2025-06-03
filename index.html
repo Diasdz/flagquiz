@@ -192,11 +192,20 @@
       <button class="btn" onclick="startClassicMode()">Mode Classique</button>
       <button class="btn btn-secondary" onclick="startChallengeMode()">Mode Défi ⏱️</button>
     </div>
+    
+    <div style="margin-top: 20px;">
+      <h3>Choisissez la difficulté :</h3>
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button class="btn easy" onclick="setDifficulty('easy')">Facile (10s)</button>
+        <button class="btn medium" onclick="setDifficulty('medium')">Moyen (8s)</button>
+        <button class="btn hard" onclick="setDifficulty('hard')">Difficile (5s)</button>
+      </div>
+    </div>
   </div>
 
   <!-- Conteneur du quiz -->
   <div id="timer-container">
-    ⏱️ Temps restant : <span id="timer">15</span>s 
+    ⏱️ Temps restant : <span id="timer">10</span>s 
     <span id="lives">❤️❤️❤️</span>
     <span id="difficultyBadge" class="difficulty-badge easy">Facile</span>
   </div>
@@ -248,13 +257,13 @@
     let totalQuestions = 0;
     let controller = new AbortController();
     let timer;
-    let timeLeft = 5;
+    let timeLeft = 10;
     let lives = 3;
     let isChallengeMode = false;
     let currentDifficulty = {
       level: 'easy',
-      time: 5,
-      countries: allCountries.slice(0, 15)
+      time: 10,
+      countries: allCountries
     };
 
     // Initialisation
@@ -290,7 +299,6 @@
       isChallengeMode = false;
       lives = 3;
       startQuiz(10);
-      setDifficulty('easy');
       document.getElementById('timer-container').style.display = 'none';
     }
 
@@ -299,7 +307,6 @@
       isChallengeMode = true;
       lives = 3;
       startQuiz(15);
-      setDifficulty('hard');
       document.getElementById('timer-container').style.display = 'flex';
       updateLivesDisplay();
     }
@@ -307,14 +314,21 @@
     // Définit la difficulté
     function setDifficulty(level) {
       const difficulties = {
-        easy: { time: 20, countries: allCountries.slice(0, 15) },
-        medium: { time: 15, countries: allCountries },
-        hard: { time: 10, countries: allCountries }
+        easy: { time: 10, countries: allCountries },
+        medium: { time: 8, countries: allCountries },
+        hard: { time: 5, countries: allCountries }
       };
       currentDifficulty = { level, ...difficulties[level] };
       document.getElementById('difficultyBadge').className = `difficulty-badge ${level}`;
       document.getElementById('difficultyBadge').textContent = 
-        level === 'easy' ? 'Facile' : level === 'medium' ? 'Moyen' : 'Difficile';
+        level === 'easy' ? 'Facile (10s)' : 
+        level === 'medium' ? 'Moyen (8s)' : 'Difficile (5s)';
+      
+      // Mise à jour du timer si le quiz est en cours
+      if (isChallengeMode && document.getElementById('quizContainer').style.display !== 'none') {
+        timeLeft = currentDifficulty.time;
+        document.getElementById('timer').textContent = timeLeft;
+      }
     }
 
     // Génère des questions uniques
