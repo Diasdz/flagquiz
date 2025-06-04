@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ultimate Flag Quiz</title>
+  <title>Quiz des Drapeaux par Continent</title>
   <style>
     :root {
       --correct-color: #28a745;
@@ -371,7 +371,7 @@
   
   <h1 class="quiz-title">
     <span class="title-icon">🚩</span>
-    <span class="title-text">Ultimate Flag Quiz</span>
+    <span class="title-text">Quiz des Drapeaux</span>
     <span class="title-icon">🚩</span>
   </h1>
 
@@ -404,7 +404,6 @@
       <button class="btn continent-btn" onclick="startContinentMode('asie')">Asie 🌏</button>
       <button class="btn continent-btn" onclick="startContinentMode('amerique')">Amérique 🌎</button>
       <button class="btn continent-btn" onclick="startContinentMode('oceanie')">Océanie 🌊</button>
-      <button class="btn continent-btn" onclick="startContinentMode('monde')">Monde entier 🌐</button>
     </div>
     <button class="btn btn-secondary" onclick="showStartScreen()" style="margin-top: 15px;">Retour</button>
   </div>
@@ -482,32 +481,6 @@
         ["Papouasie-Nouvelle-Guinée", "https://flagcdn.com/w320/pg.png"],
         ["Samoa", "https://flagcdn.com/w320/ws.png"],
         ["Tonga", "https://flagcdn.com/w320/to.png"]
-      ],
-      monde: [
-        ["France", "https://flagcdn.com/w320/fr.png"],
-        ["Allemagne", "https://flagcdn.com/w320/de.png"],
-        ["Brésil", "https://flagcdn.com/w320/br.png"],
-        ["Canada", "https://flagcdn.com/w320/ca.png"],
-        ["Japon", "https://flagcdn.com/w320/jp.png"],
-        ["Italie", "https://flagcdn.com/w320/it.png"],
-        ["Inde", "https://flagcdn.com/w320/in.png"],
-        ["Russie", "https://flagcdn.com/w320/ru.png"],
-        ["Australie", "https://flagcdn.com/w320/au.png"],
-        ["Royaume-Uni", "https://flagcdn.com/w320/gb.png"],
-        ["Espagne", "https://flagcdn.com/w320/es.png"],
-        ["États-Unis", "https://flagcdn.com/w320/us.png"],
-        ["Chine", "https://flagcdn.com/w320/cn.png"],
-        ["Afrique du Sud", "https://flagcdn.com/w320/za.png"],
-        ["Mexique", "https://flagcdn.com/w320/mx.png"],
-        ["Argentine", "https://flagcdn.com/w320/ar.png"],
-        ["Égypte", "https://flagcdn.com/w320/eg.png"],
-        ["Suède", "https://flagcdn.com/w320/se.png"],
-        ["Norvège", "https://flagcdn.com/w320/no.png"],
-        ["Corée du Sud", "https://flagcdn.com/w320/kr.png"],
-        ["Suisse", "https://flagcdn.com/w320/ch.png"],
-        ["Portugal", "https://flagcdn.com/w320/pt.png"],
-        ["Pays-Bas", "https://flagcdn.com/w320/nl.png"],
-        ["Belgique", "https://flagcdn.com/w320/be.png"]
       ]
     };
 
@@ -523,7 +496,7 @@
     let currentDifficulty = {
       level: 'easy',
       time: 10,
-      countries: countriesByContinent.monde
+      countries: countriesByContinent.europe // Europe par défaut
     };
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -571,7 +544,7 @@
 
     function startClassicMode() {
       isChallengeMode = false;
-      currentDifficulty.countries = countriesByContinent.monde;
+      currentDifficulty.countries = countriesByContinent.europe;
       startQuiz(10);
       document.getElementById('timer-container').style.display = 'none';
     }
@@ -619,7 +592,7 @@
 
     function startChallengeMode() {
       isChallengeMode = true;
-      currentDifficulty.countries = countriesByContinent.monde;
+      currentDifficulty.countries = countriesByContinent.europe;
       startQuiz(15);
       document.getElementById('timer-container').style.display = 'flex';
       document.getElementById('difficultyOptions').style.display = 'none';
@@ -813,7 +786,10 @@
     }
 
     function saveScore() {
-      const key = `bestScore_${currentDifficulty.level}_${isChallengeMode ? 'challenge' : 'classic'}`;
+      const key = `bestScore_${currentDifficulty.level}_${isChallengeMode ? 'challenge' : 'classic'}_${currentDifficulty.countries === countriesByContinent.europe ? 'europe' : 
+                 currentDifficulty.countries === countriesByContinent.afrique ? 'afrique' :
+                 currentDifficulty.countries === countriesByContinent.asie ? 'asie' :
+                 currentDifficulty.countries === countriesByContinent.amerique ? 'amerique' : 'oceanie'}`;
       const best = localStorage.getItem(key) || 0;
       if (score > best) {
         localStorage.setItem(key, score);
@@ -821,7 +797,10 @@
     }
 
     function getBestScore() {
-      const key = `bestScore_${currentDifficulty.level}_${isChallengeMode ? 'challenge' : 'classic'}`;
+      const key = `bestScore_${currentDifficulty.level}_${isChallengeMode ? 'challenge' : 'classic'}_${currentDifficulty.countries === countriesByContinent.europe ? 'europe' : 
+                 currentDifficulty.countries === countriesByContinent.afrique ? 'afrique' :
+                 currentDifficulty.countries === countriesByContinent.asie ? 'asie' :
+                 currentDifficulty.countries === countriesByContinent.amerique ? 'amerique' : 'oceanie'}`;
       return localStorage.getItem(key) || 0;
     }
 
