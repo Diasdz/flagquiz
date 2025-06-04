@@ -163,10 +163,9 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      margin: 15px auto 0;
-      display: block;
       font-size: 1em;
       transition: all 0.3s;
+      flex: 1;
     }
 
     .btn:hover { 
@@ -268,6 +267,13 @@
       color: white;
     }
 
+    .button-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-5px); }
@@ -314,7 +320,6 @@
 
       .choices { grid-template-columns: 1fr; }
       .quiz-card, .start-screen { padding: 15px 10px; }
-      .btn { width: 100%; }
       
       .flag-image {
         height: 60px;
@@ -323,6 +328,10 @@
       .choices label {
         padding: 8px 10px;
         font-size: 0.9em;
+      }
+
+      .button-group {
+        flex-direction: column;
       }
     }
   </style>
@@ -545,9 +554,12 @@
           `).join("")}
         </div>
         <div class="feedback" id="feedback" style="min-height: 20px;"></div>
-        <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled style="margin-top: 10px;">
-          ${currentQuestion < totalQuestions - 1 ? 'Suivant' : 'Résultats'}
-        </button>
+        <div class="button-group">
+          <button class="btn btn-secondary" onclick="endGame()">Arrêter la partie</button>
+          <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>
+            ${currentQuestion < totalQuestions - 1 ? 'Suivant' : 'Résultats'}
+          </button>
+        </div>
       `;
 
       selected = null;
@@ -637,6 +649,25 @@
       }
     }
 
+    function endGame() {
+      clearInterval(timer);
+      saveScore();
+      const best = getBestScore();
+
+      document.getElementById("quizContainer").style.display = "none";
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").innerHTML = `
+        <h2>Partie arrêtée</h2>
+        <p>Votre score actuel: <strong>${score} / ${totalQuestions}</strong></p>
+        <p>🏆 Meilleur score: <strong>${best} / ${totalQuestions}</strong></p>
+        
+        <div class="button-group">
+          <button class="btn" onclick="restartQuiz()">Rejouer</button>
+          <button class="btn btn-secondary" onclick="showStartScreen()">Menu Principal</button>
+        </div>
+      `;
+    }
+
     function showResult() {
       saveScore();
       const best = getBestScore();
@@ -648,7 +679,7 @@
         <p>Votre score final: <strong>${score} / ${totalQuestions}</strong></p>
         <p>🏆 Meilleur score: <strong>${best} / ${totalQuestions}</strong></p>
         
-        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+        <div class="button-group">
           <button class="btn" onclick="restartQuiz()">Rejouer</button>
           <button class="btn btn-secondary" onclick="showStartScreen()">Menu Principal</button>
         </div>
