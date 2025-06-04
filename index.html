@@ -91,7 +91,7 @@
       50% { transform: translateY(-5px); }
     }
 
-    .start-screen, .quiz-card, .result-card {
+    .start-screen, .quiz-card, .result-card, .continent-selection {
       background: var(--card-bg);
       border-radius: 20px;
       padding: 20px 15px;
@@ -102,7 +102,7 @@
       transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
     }
 
-    .quiz-card:hover, .start-screen:hover {
+    .quiz-card:hover, .start-screen:hover, .continent-selection:hover {
       transform: translateY(-5px);
       box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     }
@@ -287,6 +287,26 @@
       color: #dc3545;
     }
 
+    .continent-btn {
+      background-color: #4a6baf;
+      color: white;
+      margin: 5px;
+      flex: 1 1 45%;
+      min-width: 120px;
+    }
+
+    .continent-btn:hover {
+      background-color: #3a5a9f;
+    }
+
+    .continent-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 15px 0;
+    }
+
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-5px); }
@@ -332,7 +352,7 @@
       }
 
       .choices { grid-template-columns: 1fr; }
-      .quiz-card, .start-screen { padding: 15px 10px; }
+      .quiz-card, .start-screen, .continent-selection { padding: 15px 10px; }
       .btn { width: 100%; }
       
       .flag-image {
@@ -362,6 +382,7 @@
     <div style="margin: 15px 0; display: flex; flex-direction: column; gap: 8px;">
       <button class="btn" onclick="startClassicMode()">Mode Classique</button>
       <button class="btn btn-secondary" onclick="showDifficultyOptions()">Mode Défi ⏱️</button>
+      <button class="btn" onclick="showContinentSelection()">Mode Continent 🌍</button>
     </div>
     
     <div id="difficultyOptions" style="margin-top: 15px; display: none;">
@@ -373,6 +394,19 @@
       </div>
       <button class="btn" onclick="startChallengeMode()" style="margin-top: 15px;">Commencer le défi</button>
     </div>
+  </div>
+
+  <div class="continent-selection" id="continentSelection" style="display: none;">
+    <h2 style="margin-top: 0; text-align: center;">Choisissez un continent</h2>
+    <div class="continent-grid">
+      <button class="btn continent-btn" onclick="startContinentMode('europe')">Europe 🇪🇺</button>
+      <button class="btn continent-btn" onclick="startContinentMode('afrique')">Afrique 🌍</button>
+      <button class="btn continent-btn" onclick="startContinentMode('asie')">Asie 🌏</button>
+      <button class="btn continent-btn" onclick="startContinentMode('amerique')">Amérique 🌎</button>
+      <button class="btn continent-btn" onclick="startContinentMode('oceanie')">Océanie 🌊</button>
+      <button class="btn continent-btn" onclick="startContinentMode('monde')">Monde entier 🌐</button>
+    </div>
+    <button class="btn btn-secondary" onclick="showStartScreen()" style="margin-top: 15px;">Retour</button>
   </div>
 
   <div id="timer-container">
@@ -389,32 +423,93 @@
   <audio id="timeoutSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-explosion-2759.mp3"></audio>
 
   <script>
-    const allCountries = [
-      ["France", "https://flagcdn.com/w320/fr.png"],
-      ["Allemagne", "https://flagcdn.com/w320/de.png"],
-      ["Brésil", "https://flagcdn.com/w320/br.png"],
-      ["Canada", "https://flagcdn.com/w320/ca.png"],
-      ["Japon", "https://flagcdn.com/w320/jp.png"],
-      ["Italie", "https://flagcdn.com/w320/it.png"],
-      ["Inde", "https://flagcdn.com/w320/in.png"],
-      ["Russie", "https://flagcdn.com/w320/ru.png"],
-      ["Australie", "https://flagcdn.com/w320/au.png"],
-      ["Royaume-Uni", "https://flagcdn.com/w320/gb.png"],
-      ["Espagne", "https://flagcdn.com/w320/es.png"],
-      ["États-Unis", "https://flagcdn.com/w320/us.png"],
-      ["Chine", "https://flagcdn.com/w320/cn.png"],
-      ["Afrique du Sud", "https://flagcdn.com/w320/za.png"],
-      ["Mexique", "https://flagcdn.com/w320/mx.png"],
-      ["Argentine", "https://flagcdn.com/w320/ar.png"],
-      ["Égypte", "https://flagcdn.com/w320/eg.png"],
-      ["Suède", "https://flagcdn.com/w320/se.png"],
-      ["Norvège", "https://flagcdn.com/w320/no.png"],
-      ["Corée du Sud", "https://flagcdn.com/w320/kr.png"],
-      ["Suisse", "https://flagcdn.com/w320/ch.png"],
-      ["Portugal", "https://flagcdn.com/w320/pt.png"],
-      ["Pays-Bas", "https://flagcdn.com/w320/nl.png"],
-      ["Belgique", "https://flagcdn.com/w320/be.png"]
-    ];
+    // Base de données des pays par continent
+    const countriesByContinent = {
+      europe: [
+        ["France", "https://flagcdn.com/w320/fr.png"],
+        ["Allemagne", "https://flagcdn.com/w320/de.png"],
+        ["Italie", "https://flagcdn.com/w320/it.png"],
+        ["Espagne", "https://flagcdn.com/w320/es.png"],
+        ["Royaume-Uni", "https://flagcdn.com/w320/gb.png"],
+        ["Portugal", "https://flagcdn.com/w320/pt.png"],
+        ["Suisse", "https://flagcdn.com/w320/ch.png"],
+        ["Belgique", "https://flagcdn.com/w320/be.png"],
+        ["Pays-Bas", "https://flagcdn.com/w320/nl.png"],
+        ["Suède", "https://flagcdn.com/w320/se.png"],
+        ["Norvège", "https://flagcdn.com/w320/no.png"],
+        ["Russie", "https://flagcdn.com/w320/ru.png"]
+      ],
+      afrique: [
+        ["Afrique du Sud", "https://flagcdn.com/w320/za.png"],
+        ["Égypte", "https://flagcdn.com/w320/eg.png"],
+        ["Maroc", "https://flagcdn.com/w320/ma.png"],
+        ["Nigeria", "https://flagcdn.com/w320/ng.png"],
+        ["Kenya", "https://flagcdn.com/w320/ke.png"],
+        ["Algérie", "https://flagcdn.com/w320/dz.png"],
+        ["Tunisie", "https://flagcdn.com/w320/tn.png"],
+        ["Ghana", "https://flagcdn.com/w320/gh.png"],
+        ["Sénégal", "https://flagcdn.com/w320/sn.png"],
+        ["Côte d'Ivoire", "https://flagcdn.com/w320/ci.png"]
+      ],
+      asie: [
+        ["Chine", "https://flagcdn.com/w320/cn.png"],
+        ["Japon", "https://flagcdn.com/w320/jp.png"],
+        ["Corée du Sud", "https://flagcdn.com/w320/kr.png"],
+        ["Inde", "https://flagcdn.com/w320/in.png"],
+        ["Thaïlande", "https://flagcdn.com/w320/th.png"],
+        ["Vietnam", "https://flagcdn.com/w320/vn.png"],
+        ["Indonésie", "https://flagcdn.com/w320/id.png"],
+        ["Arabie Saoudite", "https://flagcdn.com/w320/sa.png"],
+        ["Turquie", "https://flagcdn.com/w320/tr.png"],
+        ["Iran", "https://flagcdn.com/w320/ir.png"]
+      ],
+      amerique: [
+        ["États-Unis", "https://flagcdn.com/w320/us.png"],
+        ["Canada", "https://flagcdn.com/w320/ca.png"],
+        ["Brésil", "https://flagcdn.com/w320/br.png"],
+        ["Mexique", "https://flagcdn.com/w320/mx.png"],
+        ["Argentine", "https://flagcdn.com/w320/ar.png"],
+        ["Colombie", "https://flagcdn.com/w320/co.png"],
+        ["Chili", "https://flagcdn.com/w320/cl.png"],
+        ["Pérou", "https://flagcdn.com/w320/pe.png"],
+        ["Cuba", "https://flagcdn.com/w320/cu.png"],
+        ["Jamaïque", "https://flagcdn.com/w320/jm.png"]
+      ],
+      oceanie: [
+        ["Australie", "https://flagcdn.com/w320/au.png"],
+        ["Nouvelle-Zélande", "https://flagcdn.com/w320/nz.png"],
+        ["Fidji", "https://flagcdn.com/w320/fj.png"],
+        ["Papouasie-Nouvelle-Guinée", "https://flagcdn.com/w320/pg.png"],
+        ["Samoa", "https://flagcdn.com/w320/ws.png"],
+        ["Tonga", "https://flagcdn.com/w320/to.png"]
+      ],
+      monde: [
+        ["France", "https://flagcdn.com/w320/fr.png"],
+        ["Allemagne", "https://flagcdn.com/w320/de.png"],
+        ["Brésil", "https://flagcdn.com/w320/br.png"],
+        ["Canada", "https://flagcdn.com/w320/ca.png"],
+        ["Japon", "https://flagcdn.com/w320/jp.png"],
+        ["Italie", "https://flagcdn.com/w320/it.png"],
+        ["Inde", "https://flagcdn.com/w320/in.png"],
+        ["Russie", "https://flagcdn.com/w320/ru.png"],
+        ["Australie", "https://flagcdn.com/w320/au.png"],
+        ["Royaume-Uni", "https://flagcdn.com/w320/gb.png"],
+        ["Espagne", "https://flagcdn.com/w320/es.png"],
+        ["États-Unis", "https://flagcdn.com/w320/us.png"],
+        ["Chine", "https://flagcdn.com/w320/cn.png"],
+        ["Afrique du Sud", "https://flagcdn.com/w320/za.png"],
+        ["Mexique", "https://flagcdn.com/w320/mx.png"],
+        ["Argentine", "https://flagcdn.com/w320/ar.png"],
+        ["Égypte", "https://flagcdn.com/w320/eg.png"],
+        ["Suède", "https://flagcdn.com/w320/se.png"],
+        ["Norvège", "https://flagcdn.com/w320/no.png"],
+        ["Corée du Sud", "https://flagcdn.com/w320/kr.png"],
+        ["Suisse", "https://flagcdn.com/w320/ch.png"],
+        ["Portugal", "https://flagcdn.com/w320/pt.png"],
+        ["Pays-Bas", "https://flagcdn.com/w320/nl.png"],
+        ["Belgique", "https://flagcdn.com/w320/be.png"]
+      ]
+    };
 
     let questions = [];
     let currentQuestion = 0;
@@ -428,19 +523,19 @@
     let currentDifficulty = {
       level: 'easy',
       time: 10,
-      countries: allCountries
+      countries: countriesByContinent.monde
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-      preloadImages();
+      preloadAllImages();
       if (localStorage.getItem('darkMode') === 'true') {
         document.body.classList.add('dark-mode');
       }
       preloadSounds();
     });
 
-    function preloadImages() {
-      allCountries.forEach(([_, url]) => {
+    function preloadAllImages() {
+      Object.values(countriesByContinent).flat().forEach(([_, url]) => {
         new Image().src = url;
       });
     }
@@ -449,7 +544,7 @@
       const sounds = ['correctSound', 'wrongSound', 'timeoutSound'];
       sounds.forEach(soundId => {
         const sound = document.getElementById(soundId);
-        sound.volume = 1.0;
+        sound.volume = 0.7;
         sound.load();
       });
     }
@@ -476,8 +571,23 @@
 
     function startClassicMode() {
       isChallengeMode = false;
+      currentDifficulty.countries = countriesByContinent.monde;
       startQuiz(10);
       document.getElementById('timer-container').style.display = 'none';
+    }
+
+    function showContinentSelection() {
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('continentSelection').style.display = 'block';
+    }
+
+    function startContinentMode(continent) {
+      isChallengeMode = false;
+      currentDifficulty.countries = countriesByContinent[continent];
+      const questionCount = Math.min(10, countriesByContinent[continent].length);
+      startQuiz(questionCount);
+      document.getElementById('timer-container').style.display = 'none';
+      document.getElementById('continentSelection').style.display = 'none';
     }
 
     function showDifficultyOptions() {
@@ -492,11 +602,15 @@
       document.querySelector(`.difficulty-btn.${level}`).classList.add('selected');
       
       const difficulties = {
-        easy: { time: 10, countries: allCountries },
-        medium: { time: 8, countries: allCountries },
-        hard: { time: 5, countries: allCountries }
+        easy: { time: 10 },
+        medium: { time: 8 },
+        hard: { time: 5 }
       };
-      currentDifficulty = { level, ...difficulties[level] };
+      currentDifficulty = { 
+        ...currentDifficulty,
+        level,
+        time: difficulties[level].time
+      };
       document.getElementById('difficultyBadge').className = `difficulty-badge ${level}`;
       document.getElementById('difficultyBadge').textContent = 
         level === 'easy' ? 'Facile (10s)' : 
@@ -505,14 +619,18 @@
 
     function startChallengeMode() {
       isChallengeMode = true;
+      currentDifficulty.countries = countriesByContinent.monde;
       startQuiz(15);
       document.getElementById('timer-container').style.display = 'flex';
+      document.getElementById('difficultyOptions').style.display = 'none';
     }
 
     function generateUniqueQuestions(count) {
-      const shuffledCountries = [...currentDifficulty.countries].sort(() => Math.random() - 0.5);
+      const availableCountries = [...currentDifficulty.countries];
+      const shuffledCountries = [...availableCountries].sort(() => Math.random() - 0.5);
+      
       return shuffledCountries.slice(0, count).map(correct => {
-        const incorrectChoices = currentDifficulty.countries
+        const incorrectChoices = availableCountries
           .filter(c => c[0] !== correct[0])
           .sort(() => Math.random() - 0.5)
           .slice(0, 3);
@@ -695,14 +813,16 @@
     }
 
     function saveScore() {
-      const best = localStorage.getItem(`bestScore${currentDifficulty.level}`) || 0;
+      const key = `bestScore_${currentDifficulty.level}_${isChallengeMode ? 'challenge' : 'classic'}`;
+      const best = localStorage.getItem(key) || 0;
       if (score > best) {
-        localStorage.setItem(`bestScore${currentDifficulty.level}`, score);
+        localStorage.setItem(key, score);
       }
     }
 
     function getBestScore() {
-      return localStorage.getItem(`bestScore${currentDifficulty.level}`) || 0;
+      const key = `bestScore_${currentDifficulty.level}_${isChallengeMode ? 'challenge' : 'classic'}`;
+      return localStorage.getItem(key) || 0;
     }
 
     function restartQuiz() {
@@ -715,6 +835,7 @@
       document.getElementById("startScreen").style.display = "block";
       document.getElementById("timer-container").style.display = "none";
       document.getElementById('difficultyOptions').style.display = 'none';
+      document.getElementById('continentSelection').style.display = 'none';
       document.querySelector('#startScreen div:first-of-type').style.display = 'flex';
     }
   </script>
