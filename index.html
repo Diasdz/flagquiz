@@ -336,7 +336,6 @@
     <span class="title-icon">🚩</span>
   </h1>
 
-  <!-- Écran de démarrage modifié -->
   <div class="start-screen" id="startScreen">
     <h2 style="margin-top: 0; font-size: 1.3em;">Testez vos connaissances des drapeaux !</h2>
     <p>Choisissez votre mode de jeu :</p>
@@ -346,7 +345,6 @@
       <button class="btn btn-secondary" onclick="showDifficultyOptions()">Mode Défi ⏱️</button>
     </div>
     
-    <!-- Options de difficulté (cachées par défaut) -->
     <div id="difficultyOptions" style="margin-top: 15px; display: none;">
       <h3 style="margin-bottom: 8px; font-size: 1.1em;">Choisissez la difficulté :</h3>
       <div class="difficulty-buttons" style="display: flex; gap: 8px; justify-content: center;">
@@ -358,7 +356,6 @@
     </div>
   </div>
 
-  <!-- Conteneur du quiz -->
   <div id="timer-container">
     ⏱️ Temps restant : <span id="timer">10</span>s
     <span id="difficultyBadge" class="difficulty-badge easy">Facile (10s)</span>
@@ -366,17 +363,13 @@
 
   <div class="quiz-card" id="quizContainer" style="display: none;"></div>
   
-  <!-- Résultats -->
   <div class="result-card" id="result" style="display: none;"></div>
 
-  <!-- Sons -->
   <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
   <audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
   <audio id="timeoutSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-explosion-2759.mp3"></audio>
-  <audio id="tickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-clock-countdown-bleeps-916.mp3"></audio>
 
   <script>
-    // Liste complète des pays
     const allCountries = [
       ["France", "https://flagcdn.com/w320/fr.png"],
       ["Allemagne", "https://flagcdn.com/w320/de.png"],
@@ -404,7 +397,6 @@
       ["Belgique", "https://flagcdn.com/w320/be.png"]
     ];
 
-    // Variables globales
     let questions = [];
     let currentQuestion = 0;
     let score = 0;
@@ -420,7 +412,6 @@
       countries: allCountries
     };
 
-    // Initialisation
     document.addEventListener('DOMContentLoaded', () => {
       preloadImages();
       if (localStorage.getItem('darkMode') === 'true') {
@@ -436,10 +427,10 @@
     }
 
     function preloadSounds() {
-      const sounds = ['correctSound', 'wrongSound', 'timeoutSound', 'tickSound'];
+      const sounds = ['correctSound', 'wrongSound', 'timeoutSound'];
       sounds.forEach(soundId => {
         const sound = document.getElementById(soundId);
-        sound.volume = soundId === 'tickSound' ? 0.3 : 1.0;
+        sound.volume = 1.0;
         sound.load();
       });
     }
@@ -584,29 +575,11 @@
       
       enableAllChoices(true);
       
-      const tickSound = document.getElementById('tickSound');
-      tickSound.volume = 0.3;
-      
-      if (timeLeft <= 5) {
-        try {
-          tickSound.currentTime = 0;
-          tickSound.play().catch(e => console.log("Son initial non joué:", e));
-        } catch (e) {
-          console.log("Erreur son initial:", e);
-        }
-      }
-      
       timer = setInterval(() => {
         timeLeft--;
         document.getElementById('timer').textContent = timeLeft;
         
         if(timeLeft <= 5 && timeLeft > 0) {
-          try {
-            tickSound.currentTime = 0;
-            tickSound.play().catch(e => console.log("Son du chrono non joué:", e));
-          } catch (e) {
-            console.log("Erreur son chrono:", e);
-          }
           document.getElementById('timer').classList.add('pulse');
         }
         
@@ -702,7 +675,6 @@
       document.getElementById("result").style.display = "none";
       document.getElementById("startScreen").style.display = "block";
       document.getElementById("timer-container").style.display = "none";
-      // Réinitialiser l'affichage des options
       document.getElementById('difficultyOptions').style.display = 'none';
       document.querySelector('#startScreen div:first-of-type').style.display = 'flex';
     }
