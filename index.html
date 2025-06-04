@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz des Drapeaux par Continent</title>
+  <title>Quiz des Drapeaux</title>
   <style>
     :root {
       --correct-color: #28a745;
@@ -16,6 +16,7 @@
       --choices-hover: #b2ebf2;
       --progress-bg: #f1f1f1;
       --timer-bg: #3b3054;
+      --loader-color: #4a6baf;
     }
 
     .dark-mode {
@@ -26,8 +27,57 @@
       --choices-hover: #3d3d3d;
       --progress-bg: #2d2d2d;
       --timer-bg: #2d2d2d;
+      --loader-color: #5a7bc8;
     }
 
+    /* Loader Styles */
+    .loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+
+    .loader-container.active {
+      opacity: 1;
+    }
+
+    .loader {
+      width: 48px;
+      height: 48px;
+      border: 5px solid var(--loader-color);
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Transition entre questions */
+    .quiz-card {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .quiz-card.fade-out {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    /* Reste du CSS reste inchangé */
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -367,6 +417,10 @@
   </style>
 </head>
 <body>
+  <div class="loader-container" id="loader">
+    <div class="loader"></div>
+  </div>
+
   <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
   
   <h1 class="quiz-title">
@@ -496,16 +550,26 @@
     let currentDifficulty = {
       level: 'easy',
       time: 10,
-      countries: countriesByContinent.europe // Europe par défaut
+      countries: countriesByContinent.europe
     };
 
     document.addEventListener('DOMContentLoaded', () => {
+      showLoader(1000); // Affiche le loader pendant 1s au chargement
       preloadAllImages();
       if (localStorage.getItem('darkMode') === 'true') {
         document.body.classList.add('dark-mode');
       }
       preloadSounds();
     });
+
+    function showLoader(duration) {
+      const loader = document.getElementById('loader');
+      loader.classList.add('active');
+      
+      setTimeout(() => {
+        loader.classList.remove('active');
+      }, duration);
+    }
 
     function preloadAllImages() {
       Object.values(countriesByContinent).flat().forEach(([_, url]) => {
@@ -545,8 +609,11 @@
     function startClassicMode() {
       isChallengeMode = false;
       currentDifficulty.countries = countriesByContinent.europe;
-      startQuiz(10);
-      document.getElementById('timer-container').style.display = 'none';
+      showLoader(500);
+      setTimeout(() => {
+        startQuiz(10);
+        document.getElementById('timer-container').style.display = 'none';
+      }, 500);
     }
 
     function showContinentSelection() {
@@ -558,9 +625,12 @@
       isChallengeMode = false;
       currentDifficulty.countries = countriesByContinent[continent];
       const questionCount = Math.min(10, countriesByContinent[continent].length);
-      startQuiz(questionCount);
-      document.getElementById('timer-container').style.display = 'none';
-      document.getElementById('continentSelection').style.display = 'none';
+      showLoader(500);
+      setTimeout(() => {
+        startQuiz(questionCount);
+        document.getElementById('timer-container').style.display = 'none';
+        document.getElementById('continentSelection').style.display = 'none';
+      }, 500);
     }
 
     function showDifficultyOptions() {
@@ -593,9 +663,12 @@
     function startChallengeMode() {
       isChallengeMode = true;
       currentDifficulty.countries = countriesByContinent.europe;
-      startQuiz(15);
-      document.getElementById('timer-container').style.display = 'flex';
-      document.getElementById('difficultyOptions').style.display = 'none';
+      showLoader(500);
+      setTimeout(() => {
+        startQuiz(15);
+        document.getElementById('timer-container').style.display = 'flex';
+        document.getElementById('difficultyOptions').style.display = 'none';
+      }, 500);
     }
 
     function generateUniqueQuestions(count) {
@@ -635,47 +708,58 @@
     }
 
     function showQuestion() {
+      const quizContainer = document.getElementById("quizContainer");
       const q = questions[currentQuestion];
       
-      document.getElementById("quizContainer").innerHTML = `
-        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-          <small>Question ${currentQuestion + 1}/${totalQuestions}</small>
-          <small>Score: ${score}</small>
-        </div>
-        <div class="progress-container">
-          <div class="progress-bar" style="width: ${((currentQuestion) / totalQuestions) * 100}%"></div>
-        </div>
-        <div style="margin: 5px 0;">${q.question}</div>
-        <div class="choices">
-          ${q.choices.map((choice, i) => `
-            <label>
-              <input type="radio" name="choice" value="${i}" aria-label="${choice}">
-              ${choice}
-            </label>
-          `).join("")}
-        </div>
-        <div class="feedback" id="feedback" style="min-height: 20px;"></div>
-        <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled style="margin-top: 10px;">
-          ${currentQuestion < totalQuestions - 1 ? 'Suivant' : 'Résultats'}
-        </button>
-        <button class="stop-btn" onclick="endGame()">Arrêter la partie</button>
-      `;
-
-      selected = null;
-      document.querySelectorAll('input[name="choice"]').forEach(input => {
-        input.addEventListener('change', (e) => {
-          selected = parseInt(e.target.value);
-          validateAnswer();
+      // Effet de fondu
+      quizContainer.classList.add('fade-out');
+      
+      setTimeout(() => {
+        quizContainer.innerHTML = `
+          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <small>Question ${currentQuestion + 1}/${totalQuestions}</small>
+            <small>Score: ${score}</small>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" style="width: ${((currentQuestion) / totalQuestions) * 100}%"></div>
+          </div>
+          <div style="margin: 5px 0;">${q.question}</div>
+          <div class="choices">
+            ${q.choices.map((choice, i) => `
+              <label>
+                <input type="radio" name="choice" value="${i}" aria-label="${choice}">
+                ${choice}
+              </label>
+            `).join("")}
+          </div>
+          <div class="feedback" id="feedback" style="min-height: 20px;"></div>
+          <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled style="margin-top: 10px;">
+            ${currentQuestion < totalQuestions - 1 ? 'Suivant' : 'Résultats'}
+          </button>
+          <button class="stop-btn" onclick="endGame()">Arrêter la partie</button>
+        `;
+        
+        // Réapparition avec fondu
+        setTimeout(() => {
+          quizContainer.classList.remove('fade-out');
+        }, 50);
+        
+        selected = null;
+        document.querySelectorAll('input[name="choice"]').forEach(input => {
+          input.addEventListener('change', (e) => {
+            selected = parseInt(e.target.value);
+            validateAnswer();
+          });
         });
-      });
 
-      controller.abort();
-      controller = new AbortController();
-      document.addEventListener(
-        "keydown", 
-        (e) => { if (e.key === "Enter") nextQuestion(); },
-        { signal: controller.signal }
-      );
+        controller.abort();
+        controller = new AbortController();
+        document.addEventListener(
+          "keydown", 
+          (e) => { if (e.key === "Enter") nextQuestion(); },
+          { signal: controller.signal }
+        );
+      }, 300); // Correspond à la durée de la transition
     }
 
     function startTimer() {
@@ -739,13 +823,17 @@
 
     function nextQuestion() {
       clearInterval(timer);
-      currentQuestion++;
-      if (currentQuestion < totalQuestions) {
-        showQuestion();
-        if (isChallengeMode) startTimer();
-      } else {
-        showResult();
-      }
+      showLoader(300); // Court loader entre les questions
+      
+      setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < totalQuestions) {
+          showQuestion();
+          if (isChallengeMode) startTimer();
+        } else {
+          showResult();
+        }
+      }, 300);
     }
 
     function endGame() {
@@ -806,7 +894,10 @@
 
     function restartQuiz() {
       document.getElementById("result").style.display = "none";
-      startQuiz(totalQuestions);
+      showLoader(500);
+      setTimeout(() => {
+        startQuiz(totalQuestions);
+      }, 500);
     }
 
     function showStartScreen() {
