@@ -336,23 +336,25 @@
     <span class="title-icon">🚩</span>
   </h1>
 
-  <!-- Écran de démarrage -->
+  <!-- Écran de démarrage modifié -->
   <div class="start-screen" id="startScreen">
     <h2 style="margin-top: 0; font-size: 1.3em;">Testez vos connaissances des drapeaux !</h2>
     <p>Choisissez votre mode de jeu :</p>
     
     <div style="margin: 15px 0; display: flex; flex-direction: column; gap: 8px;">
       <button class="btn" onclick="startClassicMode()">Mode Classique</button>
-      <button class="btn btn-secondary" onclick="startChallengeMode()">Mode Défi ⏱️</button>
+      <button class="btn btn-secondary" onclick="showDifficultyOptions()">Mode Défi ⏱️</button>
     </div>
     
-    <div style="margin-top: 15px;">
+    <!-- Options de difficulté (cachées par défaut) -->
+    <div id="difficultyOptions" style="margin-top: 15px; display: none;">
       <h3 style="margin-bottom: 8px; font-size: 1.1em;">Choisissez la difficulté :</h3>
       <div class="difficulty-buttons" style="display: flex; gap: 8px; justify-content: center;">
         <button class="btn easy difficulty-btn selected" onclick="setDifficulty('easy')">Facile (10s)</button>
         <button class="btn medium difficulty-btn" onclick="setDifficulty('medium')">Moyen (8s)</button>
         <button class="btn hard difficulty-btn" onclick="setDifficulty('hard')">Difficile (5s)</button>
       </div>
+      <button class="btn" onclick="startChallengeMode()" style="margin-top: 15px;">Commencer le défi</button>
     </div>
   </div>
 
@@ -424,19 +426,15 @@
       if (localStorage.getItem('darkMode') === 'true') {
         document.body.classList.add('dark-mode');
       }
-      
-      // Précharger les sons
       preloadSounds();
     });
 
-    // Précharge les images des drapeaux
     function preloadImages() {
       allCountries.forEach(([_, url]) => {
         new Image().src = url;
       });
     }
 
-    // Précharge les sons
     function preloadSounds() {
       const sounds = ['correctSound', 'wrongSound', 'timeoutSound', 'tickSound'];
       sounds.forEach(soundId => {
@@ -446,13 +444,11 @@
       });
     }
 
-    // Basculer le mode sombre
     function toggleDarkMode() {
       document.body.classList.toggle('dark-mode');
       localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
     }
 
-    // Active ou désactive tous les choix de réponse
     function enableAllChoices(enable) {
       const inputs = document.querySelectorAll('input[name="choice"]');
       inputs.forEach(input => {
@@ -468,21 +464,17 @@
       });
     }
 
-    // Démarre le mode classique
     function startClassicMode() {
       isChallengeMode = false;
       startQuiz(10);
       document.getElementById('timer-container').style.display = 'none';
     }
 
-    // Démarre le mode défi
-    function startChallengeMode() {
-      isChallengeMode = true;
-      startQuiz(15);
-      document.getElementById('timer-container').style.display = 'flex';
+    function showDifficultyOptions() {
+      document.getElementById('difficultyOptions').style.display = 'block';
+      document.querySelector('#startScreen div:first-of-type').style.display = 'none';
     }
 
-    // Définit la difficulté
     function setDifficulty(level) {
       document.querySelectorAll('.difficulty-btn').forEach(btn => {
         btn.classList.remove('selected');
@@ -499,14 +491,14 @@
       document.getElementById('difficultyBadge').textContent = 
         level === 'easy' ? 'Facile (10s)' : 
         level === 'medium' ? 'Moyen (8s)' : 'Difficile (5s)';
-      
-      if (isChallengeMode && document.getElementById('quizContainer').style.display !== 'none') {
-        timeLeft = currentDifficulty.time;
-        document.getElementById('timer').textContent = timeLeft;
-      }
     }
 
-    // Génère des questions uniques
+    function startChallengeMode() {
+      isChallengeMode = true;
+      startQuiz(15);
+      document.getElementById('timer-container').style.display = 'flex';
+    }
+
     function generateUniqueQuestions(count) {
       const shuffledCountries = [...currentDifficulty.countries].sort(() => Math.random() - 0.5);
       return shuffledCountries.slice(0, count).map(correct => {
@@ -527,7 +519,6 @@
       });
     }
 
-    // Démarrer le quiz
     function startQuiz(count) {
       totalQuestions = Math.min(count, currentDifficulty.countries.length);
       questions = generateUniqueQuestions(totalQuestions);
@@ -542,7 +533,6 @@
       if (isChallengeMode) startTimer();
     }
 
-    // Affiche la question actuelle
     function showQuestion() {
       const q = questions[currentQuestion];
       
@@ -586,7 +576,6 @@
       );
     }
 
-    // Gestion du timer avec son fonctionnel
     function startTimer() {
       clearInterval(timer);
       timeLeft = currentDifficulty.time;
@@ -598,7 +587,6 @@
       const tickSound = document.getElementById('tickSound');
       tickSound.volume = 0.3;
       
-      // Jouer un premier son immédiatement pour activer l'audio
       if (timeLeft <= 5) {
         try {
           tickSound.currentTime = 0;
@@ -632,11 +620,8 @@
       }, 1000);
     }
 
-    // Valide la réponse sélectionnée
     function validateAnswer() {
-      if (isChallengeMode && timeLeft <= 0) {
-        return;
-      }
+      if (isChallengeMode && timeLeft <= 0) return;
 
       clearInterval(timer);
       const correctIndex = questions[currentQuestion].answer;
@@ -668,7 +653,6 @@
       document.getElementById("nextBtn").disabled = false;
     }
 
-    // Passe à la question suivante
     function nextQuestion() {
       clearInterval(timer);
       currentQuestion++;
@@ -680,7 +664,6 @@
       }
     }
 
-    // Affiche les résultats finaux
     function showResult() {
       saveScore();
       const best = getBestScore();
@@ -699,7 +682,6 @@
       `;
     }
 
-    // Sauvegarde le score actuel
     function saveScore() {
       const best = localStorage.getItem(`bestScore${currentDifficulty.level}`) || 0;
       if (score > best) {
@@ -707,22 +689,22 @@
       }
     }
 
-    // Récupère le meilleur score
     function getBestScore() {
       return localStorage.getItem(`bestScore${currentDifficulty.level}`) || 0;
     }
 
-    // Redémarre le quiz
     function restartQuiz() {
       document.getElementById("result").style.display = "none";
       startQuiz(totalQuestions);
     }
 
-    // Retour à l'écran de démarrage
     function showStartScreen() {
       document.getElementById("result").style.display = "none";
       document.getElementById("startScreen").style.display = "block";
       document.getElementById("timer-container").style.display = "none";
+      // Réinitialiser l'affichage des options
+      document.getElementById('difficultyOptions').style.display = 'none';
+      document.querySelector('#startScreen div:first-of-type').style.display = 'flex';
     }
   </script>
 </body>
