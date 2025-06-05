@@ -411,23 +411,40 @@
 
   <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
   
-  <h1 class="quiz-title">
-  <span class="title-icon">🌎</span>
-  <span class="title-text" style="
-    background: linear-gradient(135deg, #ff6b6b, #3b3054, #4a6baf);
+<h1 class="quiz-title" style="
+  position: relative;
+  display: inline-block;
+  padding: 15px 30px;
+  background: var(--card-bg);
+  border-radius: 50px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+">
+  <span style="
+    position: absolute;
+    inset: 0;
+    border-radius: 50px;
+    padding: 2px;
+    background: linear-gradient(45deg, #ff6b6b, #4a6baf);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  "></span>
+  <span style="
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff6b6b, #4a6baf);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    font-weight: 800;
-    font-size: 1.2em;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 0 15px;
-    position: relative;
-    display: inline-block;
-  ">ULTIMATE FLAG QUIZ</span>
-  <span class="title-icon">🚩</span>
+  ">
+    <span>🚩</span>
+    <span>ULTIMATE FLAG QUIZ</span>
+    <span>🌎</span>
+  </span>
 </h1>
-
   <div class="start-screen" id="startScreen">
     <h2 style="margin-top: 0; font-size: 1.3em;">Testez vos connaissances des drapeaux !</h2>
     <p>Choisissez votre mode de jeu :</p>
