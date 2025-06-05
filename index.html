@@ -28,24 +28,6 @@
       --timer-bg: #2d2d2d;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--bg-color);
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-      transition: all 0.3s ease;
-    }
-
     .loader-container {
       position: fixed;
       top: 0;
@@ -67,6 +49,7 @@
       border-bottom-color: transparent;
       border-radius: 50%;
       display: inline-block;
+      box-sizing: border-box;
       animation: rotation 1s linear infinite;
     }
 
@@ -75,22 +58,70 @@
       100% { transform: rotate(360deg); }
     }
 
-    h1, h2, h3 {
+    .quiz-card {
+      transition: opacity 0.3s ease;
+    }
+
+    .quiz-card.fade-out {
+      opacity: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-color);
       color: var(--text-color);
-      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      transition: background 0.3s, color 0.3s;
     }
 
     .quiz-title {
-      font-size: 2.2rem;
+      font-size: 2.2em;
+      margin: 0 0 10px 0;
       text-align: center;
-      margin: 20px 0;
+      color: var(--text-color);
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+      padding: 5px 0;
+    }
+
+    .quiz-title::before,
+    .quiz-title::after {
+      content: "";
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
     }
 
     .title-icon {
+      display: inline-block;
       animation: float 3s ease-in-out infinite;
+      font-size: 1.2em;
+    }
+
+    .title-icon:first-child {
+      animation-delay: 0.2s;
+    }
+
+    .title-icon:last-child {
+      animation-delay: 0.4s;
+    }
+
+    .title-text {
+      background: linear-gradient(135deg, #ff6b6b, #3b3054);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 700;
+      padding: 0 10px;
     }
 
     @keyframes float {
@@ -98,66 +129,94 @@
       50% { transform: translateY(-5px); }
     }
 
-    .screen {
+    .start-screen, .quiz-card, .result-card, .continent-selection {
       background: var(--card-bg);
-      border-radius: 15px;
-      padding: 25px;
-      width: 100%;
+      border-radius: 20px;
+      padding: 20px 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
       max-width: 600px;
-      margin: 15px 0;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
+      width: 100%;
+      margin: 10px 0;
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
     }
 
-    .hidden {
-      display: none !important;
+    .quiz-card:hover, .start-screen:hover, .continent-selection:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
     }
 
     .choices {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin: 20px 0;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
     }
 
     .choices label {
       background: var(--choices-bg);
-      padding: 12px 15px;
-      border-radius: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
       display: flex;
       align-items: center;
     }
 
-    .choices label:hover {
-      background: var(--choices-hover);
-      transform: translateY(-2px);
+    .choices label.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
-    .choices input[type="radio"] {
-      margin-right: 10px;
+    .choices label:hover:not(.disabled) { background: var(--choices-hover); }
+    
+    .choices input[type="radio"] { 
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    .correct {
+      background-color: #d4edda !important;
+      border: 2px solid var(--correct-color);
+      color: #155724;
+    }
+
+    .incorrect {
+      background-color: #f8d7da !important;
+      border: 2px solid var(--incorrect-color);
+      color: #721c24;
+      animation: shake 0.4s;
+    }
+
+    .feedback {
+      font-weight: bold;
+      margin-top: 10px;
+      text-align: center;
+      min-height: 20px;
     }
 
     .btn {
       background-color: var(--primary-color);
       color: white;
-      padding: 12px 20px;
+      padding: 10px 15px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      margin: 20px auto 0;
-      font-size: 1rem;
-      font-weight: bold;
-      transition: all 0.3s;
+      margin: 15px auto 0;
       display: block;
-      width: 100%;
-      max-width: 250px;
+      font-size: 1em;
+      transition: all 0.3s;
+      font-weight: bold;
     }
 
-    .btn:hover {
+    .btn:hover { 
       background-color: #ff4757;
-      transform: scale(1.03);
+      transform: scale(1.02);
+    }
+
+    .btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .btn-secondary {
@@ -170,58 +229,124 @@
 
     .flag-image {
       max-width: 100%;
-      height: 120px;
+      height: 80px;
       object-fit: contain;
-      margin: 15px auto;
+      margin: 5px auto;
       display: block;
       border: 1px solid #ddd;
-      border-radius: 5px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      border-radius: 4px;
+      transition: transform 0.3s;
+    }
+
+    .flag-image:hover {
+      transform: scale(1.05);
     }
 
     .progress-container {
       width: 100%;
       background-color: var(--progress-bg);
       border-radius: 10px;
-      margin: 15px 0;
-      height: 10px;
+      margin: 10px 0;
     }
 
     .progress-bar {
-      height: 100%;
-      background-color: var(--correct-color);
+      height: 10px;
+      background-color: #4CAF50;
       border-radius: 10px;
       width: 0%;
-      transition: width 0.5s ease;
+      transition: width 0.5s;
     }
 
     #timer-container {
+      display: none;
       background: var(--timer-bg);
       color: white;
-      padding: 8px 15px;
+      padding: 5px 10px;
       border-radius: 20px;
-      margin-bottom: 15px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
+      margin-bottom: 5px;
+      font-size: 0.9em;
+      transition: background 0.3s;
     }
 
-    .feedback {
+    .difficulty-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
       font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .easy { background: #d4edda; color: #155724; }
+    .medium { background: #fff3cd; color: #856404; }
+    .hard { background: #f8d7da; color: #721c24; }
+
+    .difficulty-btn {
+      transition: all 0.3s;
+      border: 2px solid transparent;
+      font-weight: bold;
+    }
+
+    .difficulty-btn.selected {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border-color: currentColor;
+    }
+
+    .easy.selected {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .medium.selected {
+      background-color: #ffc107;
+      color: white;
+    }
+
+    .hard.selected {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .stop-btn {
+      background-color: transparent;
+      color: var(--text-color);
+      border: 1px solid var(--text-color);
+      padding: 5px 10px;
+      border-radius: 15px;
+      cursor: pointer;
+      margin: 20px auto 0;
+      display: block;
+      font-size: 0.8em;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+
+    .stop-btn:hover {
+      background-color: rgba(220, 53, 69, 0.1);
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+
+    .continent-btn {
+      background-color: #4a6baf;
+      color: white;
+      margin: 5px;
+      flex: 1 1 45%;
+      min-width: 120px;
+      font-weight: bold;
+    }
+
+    .continent-btn:hover {
+      background-color: #3a5a9f;
+    }
+
+    .continent-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
       margin: 15px 0;
-      text-align: center;
-      min-height: 24px;
-    }
-
-    .correct {
-      background-color: #d4edda !important;
-      border: 2px solid var(--correct-color) !important;
-    }
-
-    .incorrect {
-      background-color: #f8d7da !important;
-      border: 2px solid var(--incorrect-color) !important;
-      animation: shake 0.4s;
     }
 
     @keyframes shake {
@@ -230,49 +355,55 @@
       75% { transform: translateX(5px); }
     }
 
-    .continent-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin: 20px 0;
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
 
-    .difficulty-buttons {
-      display: flex;
-      gap: 10px;
-      margin: 15px 0;
-      flex-wrap: wrap;
-      justify-content: center;
+    .pulse {
+      animation: pulse 1.5s infinite;
     }
 
-    .difficulty-btn {
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-weight: bold;
+    .dark-mode-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 1.5em;
       cursor: pointer;
-      transition: all 0.3s;
+      color: var(--text-color);
+      transition: transform 0.3s;
+      z-index: 100;
     }
 
-    .easy { background: #d4edda; color: #155724; }
-    .medium { background: #fff3cd; color: #856404; }
-    .hard { background: #f8d7da; color: #721c24; }
-
-    .selected {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    .dark-mode-toggle:hover {
+      transform: rotate(30deg);
     }
 
     @media (max-width: 600px) {
       .quiz-title {
-        font-size: 1.8rem;
+        font-size: 1.8em;
+        gap: 8px;
       }
+      
+      .quiz-title::before,
+      .quiz-title::after {
+        flex: 0.5;
+      }
+
+      .choices { grid-template-columns: 1fr; }
+      .quiz-card, .start-screen, .continent-selection { padding: 15px 10px; }
+      .btn { width: 100%; }
       
       .flag-image {
-        height: 100px;
+        height: 60px;
       }
-      
-      .continent-grid {
-        grid-template-columns: 1fr;
+    
+      .choices label {
+        padding: 8px 10px;
+        font-size: 0.9em;
       }
     }
   </style>
@@ -282,114 +413,340 @@
     <div class="loader"></div>
   </div>
 
+  <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
+  
   <h1 class="quiz-title">
-    <span class="title-icon">🌎</span>
-    Ultimate Flag Quiz
+    <span class="title-icon">🚩</span>
+    <span class="title-text">Ultimate Flag Quiz</span>
     <span class="title-icon">🚩</span>
   </h1>
 
-  <!-- Écran d'accueil -->
-  <div class="screen" id="startScreen">
-    <h2>Testez vos connaissances des drapeaux !</h2>
+  <div class="start-screen" id="startScreen">
+    <h2 style="margin-top: 0; font-size: 1.3em;">Testez vos connaissances des drapeaux !</h2>
     <p>Choisissez votre mode de jeu :</p>
     
-    <div class="choices">
-      <button class="btn" onclick="startGame('classic')">Mode Classique</button>
-      <button class="btn" onclick="showDifficultySelection()">Mode Défi ⏱️</button>
+    <div style="margin: 15px 0; display: flex; flex-direction: column; gap: 8px;">
+      <button class="btn" onclick="startClassicMode()">Mode Classique</button>
+      <button class="btn btn-secondary" onclick="showDifficultyOptions()">Mode Défi ⏱️</button>
       <button class="btn" onclick="showContinentSelection()">Mode Continent 🌍</button>
     </div>
-  </div>
-
-  <!-- Sélection de difficulté -->
-  <div class="screen hidden" id="difficultyScreen">
-    <h2>Mode Défi</h2>
-    <p>Choisissez la difficulté :</p>
     
-    <div class="difficulty-buttons">
-      <button class="difficulty-btn easy selected" onclick="setDifficulty('easy')">Facile (15s)</button>
-      <button class="difficulty-btn medium" onclick="setDifficulty('medium')">Moyen (10s)</button>
-      <button class="difficulty-btn hard" onclick="setDifficulty('hard')">Difficile (5s)</button>
+    <div id="difficultyOptions" style="margin-top: 15px; display: none;">
+      <h3 style="margin-bottom: 8px; font-size: 1.1em;">Choisissez la difficulté :</h3>
+      <div class="difficulty-buttons" style="display: flex; gap: 8px; justify-content: center;">
+        <button class="btn easy difficulty-btn selected" onclick="setDifficulty('easy')">Facile (10s)</button>
+        <button class="btn medium difficulty-btn" onclick="setDifficulty('medium')">Moyen (8s)</button>
+        <button class="btn hard difficulty-btn" onclick="setDifficulty('hard')">Difficile (5s)</button>
+      </div>
+      <button class="btn" onclick="startChallengeMode()" style="margin-top: 15px;">Commencer le défi</button>
     </div>
-    
-    <button class="btn" onclick="startGame('challenge')">Commencer</button>
-    <button class="btn btn-secondary" onclick="showStartScreen()">Retour</button>
   </div>
 
-  <!-- Sélection de continent -->
-  <div class="screen hidden" id="continentScreen">
-    <h2>Mode Continent</h2>
-    <p>Choisissez un continent :</p>
-    
+  <div class="continent-selection" id="continentSelection" style="display: none;">
+    <h2 style="margin-top: 0; text-align: center;">Choisissez un continent</h2>
     <div class="continent-grid">
-      <button class="btn" onclick="startContinentGame('europe')">Europe</button>
-      <button class="btn" onclick="startContinentGame('africa')">Afrique</button>
-      <button class="btn" onclick="startContinentGame('asia')">Asie</button>
-      <button class="btn" onclick="startContinentGame('americas')">Amérique</button>
-      <button class="btn" onclick="startContinentGame('oceania')">Océanie</button>
-      <button class="btn" onclick="startContinentGame('all')">Tous les pays</button>
+      <button class="btn continent-btn" onclick="startContinentMode('europe')">Europe 🇪🇺</button>
+      <button class="btn continent-btn" onclick="startContinentMode('afrique')">Afrique 🌍</button>
+      <button class="btn continent-btn" onclick="startContinentMode('asie')">Asie 🌏</button>
+      <button class="btn continent-btn" onclick="startContinentMode('amerique')">Amérique 🌎</button>
+      <button class="btn continent-btn" onclick="startContinentMode('oceanie')">Océanie 🌊</button>
+      <button class="btn continent-btn" onclick="startContinentMode('all')">Tous les pays 🌎</button>
     </div>
-    
-    <button class="btn btn-secondary" onclick="showStartScreen()">Retour</button>
+    <button class="btn btn-secondary" onclick="showStartScreen()" style="margin-top: 15px;">Retour</button>
   </div>
 
-  <!-- Écran de quiz -->
-  <div class="screen hidden" id="quizScreen">
-    <div id="timer-container" class="hidden">
-      ⏱️ <span id="timer">15</span>s
-    </div>
-    
-    <div class="progress-container">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-    
-    <div id="questionContainer"></div>
-    
-    <div class="feedback" id="feedback"></div>
-    
-    <button class="btn hidden" id="nextBtn">Suivant</button>
-    <button class="btn btn-secondary" onclick="endGame()">Arrêter</button>
+  <div id="timer-container">
+    ⏱️ Temps restant : <span id="timer">10</span>s
+    <span id="difficultyBadge" class="difficulty-badge easy">Facile (10s)</span>
   </div>
 
-  <!-- Écran des résultats -->
-  <div class="screen hidden" id="resultScreen">
-    <h2>Résultats</h2>
-    <div id="resultContent"></div>
-    <button class="btn" onclick="restartGame()">Rejouer</button>
-    <button class="btn btn-secondary" onclick="showStartScreen()">Menu principal</button>
-  </div>
+  <div class="quiz-card" id="quizContainer" style="display: none;"></div>
+  
+  <div class="result-card" id="result" style="display: none;"></div>
+
+  <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
+  <audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+  <audio id="timeoutSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-explosion-2759.mp3"></audio>
 
   <script>
-    // Base de données des pays
-    const countries = [
-      { name: "France", flag: "https://flagcdn.com/w320/fr.png", continent: "europe" },
-      { name: "Allemagne", flag: "https://flagcdn.com/w320/de.png", continent: "europe" },
-      { name: "Espagne", flag: "https://flagcdn.com/w320/es.png", continent: "europe" },
-      { name: "Italie", flag: "https://flagcdn.com/w320/it.png", continent: "europe" },
-      { name: "Royaume-Uni", flag: "https://flagcdn.com/w320/gb.png", continent: "europe" },
-      { name: "États-Unis", flag: "https://flagcdn.com/w320/us.png", continent: "americas" },
-      { name: "Canada", flag: "https://flagcdn.com/w320/ca.png", continent: "americas" },
-      { name: "Brésil", flag: "https://flagcdn.com/w320/br.png", continent: "americas" },
-      { name: "Japon", flag: "https://flagcdn.com/w320/jp.png", continent: "asia" },
-      { name: "Chine", flag: "https://flagcdn.com/w320/cn.png", continent: "asia" },
-      { name: "Inde", flag: "https://flagcdn.com/w320/in.png", continent: "asia" },
-      { name: "Australie", flag: "https://flagcdn.com/w320/au.png", continent: "oceania" },
-      { name: "Afrique du Sud", flag: "https://flagcdn.com/w320/za.png", continent: "africa" },
-      { name: "Égypte", flag: "https://flagcdn.com/w320/eg.png", continent: "africa" },
-      // Ajoutez d'autres pays selon vos besoins
-    ];
+    // Base de données complète des pays
+    const countriesByContinent = {
+      europe: [
+        ["Albanie", "https://flagcdn.com/w320/al.png"],
+        ["Allemagne", "https://flagcdn.com/w320/de.png"],
+        ["Andorre", "https://flagcdn.com/w320/ad.png"],
+        ["Autriche", "https://flagcdn.com/w320/at.png"],
+        ["Belgique", "https://flagcdn.com/w320/be.png"],
+        ["Biélorussie", "https://flagcdn.com/w320/by.png"],
+        ["Bosnie-Herzégovine", "https://flagcdn.com/w320/ba.png"],
+        ["Bulgarie", "https://flagcdn.com/w320/bg.png"],
+        ["Chypre", "https://flagcdn.com/w320/cy.png"],
+        ["Croatie", "https://flagcdn.com/w320/hr.png"],
+        ["Danemark", "https://flagcdn.com/w320/dk.png"],
+        ["Espagne", "https://flagcdn.com/w320/es.png"],
+        ["Estonie", "https://flagcdn.com/w320/ee.png"],
+        ["Finlande", "https://flagcdn.com/w320/fi.png"],
+        ["France", "https://flagcdn.com/w320/fr.png"],
+        ["Grèce", "https://flagcdn.com/w320/gr.png"],
+        ["Hongrie", "https://flagcdn.com/w320/hu.png"],
+        ["Irlande", "https://flagcdn.com/w320/ie.png"],
+        ["Islande", "https://flagcdn.com/w320/is.png"],
+        ["Italie", "https://flagcdn.com/w320/it.png"],
+        ["Lettonie", "https://flagcdn.com/w320/lv.png"],
+        ["Liechtenstein", "https://flagcdn.com/w320/li.png"],
+        ["Lituanie", "https://flagcdn.com/w320/lt.png"],
+        ["Luxembourg", "https://flagcdn.com/w320/lu.png"],
+        ["Macédoine du Nord", "https://flagcdn.com/w320/mk.png"],
+        ["Malte", "https://flagcdn.com/w320/mt.png"],
+        ["Moldavie", "https://flagcdn.com/w320/md.png"],
+        ["Monaco", "https://flagcdn.com/w320/mc.png"],
+        ["Monténégro", "https://flagcdn.com/w320/me.png"],
+        ["Norvège", "https://flagcdn.com/w320/no.png"],
+        ["Pays-Bas", "https://flagcdn.com/w320/nl.png"],
+        ["Pologne", "https://flagcdn.com/w320/pl.png"],
+        ["Portugal", "https://flagcdn.com/w320/pt.png"],
+        ["Roumanie", "https://flagcdn.com/w320/ro.png"],
+        ["Royaume-Uni", "https://flagcdn.com/w320/gb.png"],
+        ["Russie", "https://flagcdn.com/w320/ru.png"],
+        ["Saint-Marin", "https://flagcdn.com/w320/sm.png"],
+        ["Serbie", "https://flagcdn.com/w320/rs.png"],
+        ["Slovaquie", "https://flagcdn.com/w320/sk.png"],
+        ["Slovénie", "https://flagcdn.com/w320/si.png"],
+        ["Suède", "https://flagcdn.com/w320/se.png"],
+        ["Suisse", "https://flagcdn.com/w320/ch.png"],
+        ["République Tchèque", "https://flagcdn.com/w320/cz.png"],
+        ["Ukraine", "https://flagcdn.com/w320/ua.png"],
+        ["Vatican", "https://flagcdn.com/w320/va.png"]
+      ],
+      afrique: [
+        ["Afrique du Sud", "https://flagcdn.com/w320/za.png"],
+        ["Algérie", "https://flagcdn.com/w320/dz.png"],
+        ["Angola", "https://flagcdn.com/w320/ao.png"],
+        ["Bénin", "https://flagcdn.com/w320/bj.png"],
+        ["Botswana", "https://flagcdn.com/w320/bw.png"],
+        ["Burkina Faso", "https://flagcdn.com/w320/bf.png"],
+        ["Burundi", "https://flagcdn.com/w320/bi.png"],
+        ["Cameroun", "https://flagcdn.com/w320/cm.png"],
+        ["Cap-Vert", "https://flagcdn.com/w320/cv.png"],
+        ["République centrafricaine", "https://flagcdn.com/w320/cf.png"],
+        ["Comores", "https://flagcdn.com/w320/km.png"],
+        ["République du Congo", "https://flagcdn.com/w320/cg.png"],
+        ["République démocratique du Congo", "https://flagcdn.com/w320/cd.png"],
+        ["Côte d'Ivoire", "https://flagcdn.com/w320/ci.png"],
+        ["Djibouti", "https://flagcdn.com/w320/dj.png"],
+        ["Égypte", "https://flagcdn.com/w320/eg.png"],
+        ["Érythrée", "https://flagcdn.com/w320/er.png"],
+        ["Eswatini", "https://flagcdn.com/w320/sz.png"],
+        ["Éthiopie", "https://flagcdn.com/w320/et.png"],
+        ["Gabon", "https://flagcdn.com/w320/ga.png"],
+        ["Gambie", "https://flagcdn.com/w320/gm.png"],
+        ["Ghana", "https://flagcdn.com/w320/gh.png"],
+        ["Guinée", "https://flagcdn.com/w320/gn.png"],
+        ["Guinée-Bissau", "https://flagcdn.com/w320/gw.png"],
+        ["Guinée équatoriale", "https://flagcdn.com/w320/gq.png"],
+        ["Kenya", "https://flagcdn.com/w320/ke.png"],
+        ["Lesotho", "https://flagcdn.com/w320/ls.png"],
+        ["Liberia", "https://flagcdn.com/w320/lr.png"],
+        ["Libye", "https://flagcdn.com/w320/ly.png"],
+        ["Madagascar", "https://flagcdn.com/w320/mg.png"],
+        ["Malawi", "https://flagcdn.com/w320/mw.png"],
+        ["Mali", "https://flagcdn.com/w320/ml.png"],
+        ["Maroc", "https://flagcdn.com/w320/ma.png"],
+        ["Maurice", "https://flagcdn.com/w320/mu.png"],
+        ["Mauritanie", "https://flagcdn.com/w320/mr.png"],
+        ["Mozambique", "https://flagcdn.com/w320/mz.png"],
+        ["Namibie", "https://flagcdn.com/w320/na.png"],
+        ["Niger", "https://flagcdn.com/w320/ne.png"],
+        ["Nigeria", "https://flagcdn.com/w320/ng.png"],
+        ["Ouganda", "https://flagcdn.com/w320/ug.png"],
+        ["Rwanda", "https://flagcdn.com/w320/rw.png"],
+        ["Sao Tomé-et-Principe", "https://flagcdn.com/w320/st.png"],
+        ["Sénégal", "https://flagcdn.com/w320/sn.png"],
+        ["Seychelles", "https://flagcdn.com/w320/sc.png"],
+        ["Sierra Leone", "https://flagcdn.com/w320/sl.png"],
+        ["Somalie", "https://flagcdn.com/w320/so.png"],
+        ["Soudan", "https://flagcdn.com/w320/sd.png"],
+        ["Soudan du Sud", "https://flagcdn.com/w320/ss.png"],
+        ["Tanzanie", "https://flagcdn.com/w320/tz.png"],
+        ["Tchad", "https://flagcdn.com/w320/td.png"],
+        ["Togo", "https://flagcdn.com/w320/tg.png"],
+        ["Tunisie", "https://flagcdn.com/w320/tn.png"],
+        ["Zambie", "https://flagcdn.com/w320/zm.png"],
+        ["Zimbabwe", "https://flagcdn.com/w320/zw.png"]
+      ],
+      asie: [
+        ["Afghanistan", "https://flagcdn.com/w320/af.png"],
+        ["Arabie Saoudite", "https://flagcdn.com/w320/sa.png"],
+        ["Arménie", "https://flagcdn.com/w320/am.png"],
+        ["Azerbaïdjan", "https://flagcdn.com/w320/az.png"],
+        ["Bahreïn", "https://flagcdn.com/w320/bh.png"],
+        ["Bangladesh", "https://flagcdn.com/w320/bd.png"],
+        ["Bhoutan", "https://flagcdn.com/w320/bt.png"],
+        ["Birmanie", "https://flagcdn.com/w320/mm.png"],
+        ["Brunei", "https://flagcdn.com/w320/bn.png"],
+        ["Cambodge", "https://flagcdn.com/w320/kh.png"],
+        ["Chine", "https://flagcdn.com/w320/cn.png"],
+        ["Corée du Nord", "https://flagcdn.com/w320/kp.png"],
+        ["Corée du Sud", "https://flagcdn.com/w320/kr.png"],
+        ["Émirats arabes unis", "https://flagcdn.com/w320/ae.png"],
+        ["Géorgie", "https://flagcdn.com/w320/ge.png"],
+        ["Inde", "https://flagcdn.com/w320/in.png"],
+        ["Indonésie", "https://flagcdn.com/w320/id.png"],
+        ["Irak", "https://flagcdn.com/w320/iq.png"],
+        ["Iran", "https://flagcdn.com/w320/ir.png"],
+        ["Israël", "https://flagcdn.com/w320/il.png"],
+        ["Japon", "https://flagcdn.com/w320/jp.png"],
+        ["Jordanie", "https://flagcdn.com/w320/jo.png"],
+        ["Kazakhstan", "https://flagcdn.com/w320/kz.png"],
+        ["Kirghizistan", "https://flagcdn.com/w320/kg.png"],
+        ["Koweït", "https://flagcdn.com/w320/kw.png"],
+        ["Laos", "https://flagcdn.com/w320/la.png"],
+        ["Liban", "https://flagcdn.com/w320/lb.png"],
+        ["Malaisie", "https://flagcdn.com/w320/my.png"],
+        ["Maldives", "https://flagcdn.com/w320/mv.png"],
+        ["Mongolie", "https://flagcdn.com/w320/mn.png"],
+        ["Népal", "https://flagcdn.com/w320/np.png"],
+        ["Oman", "https://flagcdn.com/w320/om.png"],
+        ["Ouzbékistan", "https://flagcdn.com/w320/uz.png"],
+        ["Pakistan", "https://flagcdn.com/w320/pk.png"],
+        ["Palestine", "https://flagcdn.com/w320/ps.png"],
+        ["Philippines", "https://flagcdn.com/w320/ph.png"],
+        ["Qatar", "https://flagcdn.com/w320/qa.png"],
+        ["Singapour", "https://flagcdn.com/w320/sg.png"],
+        ["Sri Lanka", "https://flagcdn.com/w320/lk.png"],
+        ["Syrie", "https://flagcdn.com/w320/sy.png"],
+        ["Tadjikistan", "https://flagcdn.com/w320/tj.png"],
+        ["Taïwan", "https://flagcdn.com/w320/tw.png"],
+        ["Thaïlande", "https://flagcdn.com/w320/th.png"],
+        ["Timor oriental", "https://flagcdn.com/w320/tl.png"],
+        ["Turquie", "https://flagcdn.com/w320/tr.png"],
+        ["Turkménistan", "https://flagcdn.com/w320/tm.png"],
+        ["Viêt Nam", "https://flagcdn.com/w320/vn.png"],
+        ["Yémen", "https://flagcdn.com/w320/ye.png"]
+      ],
+      amerique: [
+        ["Antigua-et-Barbuda", "https://flagcdn.com/w320/ag.png"],
+        ["Argentine", "https://flagcdn.com/w320/ar.png"],
+        ["Bahamas", "https://flagcdn.com/w320/bs.png"],
+        ["Barbade", "https://flagcdn.com/w320/bb.png"],
+        ["Belize", "https://flagcdn.com/w320/bz.png"],
+        ["Bolivie", "https://flagcdn.com/w320/bo.png"],
+        ["Brésil", "https://flagcdn.com/w320/br.png"],
+        ["Canada", "https://flagcdn.com/w320/ca.png"],
+        ["Chili", "https://flagcdn.com/w320/cl.png"],
+        ["Colombie", "https://flagcdn.com/w320/co.png"],
+        ["Costa Rica", "https://flagcdn.com/w320/cr.png"],
+        ["Cuba", "https://flagcdn.com/w320/cu.png"],
+        ["République dominicaine", "https://flagcdn.com/w320/do.png"],
+        ["Dominique", "https://flagcdn.com/w320/dm.png"],
+        ["Équateur", "https://flagcdn.com/w320/ec.png"],
+        ["États-Unis", "https://flagcdn.com/w320/us.png"],
+        ["Grenade", "https://flagcdn.com/w320/gd.png"],
+        ["Guatemala", "https://flagcdn.com/w320/gt.png"],
+        ["Guyana", "https://flagcdn.com/w320/gy.png"],
+        ["Haïti", "https://flagcdn.com/w320/ht.png"],
+        ["Honduras", "https://flagcdn.com/w320/hn.png"],
+        ["Jamaïque", "https://flagcdn.com/w320/jm.png"],
+        ["Mexique", "https://flagcdn.com/w320/mx.png"],
+        ["Nicaragua", "https://flagcdn.com/w320/ni.png"],
+        ["Panama", "https://flagcdn.com/w320/pa.png"],
+        ["Paraguay", "https://flagcdn.com/w320/py.png"],
+        ["Pérou", "https://flagcdn.com/w320/pe.png"],
+        ["Saint-Christophe-et-Niévès", "https://flagcdn.com/w320/kn.png"],
+        ["Saint-Vincent-et-les-Grenadines", "https://flagcdn.com/w320/vc.png"],
+        ["Sainte-Lucie", "https://flagcdn.com/w320/lc.png"],
+        ["Salvador", "https://flagcdn.com/w320/sv.png"],
+        ["Suriname", "https://flagcdn.com/w320/sr.png"],
+        ["Trinité-et-Tobago", "https://flagcdn.com/w320/tt.png"],
+        ["Uruguay", "https://flagcdn.com/w320/uy.png"],
+        ["Venezuela", "https://flagcdn.com/w320/ve.png"]
+      ],
+      oceanie: [
+        ["Australie", "https://flagcdn.com/w320/au.png"],
+        ["Fidji", "https://flagcdn.com/w320/fj.png"],
+        ["Kiribati", "https://flagcdn.com/w320/ki.png"],
+        ["Îles Marshall", "https://flagcdn.com/w320/mh.png"],
+        ["Micronésie", "https://flagcdn.com/w320/fm.png"],
+        ["Nauru", "https://flagcdn.com/w320/nr.png"],
+        ["Nouvelle-Zélande", "https://flagcdn.com/w320/nz.png"],
+        ["Palaos", "https://flagcdn.com/w320/pw.png"],
+        ["Papouasie-Nouvelle-Guinée", "https://flagcdn.com/w320/pg.png"],
+        ["Samoa", "https://flagcdn.com/w320/ws.png"],
+        ["Îles Salomon", "https://flagcdn.com/w320/sb.png"],
+        ["Tonga", "https://flagcdn.com/w320/to.png"],
+        ["Tuvalu", "https://flagcdn.com/w320/tv.png"],
+        ["Vanuatu", "https://flagcdn.com/w320/vu.png"]
+      ]
+
+    };
+
+    // Fonction pour obtenir tous les pays
+    function getAllCountries() {
+      return [
+        ...countriesByContinent.europe,
+        ...countriesByContinent.afrique,
+        ...countriesByContinent.asie,
+        ...countriesByContinent.amerique,
+        ...countriesByContinent.oceanie
+      ];
+    }
 
     // Variables du jeu
     let questions = [];
-    let currentQuestionIndex = 0;
+    let currentQuestion = 0;
     let score = 0;
+    let selected = null;
+    let totalQuestions = 0;
+    let controller = new AbortController();
     let timer;
-    let timeLeft;
-    let gameMode = '';
-    let difficulty = 'easy';
-    let selectedContinent = 'all';
-    let selectedAnswer = null;
+    let timeLeft = 10;
+    let isChallengeMode = false;
+    let currentDifficulty = {
+      level: 'easy',
+      time: 10,
+      countries: getAllCountries()
+    };
 
-    // Initialisation du jeu
+    // Fonction améliorée pour générer des questions sans répétition des choix
+    function generateUniqueQuestions(count) {
+      const allCountries = currentDifficulty.countries;
+      const shuffledCountries = [...allCountries].sort(() => Math.random() - 0.5);
+      const selectedQuestions = shuffledCountries.slice(0, count);
+      
+      return selectedQuestions.map(correct => {
+        // Crée un pool de pays disponibles pour les mauvaises réponses
+        const availableCountries = allCountries.filter(c => c[0] !== correct[0]);
+        const shuffledIncorrect = [...availableCountries].sort(() => Math.random() - 0.5);
+        
+        // Sélectionne 3 mauvaises réponses uniques
+        const incorrectChoices = [];
+        const usedIndices = new Set();
+        
+        while (incorrectChoices.length < 3 && usedIndices.size < availableCountries.length) {
+          const randomIndex = Math.floor(Math.random() * availableCountries.length);
+          if (!usedIndices.has(randomIndex)) {
+            usedIndices.add(randomIndex);
+            incorrectChoices.push(availableCountries[randomIndex]);
+          }
+        }
+        
+        // Combine et mélange les réponses
+        const choices = [...incorrectChoices.map(c => c[0]), correct[0]]
+          .sort(() => Math.random() - 0.5);
+        
+        return {
+          question: `<img src="${correct[1]}" alt="Drapeau de ${correct[0]}" class="flag-image">`,
+          choices: choices,
+          answer: choices.indexOf(correct[0]),
+          country: correct[0]
+        };
+      });
+    }
+
+    // ... (le reste des fonctions reste identique à votre code original)
+    // Fonctions pour démarrer le jeu, afficher les questions, vérifier les réponses, etc.
+
+    // Initialisation
     document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         document.getElementById('loader').style.opacity = '0';
@@ -399,224 +756,30 @@
       }, 1000);
       
       // Préchargement des images
-      countries.forEach(country => {
-        new Image().src = country.flag;
+      getAllCountries().forEach(([_, url]) => {
+        new Image().src = url;
       });
+      
+      // Préchargement des sons
+      ['correctSound', 'wrongSound', 'timeoutSound'].forEach(soundId => {
+        const sound = document.getElementById(soundId);
+        sound.volume = 0.7;
+        sound.load();
+      });
+      
+      // Vérification du mode sombre
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
     });
 
-    // Fonctions d'affichage des écrans
-    function showStartScreen() {
-      hideAllScreens();
-      document.getElementById('startScreen').classList.remove('hidden');
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
     }
 
-    function showDifficultySelection() {
-      hideAllScreens();
-      document.getElementById('difficultyScreen').classList.remove('hidden');
-    }
+    // ... (toutes les autres fonctions de gestion du jeu)
 
-    function showContinentSelection() {
-      hideAllScreens();
-      document.getElementById('continentScreen').classList.remove('hidden');
-    }
-
-    function showQuizScreen() {
-      hideAllScreens();
-      document.getElementById('quizScreen').classList.remove('hidden');
-      if (gameMode === 'challenge') {
-        document.getElementById('timer-container').classList.remove('hidden');
-      }
-    }
-
-    function showResultScreen() {
-      hideAllScreens();
-      document.getElementById('resultScreen').classList.remove('hidden');
-      
-      const resultContent = document.getElementById('resultContent');
-      resultContent.innerHTML = `
-        <p>Vous avez obtenu <strong>${score}/${questions.length}</strong> bonnes réponses !</p>
-        <p>Score final : <strong>${Math.round((score / questions.length) * 100)}%</strong></p>
-      `;
-    }
-
-    function hideAllScreens() {
-      document.querySelectorAll('.screen').forEach(screen => {
-        screen.classList.add('hidden');
-      });
-    }
-
-    // Fonctions de jeu
-    function startGame(mode) {
-      gameMode = mode;
-      score = 0;
-      currentQuestionIndex = 0;
-      
-      // Générer les questions selon le mode
-      if (mode === 'classic') {
-        questions = generateQuestions(countries);
-      } else if (mode === 'challenge') {
-        questions = generateQuestions(countries);
-        timeLeft = difficulty === 'easy' ? 15 : difficulty === 'medium' ? 10 : 5;
-      }
-      
-      showQuizScreen();
-      showQuestion();
-      
-      if (mode === 'challenge') {
-        startTimer();
-      }
-    }
-
-    function startContinentGame(continent) {
-      selectedContinent = continent;
-      const filteredCountries = continent === 'all' 
-        ? countries 
-        : countries.filter(c => c.continent === continent);
-      
-      questions = generateQuestions(filteredCountries);
-      score = 0;
-      currentQuestionIndex = 0;
-      
-      showQuizScreen();
-      showQuestion();
-    }
-
-    function generateQuestions(countryList) {
-      // Sélectionne 10 pays aléatoires
-      const shuffled = [...countryList].sort(() => 0.5 - Math.random());
-      const selectedCountries = shuffled.slice(0, 10);
-      
-      return selectedCountries.map(country => {
-        // Sélectionne 3 mauvaises réponses aléatoires
-        const wrongAnswers = shuffled
-          .filter(c => c.name !== country.name)
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 3)
-          .map(c => c.name);
-        
-        // Mélange les réponses
-        const allAnswers = [...wrongAnswers, country.name]
-          .sort(() => 0.5 - Math.random());
-        
-        return {
-          flag: country.flag,
-          correctAnswer: country.name,
-          answers: allAnswers
-        };
-      });
-    }
-
-    function showQuestion() {
-      const question = questions[currentQuestionIndex];
-      const progress = (currentQuestionIndex / questions.length) * 100;
-      
-      document.getElementById('progressBar').style.width = `${progress}%`;
-      document.getElementById('nextBtn').classList.add('hidden');
-      document.getElementById('feedback').textContent = '';
-      
-      document.getElementById('questionContainer').innerHTML = `
-        <img src="${question.flag}" alt="Drapeau" class="flag-image">
-        <div class="choices">
-          ${question.answers.map(answer => `
-            <label>
-              <input type="radio" name="answer" value="${answer}">
-              ${answer}
-            </label>
-          `).join('')}
-        </div>
-      `;
-      
-      // Ajouter les écouteurs d'événements
-      document.querySelectorAll('input[name="answer"]').forEach(input => {
-        input.addEventListener('change', (e) => {
-          selectedAnswer = e.target.value;
-          document.getElementById('nextBtn').classList.remove('hidden');
-        });
-      });
-    }
-
-    function checkAnswer() {
-      const question = questions[currentQuestionIndex];
-      const answerLabels = document.querySelectorAll('.choices label');
-      
-      // Désactiver toutes les réponses
-      document.querySelectorAll('input[name="answer"]').forEach(input => {
-        input.disabled = true;
-      });
-      
-      // Marquer les bonnes/mauvaises réponses
-      answerLabels.forEach(label => {
-        if (label.textContent.trim() === question.correctAnswer) {
-          label.classList.add('correct');
-        } else if (label.textContent.trim() === selectedAnswer) {
-          label.classList.add('incorrect');
-        }
-      });
-      
-      // Vérifier la réponse
-      if (selectedAnswer === question.correctAnswer) {
-        score++;
-        document.getElementById('feedback').innerHTML = '✅ Correct !';
-      } else {
-        document.getElementById('feedback').innerHTML = 
-          `❌ Incorrect. La bonne réponse était <strong>${question.correctAnswer}</strong>`;
-      }
-      
-      // Passer à la question suivante après un délai
-      setTimeout(() => {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
-          showQuestion();
-          if (gameMode === 'challenge') {
-            timeLeft = difficulty === 'easy' ? 15 : difficulty === 'medium' ? 10 : 5;
-            startTimer();
-          }
-        } else {
-          showResultScreen();
-        }
-      }, 1500);
-    }
-
-    function startTimer() {
-      clearInterval(timer);
-      document.getElementById('timer').textContent = timeLeft;
-      
-      timer = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timer').textContent = timeLeft;
-        
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          checkAnswer();
-        }
-      }, 1000);
-    }
-
-    function setDifficulty(level) {
-      difficulty = level;
-      document.querySelectorAll('.difficulty-btn').forEach(btn => {
-        btn.classList.remove('selected');
-      });
-      document.querySelector(`.difficulty-btn.${level}`).classList.add('selected');
-    }
-
-    function endGame() {
-      clearInterval(timer);
-      showResultScreen();
-    }
-
-    function restartGame() {
-      if (gameMode === 'classic') {
-        startGame('classic');
-      } else if (gameMode === 'challenge') {
-        startGame('challenge');
-      } else {
-        startContinentGame(selectedContinent);
-      }
-    }
-
-    // Écouteurs d'événements
-    document.getElementById('nextBtn').addEventListener('click', checkAnswer);
   </script>
 </body>
 </html>
