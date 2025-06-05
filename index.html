@@ -880,7 +880,7 @@
           </div>
           <div class="feedback" id="feedback" style="min-height: 20px;"></div>
           <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled style="margin-top: 10px;">
-            ${currentQuestion < totalQuestions - 1 ? 'Suivant' : 'Résultats'}
+            ${currentQuestion < totalQuestions - 1 ? 'Question suivante' : 'Résultats'}
           </button>
           <button class="stop-btn" onclick="endGame()">Arrêter la partie</button>
         `;
@@ -955,7 +955,7 @@
         feedback.innerHTML = "✅ Correct !";
       } else {
         document.getElementById('wrongSound').play();
-        feedback.innerHTML = `❌ Incorrect. La bonne réponse était <strong>${questions[currentQuestion].country}</strong>`;
+        feedback.innerHTML = `❌ Incorrect. La bonne réponse était :<strong>${questions[currentQuestion].country}</strong>`;
       }
 
       document.getElementById("nextBtn").disabled = false;
