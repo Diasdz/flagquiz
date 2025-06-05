@@ -410,41 +410,33 @@
   </div>
 
   <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
-  
-<h1 class="quiz-title" style="
-  position: relative;
-  display: inline-block;
-  padding: 15px 30px;
-  background: var(--card-bg);
-  border-radius: 50px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  <h1 class="quiz-title" style="
+  display: flex;
+  align-items: center;
+  gap: 15px;
 ">
-  <span style="
-    position: absolute;
-    inset: 0;
-    border-radius: 50px;
-    padding: 2px;
-    background: linear-gradient(45deg, #ff6b6b, #4a6baf);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  "></span>
-  <span style="
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
+  <span style="font-size: 1.5em;">🚩</span>
+  <span class="wave-text" style="
     background: linear-gradient(135deg, #ff6b6b, #4a6baf);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-  ">
-    <span>🚩</span>
-    <span>ULTIMATE FLAG QUIZ</span>
-    <span>🌎</span>
-  </span>
+    font-weight: 800;
+    font-size: 1.3em;
+  ">U L T I M A T E   F L A G   Q U I Z</span>
+  <span style="font-size: 1.5em;">🌍</span>
 </h1>
+
+<style>
+  .wave-text {
+    animation: wave 3s ease-in-out infinite;
+  }
+  
+  @keyframes wave {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+</style>
   <div class="start-screen" id="startScreen">
     <h2 style="margin-top: 0; font-size: 1.3em;">Testez vos connaissances des drapeaux !</h2>
     <p>Choisissez votre mode de jeu :</p>
