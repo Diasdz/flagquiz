@@ -205,7 +205,6 @@
       display: block;
       font-size: 1em;
       transition: all 0.3s;
-      font-weight: bold;
     }
 
     .btn:hover { 
@@ -220,11 +219,11 @@
     }
 
     .btn-secondary {
-      background-color: #6c757d;
+      background-color: var(--primary-color);
     }
 
     .btn-secondary:hover {
-      background-color: #5a6268;
+      background-color: #ff4757;
     }
 
     .flag-image {
@@ -284,7 +283,6 @@
     .difficulty-btn {
       transition: all 0.3s;
       border: 2px solid transparent;
-      font-weight: bold;
     }
 
     .difficulty-btn.selected {
@@ -319,7 +317,6 @@
       display: block;
       font-size: 0.8em;
       transition: all 0.3s;
-      font-weight: bold;
     }
 
     .stop-btn:hover {
@@ -334,7 +331,6 @@
       margin: 5px;
       flex: 1 1 45%;
       min-width: 120px;
-      font-weight: bold;
     }
 
     .continent-btn:hover {
@@ -414,19 +410,40 @@
   </div>
 
   <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
-  
-  <h1 class="quiz-title">
-    <span class="title-icon">🚩</span>
-    <span class="title-text">Ultimate Flag Quiz</span>
-    <span class="title-icon">🚩</span>
-  </h1>
+  <h1 class="quiz-title" style="
+  font-family: 'Fjalla One', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+">
+  <span style="font-size: 1.5em;">🚩</span>
+  <span class="wave-text" style="
+    background-image: linear-gradient(to top, #fdb2b2, #f7aeb0, #f1aaae, #eaa7ac, #e4a3aa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+    font-size: 1.3em;
+  ">Ultimate   Flag   Quiz</span>
+  <span style="font-size: 1.5em;">🚩</span>
+</h1>
 
+<style>
+  .wave-text {
+    animation: wave 3s ease-in-out infinite;
+  }
+  
+  @keyframes wave {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+</style>
   <div class="start-screen" id="startScreen">
-    <h2 style="margin-top: 0; font-size: 1.3em;">Testez vos connaissances des drapeaux !</h2>
+    <h2 style="margin-top: 0; font-size: 1.3em; text-align: center;">Connaissez-vous les 195 drapeaux du monde ?</h2>
     <p>Choisissez votre mode de jeu :</p>
     
     <div style="margin: 15px 0; display: flex; flex-direction: column; gap: 8px;">
-      <button class="btn" onclick="startClassicMode()">Mode Classique</button>
+      <button class="btn" bold onclick="startClassicMode()">Mode Classique</button>
       <button class="btn btn-secondary" onclick="showDifficultyOptions()">Mode Défi ⏱️</button>
       <button class="btn" onclick="showContinentSelection()">Mode Continent 🌍</button>
     </div>
@@ -438,19 +455,20 @@
         <button class="btn medium difficulty-btn" onclick="setDifficulty('medium')">Moyen (8s)</button>
         <button class="btn hard difficulty-btn" onclick="setDifficulty('hard')">Difficile (5s)</button>
       </div>
-      <button class="btn" onclick="startChallengeMode()" style="margin-top: 15px;">Commencer le défi</button>
+      <button class="btn" onclick="startChallengeMode()" style="display:flex;">Commencer le défi</button>
+      <button class="btn btn-secondary" onclick="showStartScreen()" style="display:flex;">Retour</button>
     </div>
   </div>
 
   <div class="continent-selection" id="continentSelection" style="display: none;">
     <h2 style="margin-top: 0; text-align: center;">Choisissez un continent</h2>
     <div class="continent-grid">
-      <button class="btn continent-btn" onclick="startContinentMode('europe')">Europe 🇪🇺</button>
-      <button class="btn continent-btn" onclick="startContinentMode('afrique')">Afrique 🌍</button>
-      <button class="btn continent-btn" onclick="startContinentMode('asie')">Asie 🌏</button>
-      <button class="btn continent-btn" onclick="startContinentMode('amerique')">Amérique 🌎</button>
-      <button class="btn continent-btn" onclick="startContinentMode('oceanie')">Océanie 🌊</button>
-      <button class="btn continent-btn" onclick="startContinentMode('all')">Tous les pays 🌎</button>
+      <button class="btn continent-btn" onclick="startContinentMode('europe')">Europe </button>
+      <button class="btn continent-btn" onclick="startContinentMode('afrique')">Afrique </button>
+      <button class="btn continent-btn" onclick="startContinentMode('asie')">Asie </button>
+      <button class="btn continent-btn" onclick="startContinentMode('amerique')">Amérique </button>
+      <button class="btn continent-btn" onclick="startContinentMode('oceanie')">Océanie </button>
+      <button class="btn continent-btn" onclick="startContinentMode('all')">Tous les pays </button>
     </div>
     <button class="btn btn-secondary" onclick="showStartScreen()" style="margin-top: 15px;">Retour</button>
   </div>
@@ -469,7 +487,7 @@
   <audio id="timeoutSound" src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-explosion-2759.mp3"></audio>
 
   <script>
-    // Base de données complète des pays
+    // Base de données complète des 195 pays reconnus par l'ONU
     const countriesByContinent = {
       europe: [
         ["Albanie", "https://flagcdn.com/w320/al.png"],
@@ -677,21 +695,8 @@
         ["Tuvalu", "https://flagcdn.com/w320/tv.png"],
         ["Vanuatu", "https://flagcdn.com/w320/vu.png"]
       ]
-
     };
 
-    // Fonction pour obtenir tous les pays
-    function getAllCountries() {
-      return [
-        ...countriesByContinent.europe,
-        ...countriesByContinent.afrique,
-        ...countriesByContinent.asie,
-        ...countriesByContinent.amerique,
-        ...countriesByContinent.oceanie
-      ];
-    }
-
-    // Variables du jeu
     let questions = [];
     let currentQuestion = 0;
     let score = 0;
@@ -707,30 +712,122 @@
       countries: getAllCountries()
     };
 
-    // Fonction améliorée pour générer des questions sans répétition des choix
-    function generateUniqueQuestions(count) {
-      const allCountries = currentDifficulty.countries;
-      const shuffledCountries = [...allCountries].sort(() => Math.random() - 0.5);
-      const selectedQuestions = shuffledCountries.slice(0, count);
+    function getAllCountries() {
+      return [
+        ...countriesByContinent.europe,
+        ...countriesByContinent.afrique,
+        ...countriesByContinent.asie,
+        ...countriesByContinent.amerique,
+        ...countriesByContinent.oceanie
+      ];
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => {
+          document.getElementById('loader').style.display = 'none';
+        }, 500);
+      }, 1000);
       
-      return selectedQuestions.map(correct => {
-        // Crée un pool de pays disponibles pour les mauvaises réponses
-        const availableCountries = allCountries.filter(c => c[0] !== correct[0]);
-        const shuffledIncorrect = [...availableCountries].sort(() => Math.random() - 0.5);
+      preloadAllImages();
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+      preloadSounds();
+    });
+
+    function preloadAllImages() {
+      getAllCountries().forEach(([_, url]) => {
+        new Image().src = url;
+      });
+    }
+
+    function preloadSounds() {
+      const sounds = ['correctSound', 'wrongSound', 'timeoutSound'];
+      sounds.forEach(soundId => {
+        const sound = document.getElementById(soundId);
+        sound.volume = 0.7;
+        sound.load();
+      });
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+
+    function startClassicMode() {
+      isChallengeMode = false;
+      currentDifficulty.countries = getAllCountries();
+      startQuiz(195);
+      document.getElementById('timer-container').style.display = 'none';
+    }
+
+    function showContinentSelection() {
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('continentSelection').style.display = 'block';
+    }
+
+    function startContinentMode(continent) {
+      isChallengeMode = false;
+      
+      if (continent === 'all') {
+        currentDifficulty.countries = getAllCountries();
+        startQuiz(195);
+      } else {
+        currentDifficulty.countries = countriesByContinent[continent];
+        startQuiz(currentDifficulty.countries.length);
+      }
+      
+      document.getElementById('timer-container').style.display = 'none';
+      document.getElementById('continentSelection').style.display = 'none';
+    }
+
+    function showDifficultyOptions() {
+      document.getElementById('difficultyOptions').style.display = 'block';
+      document.querySelector('#startScreen div:first-of-type').style.display = 'none';
+    }
+
+    function setDifficulty(level) {
+      document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.classList.remove('selected');
+      });
+      document.querySelector(`.difficulty-btn.${level}`).classList.add('selected');
+      
+      const difficulties = {
+        easy: { time: 10 },
+        medium: { time: 8 },
+        hard: { time: 5 }
+      };
+      currentDifficulty = { 
+        ...currentDifficulty,
+        level,
+        time: difficulties[level].time
+      };
+      document.getElementById('difficultyBadge').className = `difficulty-badge ${level}`;
+      document.getElementById('difficultyBadge').textContent = 
+        level === 'easy' ? 'Facile (10s)' : 
+        level === 'medium' ? 'Moyen (8s)' : 'Difficile (5s)';
+    }
+
+    function startChallengeMode() {
+      isChallengeMode = true;
+      currentDifficulty.countries = getAllCountries();
+      startQuiz(195);
+      document.getElementById('timer-container').style.display = 'flex';
+      document.getElementById('difficultyOptions').style.display = 'none';
+    }
+
+    function generateUniqueQuestions(count) {
+      const shuffledCountries = [...currentDifficulty.countries]
+        .sort(() => Math.random() - 0.5);
+      
+      return shuffledCountries.slice(0, count).map(correct => {
+        const incorrectChoices = shuffledCountries
+          .filter(c => c[0] !== correct[0])
+          .slice(0, 3);
         
-        // Sélectionne 3 mauvaises réponses uniques
-        const incorrectChoices = [];
-        const usedIndices = new Set();
-        
-        while (incorrectChoices.length < 3 && usedIndices.size < availableCountries.length) {
-          const randomIndex = Math.floor(Math.random() * availableCountries.length);
-          if (!usedIndices.has(randomIndex)) {
-            usedIndices.add(randomIndex);
-            incorrectChoices.push(availableCountries[randomIndex]);
-          }
-        }
-        
-        // Combine et mélange les réponses
         const choices = [...incorrectChoices.map(c => c[0]), correct[0]]
           .sort(() => Math.random() - 0.5);
         
@@ -743,43 +840,210 @@
       });
     }
 
-    // ... (le reste des fonctions reste identique à votre code original)
-    // Fonctions pour démarrer le jeu, afficher les questions, vérifier les réponses, etc.
-
-    // Initialisation
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => {
-          document.getElementById('loader').style.display = 'none';
-        }, 500);
-      }, 1000);
+    function startQuiz(count) {
+      totalQuestions = Math.min(count, currentDifficulty.countries.length);
+      questions = generateUniqueQuestions(totalQuestions);
+      currentQuestion = 0;
+      score = 0;
       
-      // Préchargement des images
-      getAllCountries().forEach(([_, url]) => {
-        new Image().src = url;
-      });
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('quizContainer').style.display = 'block';
+      document.getElementById('result').style.display = 'none';
       
-      // Préchargement des sons
-      ['correctSound', 'wrongSound', 'timeoutSound'].forEach(soundId => {
-        const sound = document.getElementById(soundId);
-        sound.volume = 0.7;
-        sound.load();
-      });
-      
-      // Vérification du mode sombre
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-    });
-
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+      showQuestion();
+      if (isChallengeMode) startTimer();
     }
 
-    // ... (toutes les autres fonctions de gestion du jeu)
+    function showQuestion() {
+      const quizContainer = document.getElementById("quizContainer");
+      const q = questions[currentQuestion];
+      
+      quizContainer.classList.add('fade-out');
+      
+      setTimeout(() => {
+        quizContainer.innerHTML = `
+          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <small>Question ${currentQuestion + 1}/${totalQuestions}</small>
+            <small>Score: ${score}</small>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" style="width: ${((currentQuestion) / totalQuestions) * 100}%"></div>
+          </div>
+          <div style="margin: 5px 0;">${q.question}</div>
+          <div class="choices">
+            ${q.choices.map((choice, i) => `
+              <label>
+                <input type="radio" name="choice" value="${i}" aria-label="${choice}">
+                ${choice}
+              </label>
+            `).join("")}
+          </div>
+          <div class="feedback" id="feedback" style="min-height: 20px;"></div>
+          <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled style="margin-top: 10px;">
+            ${currentQuestion < totalQuestions - 1 ? 'Question suivante' : 'Résultats'}
+          </button>
+          <button class="stop-btn" onclick="endGame()">Arrêter la partie</button>
+        `;
+        
+        setTimeout(() => {
+          quizContainer.classList.remove('fade-out');
+        }, 50);
+        
+        selected = null;
+        document.querySelectorAll('input[name="choice"]').forEach(input => {
+          input.addEventListener('change', (e) => {
+            selected = parseInt(e.target.value);
+            validateAnswer();
+          });
+        });
 
+        controller.abort();
+        controller = new AbortController();
+        document.addEventListener(
+          "keydown", 
+          (e) => { if (e.key === "Enter") nextQuestion(); },
+          { signal: controller.signal }
+        );
+      }, 300);
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timeLeft = currentDifficulty.time;
+      document.getElementById('timer').textContent = timeLeft;
+      document.getElementById('timer').className = '';
+      
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').textContent = timeLeft;
+        
+        if(timeLeft <= 5 && timeLeft > 0) {
+          document.getElementById('timer').classList.add('pulse');
+        }
+        
+        if(timeLeft <= 0) {
+          clearInterval(timer);
+          document.getElementById('timeoutSound').play();
+          document.getElementById('feedback').innerHTML = '⏱️ Temps écoulé !';
+          setTimeout(() => nextQuestion(), 1500);
+        }
+      }, 1000);
+    }
+
+    function validateAnswer() {
+      if (isChallengeMode && timeLeft <= 0) return;
+
+      clearInterval(timer);
+      const correctIndex = questions[currentQuestion].answer;
+      const feedback = document.getElementById("feedback");
+      const labels = document.querySelectorAll(".choices label");
+      
+      labels.forEach((label, index) => {
+        const input = label.querySelector("input");
+        input.disabled = true;
+
+        if (index === correctIndex) {
+          label.classList.add("correct");
+        } else if (index === selected) {
+          label.classList.add("incorrect");
+        }
+      });
+
+      if (selected === correctIndex) {
+        score++;
+        document.getElementById('correctSound').play();
+        feedback.innerHTML = "✅ Correct !";
+      } else {
+        document.getElementById('wrongSound').play();
+        feedback.innerHTML = `❌ Incorrect. La bonne réponse était :<strong>${questions[currentQuestion].country}</strong>`;
+      }
+
+      document.getElementById("nextBtn").disabled = false;
+    }
+
+    function nextQuestion() {
+      clearInterval(timer);
+      currentQuestion++;
+      if (currentQuestion < totalQuestions) {
+        showQuestion();
+        if (isChallengeMode) startTimer();
+      } else {
+        showResult();
+      }
+    }
+
+    function endGame() {
+      clearInterval(timer);
+      saveScore();
+      const best = getBestScore();
+
+      document.getElementById("quizContainer").style.display = "none";
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").innerHTML = `
+        <h2>Partie arrêtée</h2>
+        <p>Votre score actuel: <strong>${score} / ${totalQuestions}</strong></p>
+        <p>🏆 Meilleur score: <strong>${best} / ${totalQuestions}</strong></p>
+        
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+          <button class="btn" onclick="restartQuiz()">Rejouer</button>
+          <button class="btn btn-secondary" onclick="showStartScreen()">Menu Principal</button>
+        </div>
+      `;
+    }
+
+    function showResult() {
+      saveScore();
+      const best = getBestScore();
+
+      document.getElementById("quizContainer").style.display = "none";
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").innerHTML = `
+        <h2>🎉 Quiz terminé !</h2>
+        <p>Votre score final: <strong>${score} / ${totalQuestions}</strong></p>
+        <p>🏆 Meilleur score: <strong>${best} / ${totalQuestions}</strong></p>
+        
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+          <button class="btn" onclick="restartQuiz()">Rejouer</button>
+          <button class="btn btn-secondary" onclick="showStartScreen()">Menu Principal</button>
+        </div>
+      `;
+    }
+
+    function saveScore() {
+      const key = `bestScore_${currentDifficulty.level}_${isChallengeMode ? 'challenge' : 'classic'}_${getCurrentMode()}`;
+      const best = localStorage.getItem(key) || 0;
+      if (score > best) {
+        localStorage.setItem(key, score);
+      }
+    }
+
+    function getBestScore() {
+      const key = `bestScore_${currentDifficulty.level}_${isChallengeMode ? 'challenge' : 'classic'}_${getCurrentMode()}`;
+      return localStorage.getItem(key) || 0;
+    }
+
+    function getCurrentMode() {
+      if (currentDifficulty.countries === getAllCountries()) return 'all';
+      if (currentDifficulty.countries === countriesByContinent.europe) return 'europe';
+      if (currentDifficulty.countries === countriesByContinent.afrique) return 'afrique';
+      if (currentDifficulty.countries === countriesByContinent.asie) return 'asie';
+      if (currentDifficulty.countries === countriesByContinent.amerique) return 'amerique';
+      return 'oceanie';
+    }
+
+    function restartQuiz() {
+      document.getElementById("result").style.display = "none";
+      startQuiz(totalQuestions);
+    }
+
+    function showStartScreen() {
+      document.getElementById("result").style.display = "none";
+      document.getElementById("startScreen").style.display = "block";
+      document.getElementById("timer-container").style.display = "none";
+      document.getElementById('difficultyOptions').style.display = 'none';
+      document.getElementById('continentSelection').style.display = 'none';
+      document.querySelector('#startScreen div:first-of-type').style.display = 'flex';
+    }
   </script>
 </body>
 </html>
