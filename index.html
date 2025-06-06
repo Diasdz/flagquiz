@@ -819,26 +819,34 @@
       document.getElementById('difficultyOptions').style.display = 'none';
     }
 
-    function generateUniqueQuestions(count) {
-      const shuffledCountries = [...currentDifficulty.countries]
-        .sort(() => Math.random() - 0.5);
-      
-      return shuffledCountries.slice(0, count).map(correct => {
-        const incorrectChoices = shuffledCountries
-          .filter(c => c[0] !== correct[0])
-          .slice(0, 3);
-        
-        const choices = [...incorrectChoices.map(c => c[0]), correct[0]]
-          .sort(() => Math.random() - 0.5);
-        
-        return {
-          question: `<img src="${correct[1]}" alt="Drapeau de ${correct[0]}" class="flag-image">`,
-          choices: choices,
-          answer: choices.indexOf(correct[0]),
-          country: correct[0]
-        };
-      });
+   function generateUniqueQuestions(count) {
+  const shuffledCountries = [...currentDifficulty.countries]
+    .sort(() => Math.random() - 0.5);
+  const usedCountries = new Set();
+  
+  return shuffledCountries.slice(0, count).map(correct => {
+    usedCountries.add(correct[0]);
+    const availableIncorrect = shuffledCountries
+      .filter(c => !usedCountries.has(c[0]) && c[0] !== correct[0]);
+    
+    let incorrectChoices = availableIncorrect.slice(0, 3);
+    while (incorrectChoices.length < 3) {
+      const randomCountry = shuffledCountries
+        .find(c => c[0] !== correct[0] && !incorrectChoices.some(ic => ic[0] === c[0]));
+      if (randomCountry) incorrectChoices.push(randomCountry);
     }
+    
+    const choices = [...incorrectChoices.map(c => c[0]), correct[0]]
+      .sort(() => Math.random() - 0.5);
+    
+    return {
+      question: `<img src="${correct[1]}" alt="Drapeau de ${correct[0]}" class="flag-image">`,
+      choices: choices,
+      answer: choices.indexOf(correct[0]),
+      country: correct[0]
+    };
+  });
+}
 
     function startQuiz(count) {
       totalQuestions = Math.min(count, currentDifficulty.countries.length);
