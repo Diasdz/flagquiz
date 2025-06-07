@@ -952,7 +952,7 @@
         startQuiz(getAllCountries().length);
       } else {
         currentDifficulty.countries = countriesByContinent[continent];
-        startQuiz(Math.min(20, currentDifficulty.countries.length));
+       startQuiz(getAllCountries().length);
       }
       
       document.getElementById('timer-container').style.display = 'none';
