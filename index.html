@@ -17,6 +17,23 @@
       --progress-bg: #f1f1f1;
       --timer-bg: #3b3054;
     }
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 10px 10px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.dark-mode::before {
+  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+}
+    
 .start-screen, .quiz-card, .result-card, .continent-selection {
   background: var(--card-bg);
   border-radius: 20px;
