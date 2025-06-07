@@ -17,7 +17,31 @@
       --progress-bg: #f1f1f1;
       --timer-bg: #3b3054;
     }
+.start-screen, .quiz-card, .result-card, .continent-selection {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 20px 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  max-width: 600px;
+  width: 100%;
+  margin: 10px 0;
+  transition: all 0.3s;
+  transform-style: preserve-3d;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.1);
+}
 
+.quiz-card:hover, .start-screen:hover, .continent-selection:hover {
+  transform: translateY(-5px) rotateX(5deg) rotateY(5deg);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+}
+
+/* Ajout d'une lueur au survol */
+.btn:hover {
+  box-shadow: 0 0 15px rgba(255,107,107,0.6);
+  transform: scale(1.02) translateY(-2px);
+}
+    
     .dark-mode {
   background: linear-gradient(-45deg, #121212, #1a1a2e, #16213e, #0f3460);
   background-size: 400% 400%;
