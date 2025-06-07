@@ -155,13 +155,26 @@ body::before {
     }
 
     .title-text {
-      background: linear-gradient(135deg, #ff6b6b, #3b3054);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 700;
-      padding: 0 10px;
-    }
+  background: linear-gradient(135deg, #ff6b6b, #3b3054);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+  padding: 0 15px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  position: relative;
+  display: inline-block;
+}
+    .title-text::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 15px;
+  width: calc(100% - 30px);
+  height: 3px;
+  background: linear-gradient(90deg, #ff6b6b, #3b3054);
+  border-radius: 3px;
+}
 
     @keyframes float {
       0%, 100% { transform: translateY(0); }
