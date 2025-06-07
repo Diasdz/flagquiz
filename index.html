@@ -949,7 +949,7 @@
       
       if (continent === 'all') {
         currentDifficulty.countries = getAllCountries();
-        startQuiz(20); // Limité à 20 questions
+        startQuiz(getAllCountries().length);
       } else {
         currentDifficulty.countries = countriesByContinent[continent];
         startQuiz(Math.min(20, currentDifficulty.countries.length));
@@ -991,7 +991,7 @@
     function startChallengeMode() {
       isChallengeMode = true;
       currentDifficulty.countries = getAllCountries();
-      startQuiz(20); // Limité à 20 questions pour le mode défi
+      startQuiz(getAllCountries().length);
       document.getElementById('timer-container').style.display = 'flex';
       document.getElementById('difficultyOptions').style.display = 'none';
     }
