@@ -397,6 +397,39 @@
 .dark-mode .language-btn.active {
   background: rgba(0, 0, 0, 0.8);
 }
+
+.result-card {
+  text-align: center;
+}
+
+.result-card h2 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.result-card p {
+  margin: 10px 0;
+  font-size: 1.1em;
+}
+
+.result-card strong {
+  font-size: 1.2em;
+  color: var(--primary-color);
+}
+
+/* Style spécifique pour le commentaire */
+.result-card p[style*="italic"] {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dark-mode .result-card p[style*="italic"] {
+  background: rgba(0, 0, 0, 0.1);
+}
     
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
@@ -740,6 +773,14 @@
     // Système de traduction
     const translations = {
       fr: {
+        percentage: "Pourcentage de réussite",
+    comments: {
+      90: "🌟 Excellent ! Vous êtes un vrai expert en drapeaux !",
+      70: "👍 Très bien ! Vous connaissez bien vos drapeaux !",
+      50: "🤔 Pas mal ! Encore un peu d'entraînement et vous serez au top !",
+      30: "📚 Continuez à apprendre, vous allez progresser !",
+      0: "💪 Ne vous découragez pas, c'est en forgeant qu'on devient forgeron !"
+    },
         title: "Ultimate Flag Quiz",
         startTitle: "Connaissez-vous les 195 drapeaux du monde ?",
         chooseMode: "Choisissez votre mode de jeu :",
@@ -774,6 +815,14 @@
         results: "Résultats"
       },
       en: {
+        percentage: "Success rate", 
+    comments: {
+      90: "🌟 Excellent! You're a true flag expert!",
+      70: "👍 Very good! You know your flags well!",
+      50: "🤔 Not bad! A little more practice and you'll be on top!",
+      30: "📚 Keep learning, you'll improve!",
+      0: "💪 Don't give up, practice makes perfect!"
+    }, 
         title: "Ultimate Flag Quiz",
         startTitle: "Do you know all 195 world flags?",
         chooseMode: "Choose your game mode:",
@@ -1157,43 +1206,68 @@
     }
 
     function endGame() {
-      clearInterval(timer);
-      saveScore();
-      const best = getBestScore();
-      const t = translations[currentLanguage];
+  clearInterval(timer);
+  saveScore();
+  const best = getBestScore();
+  const t = translations[currentLanguage];
+  
+  // Calcul du pourcentage
+  const percentage = Math.round((score / totalQuestions) * 100);
+  
+  // Sélection du commentaire
+  let comment = "";
+  if (percentage >= 90) comment = t.comments[90];
+  else if (percentage >= 70) comment = t.comments[70];
+  else if (percentage >= 50) comment = t.comments[50];
+  else if (percentage >= 30) comment = t.comments[30];
+  else comment = t.comments[0];
 
-      document.getElementById("quizContainer").style.display = "none";
-      document.getElementById("result").style.display = "block";
-      document.getElementById("result").innerHTML = `
-        <h2>${t.stopGame}</h2>
-        <p>${t.yourScore}: <strong>${score} / ${totalQuestions}</strong></p>
-        <p>${t.bestScore}: <strong>${best} / ${totalQuestions}</strong></p>
-        
-        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-          <button class="btn" onclick="restartQuiz()">${t.playAgain}</button>
-          <button class="btn btn-secondary" onclick="showStartScreen()">${t.mainMenu}</button>
-        </div>
-      `;
-    }
+  document.getElementById("quizContainer").style.display = "none";
+  document.getElementById("result").style.display = "block";
+  document.getElementById("result").innerHTML = `
+    <h2>${t.stopGame}</h2>
+    <p>${t.yourScore}: <strong>${score} / ${totalQuestions}</strong></p>
+    <p>${t.percentage}: <strong>${percentage}%</strong></p>
+    <p style="font-style: italic; margin: 15px 0;">${comment}</p>
+    <p>${t.bestScore}: <strong>${best} / ${totalQuestions}</strong></p>
+    
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+      <button class="btn" onclick="restartQuiz()">${t.playAgain}</button>
+      <button class="btn btn-secondary" onclick="showStartScreen()">${t.mainMenu}</button>
+    </div>
+  `;
+}
+  function showResult() {
+  saveScore();
+  const best = getBestScore();
+  const t = translations[currentLanguage];
+  
+  // Calcul du pourcentage
+  const percentage = Math.round((score / totalQuestions) * 100);
+  
+  // Sélection du commentaire approprié
+  let comment = "";
+  if (percentage >= 90) comment = t.comments[90];
+  else if (percentage >= 70) comment = t.comments[70];
+  else if (percentage >= 50) comment = t.comments[50];
+  else if (percentage >= 30) comment = t.comments[30];
+  else comment = t.comments[0];
 
-    function showResult() {
-      saveScore();
-      const best = getBestScore();
-      const t = translations[currentLanguage];
-
-      document.getElementById("quizContainer").style.display = "none";
-      document.getElementById("result").style.display = "block";
-      document.getElementById("result").innerHTML = `
-        <h2>${t.gameCompleted}</h2>
-        <p>${t.yourScore}: <strong>${score} / ${totalQuestions}</strong></p>
-        <p>${t.bestScore}: <strong>${best} / ${totalQuestions}</strong></p>
-        
-        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-          <button class="btn" onclick="restartQuiz()">${t.playAgain}</button>
-          <button class="btn btn-secondary" onclick="showStartScreen()">${t.mainMenu}</button>
-        </div>
-      `;
-    }
+  document.getElementById("quizContainer").style.display = "none";
+  document.getElementById("result").style.display = "block";
+  document.getElementById("result").innerHTML = `
+    <h2>${t.gameCompleted}</h2>
+    <p>${t.yourScore}: <strong>${score} / ${totalQuestions}</strong></p>
+    <p>${t.percentage}: <strong>${percentage}%</strong></p>
+    <p style="font-style: italic; margin: 15px 0;">${comment}</p>
+    <p>${t.bestScore}: <strong>${best} / ${totalQuestions}</strong></p>
+    
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+      <button class="btn" onclick="restartQuiz()">${t.playAgain}</button>
+      <button class="btn btn-secondary" onclick="showStartScreen()">${t.mainMenu}</button>
+    </div>
+  `;
+}
 
     function saveScore() {
       const key = `bestScore_${currentDifficulty.level}_${isChallengeMode ? 'challenge' : 'classic'}_${getCurrentMode()}`;
