@@ -266,19 +266,22 @@
     }
 
     .flag-image {
-      max-width: 100%;
-      height: 80px;
-      object-fit: contain;
-      margin: 5px auto;
-      display: block;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      transition: transform 0.3s;
-    }
+  max-width: 100%;
+  height: 100px; /* Augmenté pour plus de visibilité */
+  object-fit: contain;
+  margin: 10px auto;
+  display: block;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 8px;
+  transition: all 0.5s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transform: perspective(500px) rotateY(0deg);
+}
 
-    .flag-image:hover {
-      transform: scale(1.05);
-    }
+   .flag-image:hover {
+  transform: perspective(500px) rotateY(10deg) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
 
     .progress-container {
       width: 100%;
