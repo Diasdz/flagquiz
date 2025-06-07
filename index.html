@@ -935,7 +935,7 @@
     function startClassicMode() {
       isChallengeMode = false;
       currentDifficulty.countries = getAllCountries();
-      startQuiz(20); // Limité à 20 questions pour le mode classique
+      startQuiz(getAllCountries().length);
       document.getElementById('timer-container').style.display = 'none';
     }
 
