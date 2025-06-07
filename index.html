@@ -397,6 +397,14 @@
 .dark-mode .language-btn.active {
   background: rgba(0, 0, 0, 0.3);
 }
+
+    .language-btn img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+    
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-5px); }
@@ -461,10 +469,12 @@
     <div class="loader"></div>
   </div>
 
- <div class="language-selector">
-  <button class="language-btn active" onclick="changeLanguage('fr')" aria-label="Français">🇫🇷</button>
-  <button class="language-btn" onclick="changeLanguage('en')" aria-label="English">🇬🇧</button>
-</div>
+<button class="language-btn active" onclick="changeLanguage('fr')" aria-label="Français">
+  <img src="french-flag-icon.png" alt="Français">
+</button>
+<button class="language-btn" onclick="changeLanguage('en')" aria-label="English">
+  <img src="uk-flag-icon.png" alt="English">
+</button>
 
   <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
   <h1 class="quiz-title">
