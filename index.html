@@ -42,13 +42,24 @@ body::before {
   position: relative;
   border: 1px solid rgba(255,255,255,0.1);
 }
-  .dark-mode .quiz-card,
+    
+.dark-mode .quiz-card,
 .dark-mode .start-screen,
 .dark-mode .result-card,
 .dark-mode .continent-selection {
   background: #2d3748 !important; /* Couleur sombre (ex: gris anthracite) */
   color: #f7fafc !important; /* Texte clair pour meilleur contraste */
   border: 1px solid #4a5568 !important; /* Bordure subtile */
+}
+    /* Optionnel : ajustez la couleur des boutons en mode sombre */
+.dark-mode .btn {
+  background-color: #4a5568 !important;
+  color: white !important;
+}
+
+/* Optionnel : couleur de survol des boutons */
+.dark-mode .btn:hover {
+  background-color: #5a6778 !important;
 }
 
     .quiz-card {
