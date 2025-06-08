@@ -29,21 +29,24 @@ body::before {
   z-index: -1;
 }
 
-    .title-logo {
-  height: 100px; /* Ajustez selon vos besoins */
-  width: auto;
+.title-logo {
+  width: 100%; /* Prend toute la largeur disponible */
+  max-width: 600px; /* Largeur maximale (ajustable) */
+  height: auto; /* Maintient les proportions */
   margin: 0 auto;
-  pointer-events: none; /* Important pour les SVG interactifs */
+  display: block;
 }
 
-.dark-mode .title-logo {
-  filter: invert(85%) sepia(10%) saturate(200%) hue-rotate(180deg);
-}
-
-@media (max-width: 600px) {
+/* Pour les très grands écrans */
+@media (min-width: 1200px) {
   .title-logo {
-    height: 70px;
+    max-width: 800px;
   }
+}
+
+/* Mode sombre */
+.dark-mode .title-logo {
+  filter: brightness(0.9) contrast(1.2);
 }
     
 .start-screen, .quiz-card, .result-card, .continent-selection {
