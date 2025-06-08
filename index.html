@@ -68,12 +68,10 @@ body::before {
   border: 1px solid #4a5568 !important; /* Bordure subtile */
 }
 
-.dark-mode .choices label:hover:not(.disabled) {
-  background: none !important; /* Couleur au survol */
-}
-
-    .dark-mode .choices label.correct {
-  background: #2a624a !important; /* Vert plus foncé */
+   /* Désactive le survol pour les bonnes réponses */
+.dark-mode .choices label.correct,
+.dark-mode .choices label.correct:hover {
+  background: #2a624a !important;
   border-color: #38a169 !important;
   color: #f0fff4 !important;
 }
@@ -84,9 +82,7 @@ body::before {
   color: #fff5f5 !important;
 }
 
-    .dark-mode .choices label.correct:hover:not(.disabled) {
-  background: none !important; /* Couleur au survol */
-}
+   
     
     .quiz-card {
   transition: all 2.5s cubic-bezier(0.25, 0.8, 0.25, 1);
