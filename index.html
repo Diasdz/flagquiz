@@ -1006,7 +1006,7 @@ body::before {
       ];
     }
 
-   function changeLanguage(lang) {
+  function changeLanguage(lang) {
   // Animation des icônes
   const buttons = document.querySelectorAll('.language-btn');
   buttons.forEach(btn => {
@@ -1025,7 +1025,14 @@ body::before {
   
   currentLanguage = lang;
   localStorage.setItem('quizLanguage', lang);
+  
+  // Mettre à jour toute l'interface immédiatement
   updateUI();
+  
+  // Si dans le quiz, recharger la question actuelle
+  if (document.getElementById('quizContainer').style.display === 'block') {
+    showQuestion();
+  }
 }
 
     function updateUI() {
