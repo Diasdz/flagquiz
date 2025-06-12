@@ -1006,8 +1006,8 @@ body::before {
       ];
     }
 
-  function changeLanguage(lang) {
-  // Animation des icônes
+ function changeLanguage(lang) {
+  // Animation des boutons
   const buttons = document.querySelectorAll('.language-btn');
   buttons.forEach(btn => {
     btn.classList.remove('active');
@@ -1016,23 +1016,19 @@ body::before {
       btn.style.transform = '';
     }, 300);
   });
-  
-  // Activer le bouton cliqué avec un léger délai pour l'animation
+
+  // Activer le nouveau bouton après un léger délai
   setTimeout(() => {
     document.querySelector(`.language-btn[onclick="changeLanguage('${lang}')"]`)
       .classList.add('active');
   }, 50);
-  
+
+  // Changer la langue et sauvegarder
   currentLanguage = lang;
   localStorage.setItem('quizLanguage', lang);
-  
-  // Mettre à jour toute l'interface immédiatement
-  updateUI();
-  
-  // Si dans le quiz, recharger la question actuelle
-  if (document.getElementById('quizContainer').style.display === 'block') {
-    showQuestion();
-  }
+
+  // Mise à jour complète de l'interface
+  updateFullInterface();
 }
 
     function updateUI() {
