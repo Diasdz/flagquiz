@@ -1079,62 +1079,7 @@ body::before {
   // 6. Mettre à jour le timer
   document.getElementById('timeLeftText').textContent = t.timeLeft;
 }
-
-    function updateUI() {
-      const t = translations[currentLanguage];
-      
-      // Mettre à jour tous les textes de l'interface
-      document.getElementById('quizTitleText').textContent = t.title;
-      document.getElementById('startTitle').textContent = t.startTitle;
-      document.getElementById('chooseModeText').textContent = t.chooseMode;
-      document.getElementById('classicModeBtn').textContent = t.classicMode;
-      document.getElementById('challengeModeBtn').textContent = t.challengeMode;
-      document.getElementById('continentModeBtn').textContent = t.continentMode;
-      document.getElementById('chooseDifficultyText').textContent = t.chooseDifficulty;
-      document.getElementById('easyBtn').textContent = t.easy;
-      document.getElementById('mediumBtn').textContent = t.medium;
-      document.getElementById('hardBtn').textContent = t.hard;
-      document.getElementById('startChallengeBtn').textContent = t.startChallenge;
-      document.getElementById('backFromDifficultyBtn').textContent = t.back;
-      document.getElementById('chooseContinentText').textContent = t.chooseContinent;
-      document.getElementById('europeBtn').textContent = t.europe;
-      document.getElementById('africaBtn').textContent = t.africa;
-      document.getElementById('asiaBtn').textContent = t.asia;
-      document.getElementById('americaBtn').textContent = t.america;
-      document.getElementById('oceaniaBtn').textContent = t.oceania;
-      document.getElementById('allCountriesBtn').textContent = t.allCountries;
-      document.getElementById('backFromContinentBtn').textContent = t.back;
-      document.getElementById('timeLeftText').textContent = t.timeLeft;
-      
-      // Mettre à jour les boutons de langue
-      document.querySelectorAll('.language-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      document.querySelector(`.language-btn[onclick="changeLanguage('${currentLanguage}')"]`).classList.add('active');
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => {
-          document.getElementById('loader').style.display = 'none';
-        }, 500);
-      }, 1000);
-      
-      // Charger la langue sauvegardée ou détecter la langue du navigateur
-      const savedLang = localStorage.getItem('quizLanguage');
-      const browserLang = navigator.language.startsWith('fr') ? 'fr' : 'en';
-      currentLanguage = savedLang || browserLang;
-      
-      updateUI();
-      preloadAllImages();
-      
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-      preloadSounds();
-    });
-
+   
     function preloadAllImages() {
       getAllCountries().forEach(([_, __, url]) => {
         new Image().src = url;
