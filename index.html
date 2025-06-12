@@ -182,29 +182,6 @@ body::before {
   transition: all 0.3s;
 }
 
-    .quiz-title {
-      font-size: 2.2em;
-      margin: 0 0 10px 0;
-      text-align: center;
-      color: var(--text-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      position: relative;
-      padding: 5px 0;
-    }
-
-    .quiz-title::before,
-    .quiz-title::after {
-      content: "";
-      flex: 1;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-    }
-
     .title-icon {
       display: inline-block;
       animation: float 3s ease-in-out infinite;
@@ -219,17 +196,7 @@ body::before {
       animation-delay: 0.4s;
     }
 
-    .title-text {
-  background: linear-gradient(135deg, #ff6b6b, #3b3054);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-weight: 700;
-  padding: 0 15px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  position: relative;
-  display: inline-block;
-}
+
     .title-text::after {
   content: '';
   position: absolute;
