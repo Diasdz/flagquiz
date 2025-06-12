@@ -1031,6 +1031,55 @@ body::before {
   updateFullInterface();
 }
 
+    function updateFullInterface() {
+  const t = translations[currentLanguage];
+  
+  // 1. Mettre à jour l'écran de démarrage
+  if (document.getElementById('startScreen').style.display !== 'none') {
+    document.getElementById('startTitle').textContent = t.startTitle;
+    document.getElementById('chooseModeText').textContent = t.chooseMode;
+    document.getElementById('classicModeBtn').textContent = t.classicMode;
+    document.getElementById('challengeModeBtn').textContent = t.challengeMode;
+    document.getElementById('continentModeBtn').textContent = t.continentMode;
+  }
+
+  // 2. Mettre à jour les options de difficulté si visibles
+  if (document.getElementById('difficultyOptions').style.display !== 'none') {
+    document.getElementById('chooseDifficultyText').textContent = t.chooseDifficulty;
+    document.getElementById('easyBtn').textContent = t.easy;
+    document.getElementById('mediumBtn').textContent = t.medium;
+    document.getElementById('hardBtn').textContent = t.hard;
+    document.getElementById('startChallengeBtn').textContent = t.startChallenge;
+    document.getElementById('backFromDifficultyBtn').textContent = t.back;
+  }
+
+  // 3. Mettre à jour la sélection de continent si visible
+  if (document.getElementById('continentSelection').style.display !== 'none') {
+    document.getElementById('chooseContinentText').textContent = t.chooseContinent;
+    document.getElementById('europeBtn').textContent = t.europe;
+    document.getElementById('africaBtn').textContent = t.africa;
+    document.getElementById('asiaBtn').textContent = t.asia;
+    document.getElementById('americaBtn').textContent = t.america;
+    document.getElementById('oceaniaBtn').textContent = t.oceania;
+    document.getElementById('allCountriesBtn').textContent = t.allCountries;
+    document.getElementById('backFromContinentBtn').textContent = t.back;
+  }
+
+  // 4. Mettre à jour le quiz en cours si visible
+  if (document.getElementById('quizContainer').style.display !== 'none') {
+    // Recharger complètement la question actuelle
+    showQuestion();
+  }
+
+  // 5. Mettre à jour les résultats si visibles
+  if (document.getElementById('result').style.display !== 'none') {
+    showResult();
+  }
+
+  // 6. Mettre à jour le timer
+  document.getElementById('timeLeftText').textContent = t.timeLeft;
+}
+
     function updateUI() {
       const t = translations[currentLanguage];
       
@@ -1208,9 +1257,22 @@ body::before {
     }
 
     function showQuestion() {
-      const quizContainer = document.getElementById("quizContainer");
-      const q = questions[currentQuestion];
-      const t = translations[currentLanguage];
+  const quizContainer = document.getElementById("quizContainer");
+  const q = questions[currentQuestion];
+  const t = translations[currentLanguage];
+  
+  // Regénérer les choix dans la bonne langue
+  const correctAnswer = currentLanguage === 'fr' ? q.country[0] : q.country[1];
+  const choices = q.choices.map(choice => {
+    const country = currentDifficulty.countries.find(c => 
+      (currentLanguage === 'fr' ? c[0] : c[1]) === choice
+    );
+    return currentLanguage === 'fr' ? country[0] : country[1];
+  });
+  
+  // Mettre à jour la réponse correcte
+  q.answer = choices.indexOf(correctAnswer);
+  q.choices = choices;
       
       quizContainer.classList.add('fade-out');
       
