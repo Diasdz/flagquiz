@@ -1039,99 +1039,90 @@ body::before {
       ];
     }
 
-   function changeLanguage(lang) {
-  // Désactiver tous les boutons de langue
+  function changeLanguage(lang) {
+  // Mettre à jour la langue immédiatement
+  currentLanguage = lang;
+  localStorage.setItem('quizLanguage', lang);
+
+  // Mettre à jour l'état des boutons de langue
   document.querySelectorAll('.language-btn').forEach(btn => {
     btn.classList.remove('active');
   });
-  
-  // Activer immédiatement le bouton cliqué
   document.querySelector(`.language-btn[onclick="changeLanguage('${lang}')"]`)
     .classList.add('active');
-  
-  // Mettre à jour la langue
-  currentLanguage = lang;
-  localStorage.setItem('quizLanguage', lang);
-  
-  // Mettre à jour l'interface immédiatement
+
+  // Mettre à jour toute l'UI immédiatement
   updateUI();
-  
-  // Regénérer les questions si le quiz est en cours
+
+  // Si le quiz est en cours, regénérer les questions dans la nouvelle langue
   if (document.getElementById('quizContainer').style.display === 'block') {
-    const currentMode = getCurrentMode();
-    const continentMap = {
-      'europe': 'europe',
-      'afrique': 'afrique',
-      'asie': 'asie',
-      'amerique': 'amerique',
-      'oceanie': 'oceanie',
-      'all': 'all'
-    };
-    
-    if (currentMode === 'all') {
-      questions = generateUniqueQuestions(totalQuestions);
-    } else if (continentMap[currentMode]) {
-      currentDifficulty.countries = countriesByContinent[continentMap[currentMode]];
-      questions = generateUniqueQuestions(totalQuestions);
-    }
-    
-    showQuestion();
+    regenerateQuestionsForCurrentLanguage();
+    showQuestion(); // Recharger la question actuelle
   }
 }
-    function updateUI() {
-      const t = translations[currentLanguage];
-      
-      // Mettre à jour tous les textes de l'interface
-      document.getElementById('quizTitleText').textContent = t.title;
-      document.getElementById('startTitle').textContent = t.startTitle;
-      document.getElementById('chooseModeText').textContent = t.chooseMode;
-      document.getElementById('classicModeBtn').textContent = t.classicMode;
-      document.getElementById('challengeModeBtn').textContent = t.challengeMode;
-      document.getElementById('continentModeBtn').textContent = t.continentMode;
-      document.getElementById('chooseDifficultyText').textContent = t.chooseDifficulty;
-      document.getElementById('easyBtn').textContent = t.easy;
-      document.getElementById('mediumBtn').textContent = t.medium;
-      document.getElementById('hardBtn').textContent = t.hard;
-      document.getElementById('startChallengeBtn').textContent = t.startChallenge;
-      document.getElementById('backFromDifficultyBtn').textContent = t.back;
-      document.getElementById('chooseContinentText').textContent = t.chooseContinent;
-      document.getElementById('europeBtn').textContent = t.europe;
-      document.getElementById('africaBtn').textContent = t.africa;
-      document.getElementById('asiaBtn').textContent = t.asia;
-      document.getElementById('americaBtn').textContent = t.america;
-      document.getElementById('oceaniaBtn').textContent = t.oceania;
-      document.getElementById('allCountriesBtn').textContent = t.allCountries;
-      document.getElementById('backFromContinentBtn').textContent = t.back;
-      document.getElementById('timeLeftText').textContent = t.timeLeft;
-      
-      // Mettre à jour les boutons de langue
-      document.querySelectorAll('.language-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      document.querySelector(`.language-btn[onclick="changeLanguage('${currentLanguage}')"]`).classList.add('active');
-    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => {
-          document.getElementById('loader').style.display = 'none';
-        }, 500);
-      }, 1000);
-      
-      // Charger la langue sauvegardée ou détecter la langue du navigateur
-      const savedLang = localStorage.getItem('quizLanguage');
-      const browserLang = navigator.language.startsWith('fr') ? 'fr' : 'en';
-      currentLanguage = savedLang || browserLang;
-      
-      updateUI();
-      preloadAllImages();
-      
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-      preloadSounds();
-    });
+function regenerateQuestionsForCurrentLanguage() {
+  const currentCountries = [...currentDifficulty.countries];
+  questions = questions.map(question => {
+    const correctCountry = currentCountries.find(c => 
+      c[0] === question.country[0] || c[1] === question.country[1]
+    );
+    
+    const incorrectChoices = currentCountries
+      .filter(c => c[0] !== correctCountry[0])
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+    
+    const choices = [...incorrectChoices.map(c => currentLanguage === 'fr' ? c[0] : c[1]), 
+                    currentLanguage === 'fr' ? correctCountry[0] : correctCountry[1]]
+      .sort(() => Math.random() - 0.5);
+    
+    return {
+      question: `<img src="${correctCountry[2]}" alt="Drapeau de ${currentLanguage === 'fr' ? correctCountry[0] : correctCountry[1]}" class="flag-image">`,
+      choices: choices,
+      answer: choices.indexOf(currentLanguage === 'fr' ? correctCountry[0] : correctCountry[1]),
+      country: correctCountry
+    };
+  });
+}
+    function updateUI() {
+  const t = translations[currentLanguage];
+  
+  // Mettre à jour tous les textes de l'interface
+  const elementsToUpdate = [
+    { id: 'startTitle', text: t.startTitle },
+    { id: 'chooseModeText', text: t.chooseMode },
+    { id: 'classicModeBtn', text: t.classicMode },
+    { id: 'challengeModeBtn', text: t.challengeMode },
+    { id: 'continentModeBtn', text: t.continentMode },
+    { id: 'chooseDifficultyText', text: t.chooseDifficulty },
+    { id: 'easyBtn', text: t.easy },
+    { id: 'mediumBtn', text: t.medium },
+    { id: 'hardBtn', text: t.hard },
+    { id: 'startChallengeBtn', text: t.startChallenge },
+    { id: 'backFromDifficultyBtn', text: t.back },
+    { id: 'chooseContinentText', text: t.chooseContinent },
+    { id: 'europeBtn', text: t.europe },
+    { id: 'africaBtn', text: t.africa },
+    { id: 'asiaBtn', text: t.asia },
+    { id: 'americaBtn', text: t.america },
+    { id: 'oceaniaBtn', text: t.oceania },
+    { id: 'allCountriesBtn', text: t.allCountries },
+    { id: 'backFromContinentBtn', text: t.back },
+    { id: 'timeLeftText', text: t.timeLeft }
+  ];
+
+  elementsToUpdate.forEach(item => {
+    const element = document.getElementById(item.id);
+    if (element) element.textContent = item.text;
+  });
+
+  // Mettre à jour le bouton suivant si le quiz est en cours
+  const nextBtn = document.getElementById('nextBtn');
+  if (nextBtn) {
+    nextBtn.textContent = currentQuestion < totalQuestions - 1 ? t.nextQuestion : t.results;
+  }
+}
 
     function preloadAllImages() {
       getAllCountries().forEach(([_, __, url]) => {
@@ -1254,59 +1245,52 @@ body::before {
       if (isChallengeMode) startTimer();
     }
 
-    function showQuestion() {
-      const quizContainer = document.getElementById("quizContainer");
-      const q = questions[currentQuestion];
-      const t = translations[currentLanguage];
-      
-      quizContainer.classList.add('fade-out');
-      
-      setTimeout(() => {
-        quizContainer.innerHTML = `
-          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-            <small>${t.question} ${currentQuestion + 1}/${totalQuestions}</small>
-            <small>${t.score}: ${score}</small>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: ${((currentQuestion) / totalQuestions) * 100}%"></div>
-          </div>
-          <div style="margin: 5px 0;">${q.question}</div>
-          <div class="choices">
-            ${q.choices.map((choice, i) => `
-              <label>
-                <input type="radio" name="choice" value="${i}" aria-label="${choice}">
-                ${choice}
-              </label>
-            `).join("")}
-          </div>
-          <div class="feedback" id="feedback" style="min-height: 20px;"></div>
-          <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled style="margin-top: 10px;">
-            ${currentQuestion < totalQuestions - 1 ? t.nextQuestion : t.results}
-          </button>
-          <button class="stop-btn" onclick="endGame()">${t.stopGame}</button>
-        `;
-        
-        setTimeout(() => {
-          quizContainer.classList.remove('fade-out');
-        }, 50);
-        
-        selected = null;
-        document.querySelectorAll('input[name="choice"]').forEach(input => {
-          input.addEventListener('change', (e) => {
-            selected = parseInt(e.target.value);
-            validateAnswer();
-          });
-        });
+   function showQuestion() {
+  const quizContainer = document.getElementById("quizContainer");
+  const q = questions[currentQuestion];
+  const t = translations[currentLanguage];
+  
+  // Supprimer l'animation de fondu pour plus de réactivité
+  quizContainer.innerHTML = `
+    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+      <small>${t.question} ${currentQuestion + 1}/${totalQuestions}</small>
+      <small>${t.score}: ${score}</small>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar" style="width: ${((currentQuestion) / totalQuestions) * 100}%"></div>
+    </div>
+    <div style="margin: 5px 0;">${q.question}</div>
+    <div class="choices">
+      ${q.choices.map((choice, i) => `
+        <label>
+          <input type="radio" name="choice" value="${i}" aria-label="${choice}">
+          ${choice}
+        </label>
+      `).join("")}
+    </div>
+    <div class="feedback" id="feedback" style="min-height: 20px;"></div>
+    <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled style="margin-top: 10px;">
+      ${currentQuestion < totalQuestions - 1 ? t.nextQuestion : t.results}
+    </button>
+    <button class="stop-btn" onclick="endGame()">${t.stopGame}</button>
+  `;
+  
+  selected = null;
+  document.querySelectorAll('input[name="choice"]').forEach(input => {
+    input.addEventListener('change', (e) => {
+      selected = parseInt(e.target.value);
+      validateAnswer();
+    });
+  });
 
-        controller.abort();
-        controller = new AbortController();
-        document.addEventListener(
-          "keydown", 
-          (e) => { if (e.key === "Enter") nextQuestion(); },
-          { signal: controller.signal }
-        );
-      }, 300);
-    }
+  controller.abort();
+  controller = new AbortController();
+  document.addEventListener(
+    "keydown", 
+    (e) => { if (e.key === "Enter") nextQuestion(); },
+    { signal: controller.signal }
+  );
+}
 
     function startTimer() {
       clearInterval(timer);
