@@ -1040,27 +1040,44 @@ body::before {
     }
 
    function changeLanguage(lang) {
-  // Animation des icônes
-  const buttons = document.querySelectorAll('.language-btn');
-  buttons.forEach(btn => {
+  // Désactiver tous les boutons de langue
+  document.querySelectorAll('.language-btn').forEach(btn => {
     btn.classList.remove('active');
-    btn.style.transform = 'scale(0.8)';
-    setTimeout(() => {
-      btn.style.transform = '';
-    }, 300);
   });
   
-  // Activer le bouton cliqué avec un léger délai pour l'animation
-  setTimeout(() => {
-    document.querySelector(`.language-btn[onclick="changeLanguage('${lang}')"]`)
-      .classList.add('active');
-  }, 50);
+  // Activer immédiatement le bouton cliqué
+  document.querySelector(`.language-btn[onclick="changeLanguage('${lang}')"]`)
+    .classList.add('active');
   
+  // Mettre à jour la langue
   currentLanguage = lang;
   localStorage.setItem('quizLanguage', lang);
+  
+  // Mettre à jour l'interface immédiatement
   updateUI();
+  
+  // Regénérer les questions si le quiz est en cours
+  if (document.getElementById('quizContainer').style.display === 'block') {
+    const currentMode = getCurrentMode();
+    const continentMap = {
+      'europe': 'europe',
+      'afrique': 'afrique',
+      'asie': 'asie',
+      'amerique': 'amerique',
+      'oceanie': 'oceanie',
+      'all': 'all'
+    };
+    
+    if (currentMode === 'all') {
+      questions = generateUniqueQuestions(totalQuestions);
+    } else if (continentMap[currentMode]) {
+      currentDifficulty.countries = countriesByContinent[continentMap[currentMode]];
+      questions = generateUniqueQuestions(totalQuestions);
+    }
+    
+    showQuestion();
+  }
 }
-
     function updateUI() {
       const t = translations[currentLanguage];
       
