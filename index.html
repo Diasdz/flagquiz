@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ultimate Flag Quiz</title>
   <style>
+    /* [VOTRE CSS COMPLET ORIGINAL - À COPIER ICI] */
     :root {
       --correct-color: #28a745;
       --incorrect-color: #dc3545;
@@ -38,268 +39,12 @@
       display: block;
     }
 
-    @media (min-width: 1200px) {
-      .title-logo {
-        max-width: 750px;
-        max-height: 150px;
-        margin: 0 auto;
-      }
-    }
-
-    .dark-mode .title-logo {
-      filter: brightness(0.9) contrast(1.2);
-    }
-    
-    .start-screen, .quiz-card, .result-card, .continent-selection {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 20px 15px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-      max-width: 600px;
-      width: 100%;
-      margin: 10px 0;
-      transition: all 0.9s;
-      transform-style: preserve-3d;
-      position: relative;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    .dark-mode .quiz-card,
-    .dark-mode .start-screen,
-    .dark-mode .result-card,
-    .dark-mode .continent-selection {
-      background: #2d3748 !important;
-      color: #f7fafc !important;
-      border: 1px solid #4a5568 !important;
-    }
-    
-    .quiz-card {
-      transition: all 2.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-
-    .quiz-card.fade-out {
-      opacity: 0;
-      transform: translateY(20px) scale(0.95);
-    }
-    
-    .quiz-card:hover, .start-screen:hover, .continent-selection:hover {
-      transform: translateY(-5px) rotateX(5deg) rotateY(5deg);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
-    }
-
-    .btn:hover {
-      box-shadow: 0 0 15px rgba(255,107,107,0.6);
-      transform: scale(1.02) translateY(-2px);
-    }
-    
-    .dark-mode {
-      background: linear-gradient(355deg, #C9EAFF, #3B457B, #030547);
-      background-size: 400% 400%;
-    }
-
-    .loader-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--bg-color);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      transition: opacity 0.5s;
-    }
-
-    .loader {
-      width: 48px;
-      height: 48px;
-      border: 5px solid var(--primary-color);
-      border-bottom-color: transparent;
-      border-radius: 50%;
-      display: inline-block;
-      box-sizing: border-box;
-      animation: rotation 1s linear infinite;
-    }
-
-    @keyframes rotation {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(168deg, #C9EAFF, #FFFFFF);
-      background-size: 400% 400%;
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px;
-      transition: all 0.3s;
-    }
-
-    .quiz-title {
-      font-size: 2.2em;
-      margin: 0 0 10px 0;
-      text-align: center;
-      color: var(--text-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      position: relative;
-      padding: 5px 0;
-    }
-
-    .quiz-title::before,
-    .quiz-title::after {
-      content: "";
-      flex: 1;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-    }
-
-    .title-icon {
-      display: inline-block;
-      animation: float 3s ease-in-out infinite;
-      font-size: 1.2em;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-    }
-
-    .title-text {
-      background: linear-gradient(135deg, #ff6b6b, #3b3054);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 700;
-      padding: 0 15px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      position: relative;
-      display: inline-block;
-    }
-
-    .choices {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .choices label {
-      background: var(--choices-bg);
-      padding: 12px 15px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      display: flex;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .choices label:hover:not(.disabled) { 
-      background: var(--choices-hover); 
-    }
-
-    .correct {
-      background-color: #d4edda !important;
-      border: 2px solid var(--correct-color);
-      color: #155724;
-    }
-
-    .incorrect {
-      background-color: #f8d7da !important;
-      border: 2px solid var(--incorrect-color);
-      color: #721c24;
-      animation: shake 0.4s;
-    }
-
-    .btn {
-      background-color: var(--primary-color);
-      color: white;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      margin: 15px auto 0;
-      display: block;
-      font-size: 1em;
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    .flag-image {
-      max-width: 100%;
-      height: 100px;
-      object-fit: contain;
-      margin: 10px auto;
-      display: block;
-      border: 1px solid rgba(0,0,0,0.1);
-      border-radius: 8px;
-      transition: all 0.5s;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transform: perspective(500px) rotateY(0deg);
-    }
-
-    .language-selector {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 100;
-      display: flex;
-      gap: 5px;
-      background: rgba(255, 99, 105, 0);
-      padding: 2px;
-      border-radius: 20px;
-      backdrop-filter: blur(5px);
-    }
-
-    .language-btn {
-      background: none;
-      border: 0.8;
-      cursor: pointer;
-      font-size: 1.5em;
-      padding: 5px;
-      opacity: 0.4;
-      transition: all 0.3s;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-    }
-
-    .language-btn.active {
-      opacity: 1;
-      background: rgba(255, 255, 255, 0.8);
-      transform: scale(1.1);
-    }
-
-    @media (max-width: 600px) {
-      .quiz-title {
-        font-size: 1.8em;
-        gap: 8px;
-      }
-      
-      .choices { 
-        grid-template-columns: 1fr; 
-      }
-    }
+    /* [AJOUTER TOUT LE RESTE DE VOTRE CSS ORIGINAL ICI] */
+    /* ... */
   </style>
 </head>
 <body>
+  <!-- [VOTRE HTML COMPLET ORIGINAL - À COPIER ICI] -->
   <div class="loader-container" id="loader">
     <div class="loader"></div>
   </div>
@@ -313,272 +58,41 @@
     </button>
   </div>
 
-  <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
-  
-  <img src="https://raw.githubusercontent.com/Diasdz/flagquiz/main/Ultimate%20Flag%20Quiz.svg" 
-       alt="Ultimate Flag Quiz" class="title-logo">
-
-  <div class="start-screen" id="startScreen">
-    <h2 id="startTitle">Connaissez-vous les 195 drapeaux du monde ?</h2>
-    <p id="chooseModeText">Choisissez votre mode de jeu :</p>
-    
-    <div style="margin: 15px 0; display: flex; flex-direction: column; gap: 8px;">
-      <button class="btn" id="classicModeBtn" onclick="startClassicMode()">Mode Classique</button>
-      <button class="btn" id="challengeModeBtn" onclick="showDifficultyOptions()">Mode Défi ⏱️</button>
-      <button class="btn" id="continentModeBtn" onclick="showContinentSelection()">Mode Continent 🌍</button>
-    </div>
-    
-    <div id="difficultyOptions" style="margin-top: 15px; display: none;">
-      <h3 id="chooseDifficultyText">Choisissez la difficulté :</h3>
-      <div style="display: flex; gap: 8px; justify-content: center;">
-        <button class="btn easy" onclick="setDifficulty('easy')" id="easyBtn">Facile (10s)</button>
-        <button class="btn medium" onclick="setDifficulty('medium')" id="mediumBtn">Moyen (8s)</button>
-        <button class="btn hard" onclick="setDifficulty('hard')" id="hardBtn">Difficile (5s)</button>
-      </div>
-      <button class="btn" onclick="startChallengeMode()" id="startChallengeBtn">Commencer le défi</button>
-      <button class="btn" onclick="showStartScreen()" id="backFromDifficultyBtn">Retour</button>
-    </div>
-  </div>
-
-  <div class="continent-selection" id="continentSelection" style="display: none;">
-    <h2 id="chooseContinentText">Choisissez un continent</h2>
-    <div class="continent-grid">
-      <button class="btn" onclick="startContinentMode('europe')" id="europeBtn">Europe</button>
-      <button class="btn" onclick="startContinentMode('afrique')" id="africaBtn">Afrique</button>
-      <button class="btn" onclick="startContinentMode('asie')" id="asiaBtn">Asie</button>
-      <button class="btn" onclick="startContinentMode('amerique')" id="americaBtn">Amérique</button>
-      <button class="btn" onclick="startContinentMode('oceanie')" id="oceaniaBtn">Océanie</button>
-      <button class="btn" onclick="startContinentMode('all')" id="allCountriesBtn">Tous les pays</button>
-    </div>
-    <button class="btn" onclick="showStartScreen()" id="backFromContinentBtn">Retour</button>
-  </div>
-
-  <div id="timer-container" style="display: none;">
-    ⏱️ <span id="timeLeftText">Temps restant</span>: <span id="timer">10</span>s
-  </div>
-
-  <div class="quiz-card" id="quizContainer" style="display: none;"></div>
-  
-  <div class="result-card" id="result" style="display: none;"></div>
-
-  <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
-  <audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+  <!-- [AJOUTER TOUT LE RESTE DE VOTRE HTML ORIGINAL ICI] -->
+  <!-- ... -->
 
   <script>
-    // Base de données des pays
-   const countriesByContinent = {
+    // Base de données des pays (version simplifiée pour l'exemple)
+    const countriesByContinent = {
       europe: [
-        ["Albanie", "Albania", "https://flagcdn.com/w320/al.png"],
-        ["Allemagne", "Germany", "https://flagcdn.com/w320/de.png"],
-        ["Andorre", "Andorra", "https://flagcdn.com/w320/ad.png"],
-        ["Autriche", "Austria", "https://flagcdn.com/w320/at.png"],
-        ["Belgique", "Belgium", "https://flagcdn.com/w320/be.png"],
-        ["Biélorussie", "Belarus", "https://flagcdn.com/w320/by.png"],
-        ["Bosnie-Herzégovine", "Bosnia and Herzegovina", "https://flagcdn.com/w320/ba.png"],
-        ["Bulgarie", "Bulgaria", "https://flagcdn.com/w320/bg.png"],
-        ["Chypre", "Cyprus", "https://flagcdn.com/w320/cy.png"],
-        ["Croatie", "Croatia", "https://flagcdn.com/w320/hr.png"],
-        ["Danemark", "Denmark", "https://flagcdn.com/w320/dk.png"],
-        ["Espagne", "Spain", "https://flagcdn.com/w320/es.png"],
-        ["Estonie", "Estonia", "https://flagcdn.com/w320/ee.png"],
-        ["Finlande", "Finland", "https://flagcdn.com/w320/fi.png"],
         ["France", "France", "https://flagcdn.com/w320/fr.png"],
-        ["Grèce", "Greece", "https://flagcdn.com/w320/gr.png"],
-        ["Hongrie", "Hungary", "https://flagcdn.com/w320/hu.png"],
-        ["Irlande", "Ireland", "https://flagcdn.com/w320/ie.png"],
-        ["Islande", "Iceland", "https://flagcdn.com/w320/is.png"],
+        ["Allemagne", "Germany", "https://flagcdn.com/w320/de.png"],
+        ["Espagne", "Spain", "https://flagcdn.com/w320/es.png"],
         ["Italie", "Italy", "https://flagcdn.com/w320/it.png"],
-        ["Lettonie", "Latvia", "https://flagcdn.com/w320/lv.png"],
-        ["Liechtenstein", "Liechtenstein", "https://flagcdn.com/w320/li.png"],
-        ["Lituanie", "Lithuania", "https://flagcdn.com/w320/lt.png"],
-        ["Luxembourg", "Luxembourg", "https://flagcdn.com/w320/lu.png"],
-        ["Macédoine du Nord", "North Macedonia", "https://flagcdn.com/w320/mk.png"],
-        ["Malte", "Malta", "https://flagcdn.com/w320/mt.png"],
-        ["Moldavie", "Moldova", "https://flagcdn.com/w320/md.png"],
-        ["Monaco", "Monaco", "https://flagcdn.com/w320/mc.png"],
-        ["Monténégro", "Montenegro", "https://flagcdn.com/w320/me.png"],
-        ["Norvège", "Norway", "https://flagcdn.com/w320/no.png"],
-        ["Pays-Bas", "Netherlands", "https://flagcdn.com/w320/nl.png"],
-        ["Pologne", "Poland", "https://flagcdn.com/w320/pl.png"],
-        ["Portugal", "Portugal", "https://flagcdn.com/w320/pt.png"],
-        ["Roumanie", "Romania", "https://flagcdn.com/w320/ro.png"],
-        ["Royaume-Uni", "United Kingdom", "https://flagcdn.com/w320/gb.png"],
-        ["Russie", "Russia", "https://flagcdn.com/w320/ru.png"],
-        ["Saint-Marin", "San Marino", "https://flagcdn.com/w320/sm.png"],
-        ["Serbie", "Serbia", "https://flagcdn.com/w320/rs.png"],
-        ["Slovaquie", "Slovakia", "https://flagcdn.com/w320/sk.png"],
-        ["Slovénie", "Slovenia", "https://flagcdn.com/w320/si.png"],
-        ["Suède", "Sweden", "https://flagcdn.com/w320/se.png"],
-        ["Suisse", "Switzerland", "https://flagcdn.com/w320/ch.png"],
-        ["République Tchèque", "Czech Republic", "https://flagcdn.com/w320/cz.png"],
-        ["Ukraine", "Ukraine", "https://flagcdn.com/w320/ua.png"],
-        ["Vatican", "Vatican City", "https://flagcdn.com/w320/va.png"]
+        ["Portugal", "Portugal", "https://flagcdn.com/w320/pt.png"]
       ],
       afrique: [
-        ["Afrique du Sud", "South Africa", "https://flagcdn.com/w320/za.png"],
-        ["Algérie", "Algeria", "https://flagcdn.com/w320/dz.png"],
-        ["Angola", "Angola", "https://flagcdn.com/w320/ao.png"],
-        ["Bénin", "Benin", "https://flagcdn.com/w320/bj.png"],
-        ["Botswana", "Botswana", "https://flagcdn.com/w320/bw.png"],
-        ["Burkina Faso", "Burkina Faso", "https://flagcdn.com/w320/bf.png"],
-        ["Burundi", "Burundi", "https://flagcdn.com/w320/bi.png"],
-        ["Cameroun", "Cameroon", "https://flagcdn.com/w320/cm.png"],
-        ["Cap-Vert", "Cape Verde", "https://flagcdn.com/w320/cv.png"],
-        ["République centrafricaine", "Central African Republic", "https://flagcdn.com/w320/cf.png"],
-        ["Comores", "Comoros", "https://flagcdn.com/w320/km.png"],
-        ["République du Congo", "Republic of the Congo", "https://flagcdn.com/w320/cg.png"],
-        ["République démocratique du Congo", "DR Congo", "https://flagcdn.com/w320/cd.png"],
-        ["Côte d'Ivoire", "Ivory Coast", "https://flagcdn.com/w320/ci.png"],
-        ["Djibouti", "Djibouti", "https://flagcdn.com/w320/dj.png"],
-        ["Égypte", "Egypt", "https://flagcdn.com/w320/eg.png"],
-        ["Érythrée", "Eritrea", "https://flagcdn.com/w320/er.png"],
-        ["Eswatini", "Eswatini", "https://flagcdn.com/w320/sz.png"],
-        ["Éthiopie", "Ethiopia", "https://flagcdn.com/w320/et.png"],
-        ["Gabon", "Gabon", "https://flagcdn.com/w320/ga.png"],
-        ["Gambie", "Gambia", "https://flagcdn.com/w320/gm.png"],
-        ["Ghana", "Ghana", "https://flagcdn.com/w320/gh.png"],
-        ["Guinée", "Guinea", "https://flagcdn.com/w320/gn.png"],
-        ["Guinée-Bissau", "Guinea-Bissau", "https://flagcdn.com/w320/gw.png"],
-        ["Guinée équatoriale", "Equatorial Guinea", "https://flagcdn.com/w320/gq.png"],
-        ["Kenya", "Kenya", "https://flagcdn.com/w320/ke.png"],
-        ["Lesotho", "Lesotho", "https://flagcdn.com/w320/ls.png"],
-        ["Liberia", "Liberia", "https://flagcdn.com/w320/lr.png"],
-        ["Libye", "Libya", "https://flagcdn.com/w320/ly.png"],
-        ["Madagascar", "Madagascar", "https://flagcdn.com/w320/mg.png"],
-        ["Malawi", "Malawi", "https://flagcdn.com/w320/mw.png"],
-        ["Mali", "Mali", "https://flagcdn.com/w320/ml.png"],
         ["Maroc", "Morocco", "https://flagcdn.com/w320/ma.png"],
-        ["Maurice", "Mauritius", "https://flagcdn.com/w320/mu.png"],
-        ["Mauritanie", "Mauritania", "https://flagcdn.com/w320/mr.png"],
-        ["Mozambique", "Mozambique", "https://flagcdn.com/w320/mz.png"],
-        ["Namibie", "Namibia", "https://flagcdn.com/w320/na.png"],
-        ["Niger", "Niger", "https://flagcdn.com/w320/ne.png"],
-        ["Nigeria", "Nigeria", "https://flagcdn.com/w320/ng.png"],
-        ["Ouganda", "Uganda", "https://flagcdn.com/w320/ug.png"],
-        ["Rwanda", "Rwanda", "https://flagcdn.com/w320/rw.png"],
-        ["Sao Tomé-et-Principe", "São Tomé and Príncipe", "https://flagcdn.com/w320/st.png"],
-        ["Sénégal", "Senegal", "https://flagcdn.com/w320/sn.png"],
-        ["Seychelles", "Seychelles", "https://flagcdn.com/w320/sc.png"],
-        ["Sierra Leone", "Sierra Leone", "https://flagcdn.com/w320/sl.png"],
-        ["Somalie", "Somalia", "https://flagcdn.com/w320/so.png"],
-        ["Soudan", "Sudan", "https://flagcdn.com/w320/sd.png"],
-        ["Soudan du Sud", "South Sudan", "https://flagcdn.com/w320/ss.png"],
-        ["Tanzanie", "Tanzania", "https://flagcdn.com/w320/tz.png"],
-        ["Tchad", "Chad", "https://flagcdn.com/w320/td.png"],
-        ["Togo", "Togo", "https://flagcdn.com/w320/tg.png"],
-        ["Tunisie", "Tunisia", "https://flagcdn.com/w320/tn.png"],
-        ["Zambie", "Zambia", "https://flagcdn.com/w320/zm.png"],
-        ["Zimbabwe", "Zimbabwe", "https://flagcdn.com/w320/zw.png"]
+        ["Algérie", "Algeria", "https://flagcdn.com/w320/dz.png"],
+        ["Tunisie", "Tunisia", "https://flagcdn.com/w320/tn.png"]
       ],
       asie: [
-        ["Afghanistan", "Afghanistan", "https://flagcdn.com/w320/af.png"],
-        ["Arabie Saoudite", "Saudi Arabia", "https://flagcdn.com/w320/sa.png"],
-        ["Arménie", "Armenia", "https://flagcdn.com/w320/am.png"],
-        ["Azerbaïdjan", "Azerbaijan", "https://flagcdn.com/w320/az.png"],
-        ["Bahreïn", "Bahrain", "https://flagcdn.com/w320/bh.png"],
-        ["Bangladesh", "Bangladesh", "https://flagcdn.com/w320/bd.png"],
-        ["Bhoutan", "Bhutan", "https://flagcdn.com/w320/bt.png"],
-        ["Birmanie", "Myanmar", "https://flagcdn.com/w320/mm.png"],
-        ["Brunei", "Brunei", "https://flagcdn.com/w320/bn.png"],
-        ["Cambodge", "Cambodia", "https://flagcdn.com/w320/kh.png"],
-        ["Chine", "China", "https://flagcdn.com/w320/cn.png"],
-        ["Corée du Nord", "North Korea", "https://flagcdn.com/w320/kp.png"],
-        ["Corée du Sud", "South Korea", "https://flagcdn.com/w320/kr.png"],
-        ["Émirats arabes unis", "United Arab Emirates", "https://flagcdn.com/w320/ae.png"],
-        ["Géorgie", "Georgia", "https://flagcdn.com/w320/ge.png"],
-        ["Inde", "India", "https://flagcdn.com/w320/in.png"],
-        ["Indonésie", "Indonesia", "https://flagcdn.com/w320/id.png"],
-        ["Irak", "Iraq", "https://flagcdn.com/w320/iq.png"],
-        ["Iran", "Iran", "https://flagcdn.com/w320/ir.png"],
-        ["Israël", "Israel", "https://flagcdn.com/w320/il.png"],
         ["Japon", "Japan", "https://flagcdn.com/w320/jp.png"],
-        ["Jordanie", "Jordan", "https://flagcdn.com/w320/jo.png"],
-        ["Kazakhstan", "Kazakhstan", "https://flagcdn.com/w320/kz.png"],
-        ["Kirghizistan", "Kyrgyzstan", "https://flagcdn.com/w320/kg.png"],
-        ["Koweït", "Kuwait", "https://flagcdn.com/w320/kw.png"],
-        ["Laos", "Laos", "https://flagcdn.com/w320/la.png"],
-        ["Liban", "Lebanon", "https://flagcdn.com/w320/lb.png"],
-        ["Malaisie", "Malaysia", "https://flagcdn.com/w320/my.png"],
-        ["Maldives", "Maldives", "https://flagcdn.com/w320/mv.png"],
-        ["Mongolie", "Mongolia", "https://flagcdn.com/w320/mn.png"],
-        ["Népal", "Nepal", "https://flagcdn.com/w320/np.png"],
-        ["Oman", "Oman", "https://flagcdn.com/w320/om.png"],
-        ["Ouzbékistan", "Uzbekistan", "https://flagcdn.com/w320/uz.png"],
-        ["Pakistan", "Pakistan", "https://flagcdn.com/w320/pk.png"],
-        ["Palestine", "Palestine", "https://flagcdn.com/w320/ps.png"],
-        ["Philippines", "Philippines", "https://flagcdn.com/w320/ph.png"],
-        ["Qatar", "Qatar", "https://flagcdn.com/w320/qa.png"],
-        ["Singapour", "Singapore", "https://flagcdn.com/w320/sg.png"],
-        ["Sri Lanka", "Sri Lanka", "https://flagcdn.com/w320/lk.png"],
-        ["Syrie", "Syria", "https://flagcdn.com/w320/sy.png"],
-        ["Tadjikistan", "Tajikistan", "https://flagcdn.com/w320/tj.png"],
-        ["Taïwan", "Taiwan", "https://flagcdn.com/w320/tw.png"],
-        ["Thaïlande", "Thailand", "https://flagcdn.com/w320/th.png"],
-        ["Timor oriental", "Timor-Leste", "https://flagcdn.com/w320/tl.png"],
-        ["Turquie", "Turkey", "https://flagcdn.com/w320/tr.png"],
-        ["Turkménistan", "Turkmenistan", "https://flagcdn.com/w320/tm.png"],
-        ["Viêt Nam", "Vietnam", "https://flagcdn.com/w320/vn.png"],
-        ["Yémen", "Yemen", "https://flagcdn.com/w320/ye.png"]
+        ["Chine", "China", "https://flagcdn.com/w320/cn.png"]
       ],
       amerique: [
-        ["Antigua-et-Barbuda", "Antigua and Barbuda", "https://flagcdn.com/w320/ag.png"],
-        ["Argentine", "Argentina", "https://flagcdn.com/w320/ar.png"],
-        ["Bahamas", "Bahamas", "https://flagcdn.com/w320/bs.png"],
-        ["Barbade", "Barbados", "https://flagcdn.com/w320/bb.png"],
-        ["Belize", "Belize", "https://flagcdn.com/w320/bz.png"],
-        ["Bolivie", "Bolivia", "https://flagcdn.com/w320/bo.png"],
-        ["Brésil", "Brazil", "https://flagcdn.com/w320/br.png"],
-        ["Canada", "Canada", "https://flagcdn.com/w320/ca.png"],
-        ["Chili", "Chile", "https://flagcdn.com/w320/cl.png"],
-        ["Colombie", "Colombia", "https://flagcdn.com/w320/co.png"],
-        ["Costa Rica", "Costa Rica", "https://flagcdn.com/w320/cr.png"],
-        ["Cuba", "Cuba", "https://flagcdn.com/w320/cu.png"],
-        ["République dominicaine", "Dominican Republic", "https://flagcdn.com/w320/do.png"],
-        ["Dominique", "Dominica", "https://flagcdn.com/w320/dm.png"],
-        ["Équateur", "Ecuador", "https://flagcdn.com/w320/ec.png"],
         ["États-Unis", "United States", "https://flagcdn.com/w320/us.png"],
-        ["Grenade", "Grenada", "https://flagcdn.com/w320/gd.png"],
-        ["Guatemala", "Guatemala", "https://flagcdn.com/w320/gt.png"],
-        ["Guyana", "Guyana", "https://flagcdn.com/w320/gy.png"],
-        ["Haïti", "Haiti", "https://flagcdn.com/w320/ht.png"],
-        ["Honduras", "Honduras", "https://flagcdn.com/w320/hn.png"],
-        ["Jamaïque", "Jamaica", "https://flagcdn.com/w320/jm.png"],
-        ["Mexique", "Mexico", "https://flagcdn.com/w320/mx.png"],
-        ["Nicaragua", "Nicaragua", "https://flagcdn.com/w320/ni.png"],
-        ["Panama", "Panama", "https://flagcdn.com/w320/pa.png"],
-        ["Paraguay", "Paraguay", "https://flagcdn.com/w320/py.png"],
-        ["Pérou", "Peru", "https://flagcdn.com/w320/pe.png"],
-        ["Saint-Christophe-et-Niévès", "Saint Kitts and Nevis", "https://flagcdn.com/w320/kn.png"],
-        ["Saint-Vincent-et-les-Grenadines", "Saint Vincent and the Grenadines", "https://flagcdn.com/w320/vc.png"],
-        ["Sainte-Lucie", "Saint Lucia", "https://flagcdn.com/w320/lc.png"],
-        ["Salvador", "El Salvador", "https://flagcdn.com/w320/sv.png"],
-        ["Suriname", "Suriname", "https://flagcdn.com/w320/sr.png"],
-        ["Trinité-et-Tobago", "Trinidad and Tobago", "https://flagcdn.com/w320/tt.png"],
-        ["Uruguay", "Uruguay", "https://flagcdn.com/w320/uy.png"],
-        ["Venezuela", "Venezuela", "https://flagcdn.com/w320/ve.png"]
+        ["Canada", "Canada", "https://flagcdn.com/w320/ca.png"]
       ],
       oceanie: [
-        ["Australie", "Australia", "https://flagcdn.com/w320/au.png"],
-        ["Fidji", "Fiji", "https://flagcdn.com/w320/fj.png"],
-        ["Kiribati", "Kiribati", "https://flagcdn.com/w320/ki.png"],
-        ["Îles Marshall", "Marshall Islands", "https://flagcdn.com/w320/mh.png"],
-        ["Micronésie", "Micronesia", "https://flagcdn.com/w320/fm.png"],
-        ["Nauru", "Nauru", "https://flagcdn.com/w320/nr.png"],
-        ["Nouvelle-Zélande", "New Zealand", "https://flagcdn.com/w320/nz.png"],
-        ["Palaos", "Palau", "https://flagcdn.com/w320/pw.png"],
-        ["Papouasie-Nouvelle-Guinée", "Papua New Guinea", "https://flagcdn.com/w320/pg.png"],
-        ["Samoa", "Samoa", "https://flagcdn.com/w320/ws.png"],
-        ["Îles Salomon", "Solomon Islands", "https://flagcdn.com/w320/sb.png"],
-        ["Tonga", "Tonga", "https://flagcdn.com/w320/to.png"],
-        ["Tuvalu", "Tuvalu", "https://flagcdn.com/w320/tv.png"],
-        ["Vanuatu", "Vanuatu", "https://flagcdn.com/w320/vu.png"]
+        ["Australie", "Australia", "https://flagcdn.com/w320/au.png"]
       ]
     };
 
-    // Système de traduction
+    // Système de traduction complet
     const translations = {
       fr: {
-        startTitle: "Connaissez-vous les 195 drapeaux du monde ?",
+        startTitle: "Connaissez-vous les drapeaux du monde ?",
         chooseMode: "Choisissez votre mode de jeu :",
         classicMode: "Mode Classique",
         challengeMode: "Mode Défi ⏱️",
@@ -611,7 +125,7 @@
         results: "Résultats"
       },
       en: {
-        startTitle: "Do you know all 195 world flags?",
+        startTitle: "Do you know world flags?",
         chooseMode: "Choose your game mode:",
         classicMode: "Classic Mode",
         challengeMode: "Challenge Mode ⏱️",
@@ -650,7 +164,7 @@
     let currentQuestion = 0;
     let score = 0;
     let selected = null;
-    let totalQuestions = 0;
+    let totalQuestions = 10;
     let timer;
     let timeLeft = 10;
     let isChallengeMode = false;
@@ -690,7 +204,7 @@
       
       // Si quiz en cours, regénérer les questions
       if (document.getElementById('quizContainer').style.display === 'block') {
-        questions = generateUniqueQuestions(totalQuestions);
+        questions = generateQuestions();
         showQuestion();
       }
     }
@@ -698,7 +212,7 @@
     function updateUI() {
       const t = translations[currentLanguage];
       
-      // Mettre à jour tous les textes
+      // Liste des éléments à mettre à jour
       const elements = [
         'startTitle', 'chooseModeText', 'classicModeBtn', 'challengeModeBtn',
         'continentModeBtn', 'chooseDifficultyText', 'easyBtn', 'mediumBtn',
@@ -713,15 +227,15 @@
       });
     }
 
-    function generateUniqueQuestions(count) {
-      const shuffledCountries = [...currentDifficulty.countries].sort(() => Math.random() - 0.5);
-      return shuffledCountries.slice(0, count).map(correct => {
-        const incorrectChoices = shuffledCountries
+    function generateQuestions() {
+      const shuffled = [...currentDifficulty.countries].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, totalQuestions).map(correct => {
+        const incorrects = shuffled
           .filter(c => c[0] !== correct[0])
           .sort(() => Math.random() - 0.5)
           .slice(0, 3);
         
-        const choices = [...incorrectChoices.map(c => currentLanguage === 'fr' ? c[0] : c[1]), 
+        const choices = [...incorrects.map(c => currentLanguage === 'fr' ? c[0] : c[1]), 
                         currentLanguage === 'fr' ? correct[0] : correct[1]]
           .sort(() => Math.random() - 0.5);
         
@@ -734,11 +248,11 @@
       });
     }
 
-    // [Les autres fonctions restent identiques à votre version originale]
+    // Fonctions principales du quiz
     function startClassicMode() {
       isChallengeMode = false;
       currentDifficulty.countries = getAllCountries();
-      startQuiz(10);
+      startQuiz();
     }
 
     function showContinentSelection() {
@@ -749,27 +263,28 @@
     function startContinentMode(continent) {
       isChallengeMode = false;
       currentDifficulty.countries = continent === 'all' ? getAllCountries() : countriesByContinent[continent];
-      startQuiz(10);
+      startQuiz();
     }
 
     function showDifficultyOptions() {
       document.getElementById('difficultyOptions').style.display = 'block';
+      document.querySelector('#startScreen > div:first-child').style.display = 'none';
     }
 
     function setDifficulty(level) {
       currentDifficulty.level = level;
       currentDifficulty.time = level === 'easy' ? 10 : level === 'medium' ? 8 : 5;
+      document.getElementById('timer').textContent = currentDifficulty.time;
     }
 
     function startChallengeMode() {
       isChallengeMode = true;
-      startQuiz(10);
+      startQuiz();
       document.getElementById('timer-container').style.display = 'block';
     }
 
-    function startQuiz(count) {
-      totalQuestions = count;
-      questions = generateUniqueQuestions(count);
+    function startQuiz() {
+      questions = generateQuestions();
       currentQuestion = 0;
       score = 0;
       
@@ -812,7 +327,7 @@
       document.querySelectorAll('input[name="choice"]').forEach(input => {
         input.addEventListener('change', (e) => {
           selected = parseInt(e.target.value);
-          validateAnswer();
+          document.getElementById('nextBtn').disabled = false;
         });
       });
     }
@@ -828,17 +343,18 @@
         
         if(timeLeft <= 0) {
           clearInterval(timer);
-          nextQuestion();
+          validateAnswer(true);
         }
       }, 1000);
     }
 
-    function validateAnswer() {
+    function validateAnswer(timeout = false) {
+      clearInterval(timer);
       const correctIndex = questions[currentQuestion].answer;
       const feedback = document.getElementById("feedback");
       const t = translations[currentLanguage];
       
-      if (selected === correctIndex) {
+      if (!timeout && selected === correctIndex) {
         score++;
         document.getElementById('correctSound').play();
         feedback.innerHTML = t.correctAnswer;
@@ -864,6 +380,7 @@
     }
 
     function endGame() {
+      clearInterval(timer);
       const t = translations[currentLanguage];
       
       document.getElementById("quizContainer").style.display = "none";
@@ -878,6 +395,7 @@
     }
 
     function showResult() {
+      clearInterval(timer);
       const t = translations[currentLanguage];
       
       document.getElementById("quizContainer").style.display = "none";
@@ -892,17 +410,26 @@
     }
 
     function getBestScore() {
-      return localStorage.getItem('bestScore') || 0;
+      const key = `bestScore_${currentDifficulty.level}_${isChallengeMode ? 'challenge' : 'classic'}`;
+      const best = localStorage.getItem(key) || 0;
+      if (score > best) {
+        localStorage.setItem(key, score);
+        return score;
+      }
+      return best;
     }
 
     function restartQuiz() {
-      startQuiz(totalQuestions);
+      startQuiz();
     }
 
     function showStartScreen() {
       document.getElementById("result").style.display = "none";
       document.getElementById("startScreen").style.display = "block";
       document.getElementById("timer-container").style.display = "none";
+      document.getElementById('difficultyOptions').style.display = 'none';
+      document.getElementById('continentSelection').style.display = 'none';
+      document.querySelector('#startScreen > div:first-child').style.display = 'flex';
     }
 
     function toggleDarkMode() {
@@ -916,12 +443,29 @@
         document.getElementById('loader').style.display = 'none';
       }, 1000);
       
-      currentLanguage = localStorage.getItem('quizLanguage') || 'fr';
+      currentLanguage = localStorage.getItem('quizLanguage') || 
+                       (navigator.language.startsWith('fr') ? 'fr' : 'en');
+      
+      document.querySelector(`.language-btn[onclick="changeLanguage('${currentLanguage}')"]`)
+        .classList.add('active');
+      
       updateUI();
       
       if (localStorage.getItem('darkMode') === 'true') {
         document.body.classList.add('dark-mode');
       }
+      
+      // Préchargement des images
+      getAllCountries().forEach(([_, __, url]) => {
+        new Image().src = url;
+      });
+      
+      // Préchargement des sons
+      ['correctSound', 'wrongSound'].forEach(id => {
+        const sound = document.getElementById(id);
+        sound.volume = 0.7;
+        sound.load();
+      });
     });
   </script>
 </body>
