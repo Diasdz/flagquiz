@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ultimate Flag Quiz</title>
   <style>
-    /* [VOTRE CSS ORIGINAL COMPLET - À COPIER ICI] */
     :root {
       --correct-color: #28a745;
       --incorrect-color: #dc3545;
@@ -19,115 +18,6 @@
       --timer-bg: #3b3054;
     }
     
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%; 
-      background-size: 10px 10px;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .title-logo {
-      width: 70%;
-      max-width: 200px;
-      height: auto;
-      margin: 0 auto;
-      display: block;
-    }
-
-    @media (min-width: 1200px) {
-      .title-logo {
-        max-width: 750px;
-        max-height: 150px;
-        margin: 0 auto;
-      }
-    }
-
-    .dark-mode .title-logo {
-      filter: brightness(0.9) contrast(1.2);
-    }
-    
-    .start-screen, .quiz-card, .result-card, .continent-selection {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 20px 15px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-      max-width: 600px;
-      width: 100%;
-      margin: 10px 0;
-      transition: all 0.9s;
-      transform-style: preserve-3d;
-      position: relative;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    .dark-mode .quiz-card,
-    .dark-mode .start-screen,
-    .dark-mode .result-card,
-    .dark-mode .continent-selection {
-      background: #2d3748 !important;
-      color: #f7fafc !important;
-      border: 1px solid #4a5568 !important;
-    }
-    
-    .quiz-card {
-      transition: all 2.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-
-    .quiz-card.fade-out {
-      opacity: 0;
-      transform: translateY(20px) scale(0.95);
-    }
-    
-    .quiz-card:hover, .start-screen:hover, .continent-selection:hover {
-      transform: translateY(-5px) rotateX(5deg) rotateY(5deg);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
-    }
-
-    .btn:hover {
-      box-shadow: 0 0 15px rgba(255,107,107,0.6);
-      transform: scale(1.02) translateY(-2px);
-    }
-    
-    .dark-mode {
-      background: linear-gradient(355deg, #C9EAFF, #3B457B, #030547);
-      background-size: 400% 400%;
-    }
-
-    .loader-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--bg-color);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      transition: opacity 0.5s;
-    }
-
-    .loader {
-      width: 48px;
-      height: 48px;
-      border: 5px solid var(--primary-color);
-      border-bottom-color: transparent;
-      border-radius: 50%;
-      display: inline-block;
-      box-sizing: border-box;
-      animation: rotation 1s linear infinite;
-    }
-
-    @keyframes rotation {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -141,50 +31,38 @@
       transition: all 0.3s;
     }
 
-    .quiz-title {
-      font-size: 2.2em;
-      margin: 0 0 10px 0;
-      text-align: center;
-      color: var(--text-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      position: relative;
-      padding: 5px 0;
+    .dark-mode {
+      background: linear-gradient(355deg, #C9EAFF, #3B457B, #030547);
+      background-size: 400% 400%;
+      color: #f7fafc;
     }
 
-    .quiz-title::before,
-    .quiz-title::after {
-      content: "";
-      flex: 1;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    .title-logo {
+      width: 70%;
+      max-width: 200px;
+      height: auto;
+      margin: 0 auto;
+      display: block;
     }
 
-    .title-icon {
-      display: inline-block;
-      animation: float 3s ease-in-out infinite;
-      font-size: 1.2em;
+    .start-screen, .quiz-card, .result-card, .continent-selection {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 20px 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      max-width: 600px;
+      width: 100%;
+      margin: 10px 0;
+      transition: all 0.3s;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-    }
-
-    .title-text {
-      background: linear-gradient(135deg, #ff6b6b, #3b3054);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 700;
-      padding: 0 15px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      position: relative;
-      display: inline-block;
+    .dark-mode .quiz-card,
+    .dark-mode .start-screen,
+    .dark-mode .result-card,
+    .dark-mode .continent-selection {
+      background: #2d3748;
+      color: #f7fafc;
+      border: 1px solid #4a5568;
     }
 
     .choices {
@@ -202,13 +80,11 @@
       transition: all 0.25s ease;
       display: flex;
       align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: relative;
-      overflow: hidden;
     }
 
-    .choices label:hover:not(.disabled) { 
-      background: var(--choices-hover); 
+    .dark-mode .choices label {
+      background: #3d4a5d;
+      color: #e2e8f0;
     }
 
     .correct {
@@ -221,7 +97,6 @@
       background-color: #f8d7da !important;
       border: 2px solid var(--incorrect-color);
       color: #721c24;
-      animation: shake 0.4s;
     }
 
     .btn {
@@ -235,9 +110,6 @@
       display: block;
       font-size: 1em;
       transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
     .flag-image {
@@ -248,9 +120,6 @@
       display: block;
       border: 1px solid rgba(0,0,0,0.1);
       border-radius: 8px;
-      transition: all 0.5s;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transform: perspective(500px) rotateY(0deg);
     }
 
     .language-selector {
@@ -260,58 +129,37 @@
       z-index: 100;
       display: flex;
       gap: 5px;
-      background: rgba(255, 99, 105, 0);
-      padding: 2px;
-      border-radius: 20px;
-      backdrop-filter: blur(5px);
     }
 
     .language-btn {
       background: none;
-      border: 0.8;
+      border: none;
       cursor: pointer;
       font-size: 1.5em;
       padding: 5px;
-      opacity: 0.4;
+      opacity: 0.7;
       transition: all 0.3s;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
     }
 
     .language-btn.active {
       opacity: 1;
-      background: rgba(255, 255, 255, 0.8);
       transform: scale(1.1);
     }
 
     @media (max-width: 600px) {
-      .quiz-title {
-        font-size: 1.8em;
-        gap: 8px;
-      }
-      
-      .choices { 
-        grid-template-columns: 1fr; 
+      .choices {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <!-- [VOTRE HTML ORIGINAL COMPLET - À COPIER ICI] -->
-  <div class="loader-container" id="loader">
-    <div class="loader"></div>
-  </div>
-
   <div class="language-selector">
     <button class="language-btn active" onclick="changeLanguage('fr')" aria-label="Français">
-      <img src="https://flagcdn.com/w20/fr.png" width="30" style="border: 0.7px solid #ddd">
+      <img src="https://flagcdn.com/w20/fr.png" width="30">
     </button>
     <button class="language-btn" onclick="changeLanguage('en')" aria-label="English">
-      <img src="https://flagcdn.com/w20/gb.png" width="30" style="border: 0.7px solid #ddd">
+      <img src="https://flagcdn.com/w20/gb.png" width="30">
     </button>
   </div>
 
@@ -344,7 +192,7 @@
 
   <div class="continent-selection" id="continentSelection" style="display: none;">
     <h2 id="chooseContinentText">Choisissez un continent</h2>
-    <div class="continent-grid">
+    <div>
       <button class="btn" onclick="startContinentMode('europe')" id="europeBtn">Europe</button>
       <button class="btn" onclick="startContinentMode('afrique')" id="africaBtn">Afrique</button>
       <button class="btn" onclick="startContinentMode('asie')" id="asiaBtn">Asie</button>
@@ -367,7 +215,7 @@
   <audio id="wrongSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
 
   <script>
-    // Base de données des pays (exemple simplifié)
+    // Base de données des pays
     const countriesByContinent = {
       europe: [
         ["France", "France", "https://flagcdn.com/w320/fr.png"],
@@ -376,8 +224,16 @@
       ],
       afrique: [
         ["Maroc", "Morocco", "https://flagcdn.com/w320/ma.png"]
+      ],
+      asie: [
+        ["Japon", "Japan", "https://flagcdn.com/w320/jp.png"]
+      ],
+      amerique: [
+        ["États-Unis", "United States", "https://flagcdn.com/w320/us.png"]
+      ],
+      oceanie: [
+        ["Australie", "Australia", "https://flagcdn.com/w320/au.png"]
       ]
-      // Ajoutez vos autres continents et pays ici
     };
 
     // Système de traduction
@@ -476,24 +332,24 @@
       ];
     }
 
-    // Changement de langue optimisé
+    // Changement de langue instantané
     function changeLanguage(lang) {
       if (currentLanguage === lang) return;
       
       currentLanguage = lang;
       localStorage.setItem('quizLanguage', lang);
       
-      // Mise à jour visuelle instantanée
+      // Mise à jour des boutons de langue
       document.querySelectorAll('.language-btn').forEach(btn => {
         btn.classList.remove('active');
       });
       document.querySelector(`.language-btn[onclick="changeLanguage('${lang}')"]`)
         .classList.add('active');
       
-      // Mise à jour du texte
+      // Mise à jour de l'interface
       updateUI();
       
-      // Si quiz en cours, on regénère les questions
+      // Si quiz en cours, regénérer les questions
       if (document.getElementById('quizContainer').style.display === 'block') {
         questions = generateQuestions();
         showQuestion();
@@ -503,19 +359,27 @@
     function updateUI() {
       const t = translations[currentLanguage];
       
-      // Liste exhaustive des éléments à traduire
-      const elementsToTranslate = [
-        'startTitle', 'chooseModeText', 'classicModeBtn', 'challengeModeBtn',
-        'continentModeBtn', 'chooseDifficultyText', 'easyBtn', 'mediumBtn',
-        'hardBtn', 'startChallengeBtn', 'backFromDifficultyBtn', 'chooseContinentText',
-        'europeBtn', 'africaBtn', 'asiaBtn', 'americaBtn', 'oceaniaBtn',
-        'allCountriesBtn', 'backFromContinentBtn', 'timeLeftText'
-      ];
-      
-      elementsToTranslate.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) element.textContent = t[id];
-      });
+      // Mettre à jour tous les textes
+      document.getElementById('startTitle').textContent = t.startTitle;
+      document.getElementById('chooseModeText').textContent = t.chooseMode;
+      document.getElementById('classicModeBtn').textContent = t.classicMode;
+      document.getElementById('challengeModeBtn').textContent = t.challengeMode;
+      document.getElementById('continentModeBtn').textContent = t.continentMode;
+      document.getElementById('chooseDifficultyText').textContent = t.chooseDifficulty;
+      document.getElementById('easyBtn').textContent = t.easy;
+      document.getElementById('mediumBtn').textContent = t.medium;
+      document.getElementById('hardBtn').textContent = t.hard;
+      document.getElementById('startChallengeBtn').textContent = t.startChallenge;
+      document.getElementById('backFromDifficultyBtn').textContent = t.back;
+      document.getElementById('chooseContinentText').textContent = t.chooseContinent;
+      document.getElementById('europeBtn').textContent = t.europe;
+      document.getElementById('africaBtn').textContent = t.africa;
+      document.getElementById('asiaBtn').textContent = t.asia;
+      document.getElementById('americaBtn').textContent = t.america;
+      document.getElementById('oceaniaBtn').textContent = t.oceania;
+      document.getElementById('allCountriesBtn').textContent = t.allCountries;
+      document.getElementById('backFromContinentBtn').textContent = t.back;
+      document.getElementById('timeLeftText').textContent = t.timeLeft;
     }
 
     function generateQuestions() {
@@ -539,7 +403,6 @@
       });
     }
 
-    // [VOS FONCTIONS ORIGINALES - À COPIER ICI]
     function startClassicMode() {
       isChallengeMode = false;
       currentDifficulty.countries = getAllCountries();
@@ -559,7 +422,6 @@
 
     function showDifficultyOptions() {
       document.getElementById('difficultyOptions').style.display = 'block';
-      document.querySelector('#startScreen > div:first-child').style.display = 'none';
     }
 
     function setDifficulty(level) {
@@ -720,7 +582,6 @@
       document.getElementById("timer-container").style.display = "none";
       document.getElementById('difficultyOptions').style.display = 'none';
       document.getElementById('continentSelection').style.display = 'none';
-      document.querySelector('#startScreen > div:first-child').style.display = 'flex';
     }
 
     function toggleDarkMode() {
@@ -730,10 +591,6 @@
 
     // Initialisation
     document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
-        document.getElementById('loader').style.display = 'none';
-      }, 1000);
-      
       currentLanguage = localStorage.getItem('quizLanguage') || 
                        (navigator.language.startsWith('fr') ? 'fr' : 'en');
       
@@ -746,11 +603,12 @@
         document.body.classList.add('dark-mode');
       }
       
-      // Préchargement des ressources
+      // Préchargement des images
       getAllCountries().forEach(([_, __, url]) => {
         new Image().src = url;
       });
       
+      // Préchargement des sons
       ['correctSound', 'wrongSound'].forEach(id => {
         const sound = document.getElementById(id);
         sound.volume = 0.7;
