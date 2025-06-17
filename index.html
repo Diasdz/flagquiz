@@ -1056,7 +1056,7 @@ body::before {
       .classList.add('active');
   }, 50);
   
-  currentLanguage = lang;
+currentLanguage = savedLang || 'en'; // Forcer l'anglais par défaut
   localStorage.setItem('quizLanguage', lang);
   updateUI();
 }
