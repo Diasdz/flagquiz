@@ -1104,7 +1104,7 @@ body::before {
       
       // Charger la langue sauvegardée ou détecter la langue du navigateur
       const savedLang = localStorage.getItem('quizLanguage');
-      const browserLang = navigator.language.startsWith('fr') ? 'fr' : 'en';
+      const browserLang = navigator.language.startsWith('en') ? 'en' : 'fr';
       currentLanguage = savedLang || browserLang;
       
       updateUI();
