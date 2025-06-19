@@ -1055,9 +1055,11 @@ body::before {
     document.querySelector(`.language-btn[onclick="changeLanguage('${lang}')"]`)
       .classList.add('active');
   }, 50);
-  
+
+  console.log("Changement vers la langue:", lang); // Debug
   currentLanguage = lang;
   localStorage.setItem('quizLanguage', lang);
+  console.log("Langue sauvegardée:", localStorage.getItem('quizLanguage')); // Debug
   updateUI();
 }
 
