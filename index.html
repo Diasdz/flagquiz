@@ -1039,30 +1039,31 @@ body::before {
       ];
     }
 
-   function changeLanguage(lang) {
-  // Animation des icônes
-  const buttons = document.querySelectorAll('.language-btn');
-  buttons.forEach(btn => {
+  function changeLanguage(lang) {
+  console.log("Tentative de changement vers:", lang); // Debug
+  
+  // 1. Désactive tous les boutons langue
+  document.querySelectorAll('.language-btn').forEach(btn => {
     btn.classList.remove('active');
-    btn.style.transform = 'scale(0.8)';
-    setTimeout(() => {
-      btn.style.transform = '';
-    }, 300);
   });
   
-  // Activer le bouton cliqué avec un léger délai pour l'animation
-  setTimeout(() => {
-    document.querySelector(`.language-btn[onclick="changeLanguage('${lang}')"]`)
-      .classList.add('active');
-  }, 50);
-
-  console.log("Changement vers la langue:", lang); // Debug
+  // 2. Met à jour la langue courante
   currentLanguage = lang;
   localStorage.setItem('quizLanguage', lang);
   console.log("Langue sauvegardée:", localStorage.getItem('quizLanguage')); // Debug
+  
+  // 3. Actualise TOUTE l'interface
   updateUI();
+  
+  // 4. Réactive visuellement le bon bouton (après un léger délai)
+  setTimeout(() => {
+    const activeBtn = document.querySelector(`.language-btn[onclick*="${lang}"]`);
+    if (activeBtn) {
+      activeBtn.classList.add('active');
+      console.log("Bouton activé:", activeBtn); // Debug
+    }
+  }, 50);
 }
-
     function updateUI() {
       const t = translations[currentLanguage];
       
