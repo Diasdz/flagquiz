@@ -1067,7 +1067,7 @@ body::before {
       const t = translations[currentLanguage];
       
       // Mettre à jour tous les textes de l'interface
-      document.querySelector('.title-text').textContent = t.title;
+      document.getElementById('.title-text').textContent = t.title;
       document.getElementById('quizTitleText').textContent = t.title;
       document.getElementById('startTitle').textContent = t.startTitle;
       document.getElementById('chooseModeText').textContent = t.chooseMode;
